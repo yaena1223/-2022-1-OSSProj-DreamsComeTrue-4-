@@ -103,16 +103,16 @@ class LeaderBoardMenu:
             # 페이지 넘김을 위한 버튼 구성
             if(tens == 0):  # 1 페이지 일 때
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 if(tens != len(easy_data)//10):  # 1 페이지가 마지막 페이지는 아닐 때
                     prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
             elif(tens == len(easy_data)//10): # 마지막 페이지 일 때
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
             else:   # 1 페이지도, 마지막 페이지도 아닐 때
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
         self.menu.add.button('back', self.current_rank)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
@@ -153,16 +153,16 @@ class LeaderBoardMenu:
             # 페이지 넘김을 위한 버튼 구성
             if(tens == 0):   # 1 페이지 일 때
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 if(tens != len(hard_data)//10): # 1 페이지가 마지막 페이지는 아닐 때
                     prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
             elif(tens == len(hard_data)//10):   # 마지막 페이지 일 때
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
             else:   # 1 페이지도, 마지막 페이지도 아닐 때
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
-                prev_next_frame.pack(self.menu.add._horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
+                prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
         self.menu.add.button('back', self.current_rank)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
