@@ -17,7 +17,7 @@ class Rank():
         )
 
     # 데이터 베이스에서 데이터 불러오기
-    # term : 기간 (current, past)    mode : 난이도 (easy, hard)
+    # term : 기간 (current)    mode : 난이도 (easy, hard)
     def load_data(self, term, mode):    
         curs = self.score_db.cursor(pymysql.cursors.DictCursor)
         if term == 'current':
@@ -26,12 +26,7 @@ class Rank():
             elif mode == 'hard':
                 sql = 'select * from current_hard_score order by score desc'
 
-        if term == 'past':
-            if mode == 'easy':
-                sql = 'select * from past_easy_score order by score desc'
-            elif mode == 'hard':
-                sql = 'select * from past_hard_score order by score desc'
-
+      
         curs.execute(sql)
         data = curs.fetchall()
         curs.close()
@@ -53,7 +48,7 @@ class Rank():
             return str('no_current_data')
 
     # 랭킹 검색하기
-    # term : 기간 (current, past)    mode : 난이도 (easy, hard)     ID : 검색할 아이디
+    # term : 기간 (current)    mode : 난이도 (easy, hard)     ID : 검색할 아이디
     def search_data(self, term, mode, ID):                                  
         if term == 'current':
             if mode == 'easy':
@@ -61,11 +56,6 @@ class Rank():
             elif mode == 'hard':
                 data = self.load_data('current', 'hard')
 
-        if term == 'past':
-            if mode == 'easy':
-                data = self.load_data('past', 'easy')
-            elif mode == 'hard':
-                data = self.load_data('past', 'hard')
 
         for i in range(len(data)):
             if data[i]['ID'] == ID:
@@ -74,7 +64,7 @@ class Rank():
         return 0
 
     # 데이터 베이스에서 데이터 추가하기
-    # term : 기간 (current, past)    mode : 난이도 (easy, hard)     ID : 입력받은 ID       score : 기록된 점수
+    # term : 기간 (current)    mode : 난이도 (easy, hard)     ID : 입력받은 ID       score : 기록된 점수
     def add_data(self, term, mode, ID, score):                                   
         curs = self.score_db.cursor()
         now = datetime.now()
@@ -85,30 +75,12 @@ class Rank():
             if mode == 'hard':
                 sql = 'INSERT INTO current_hard_score (ID, score, date) VALUES (%s, %s, %s)'
 
-        if term == 'past':
-            if mode == 'easy':
-                sql = 'INSERT INTO past_easy_score (ID, score, date) VALUES (%s, %s, %s)'
-
-            if mode == 'hard':
-                sql = 'INSERT INTO past_hard_score (ID, score, date) VALUES (%s, %s, %s)'  
+        
         # 데이터 추가 시 자동적으로 현재 날짜가 같이 저장됨
         curs.execute(sql, (ID, score, now.strftime('%Y-%m-%d')))
         self.score_db.commit()
         curs.close()
 
-    # 지난 달 데이터 베이스에 데이터 붙여넣기
-    # mode : 난이도 (easy, hard)     ID : 추가할 ID 데이터       score : 추가할 점수 데이터       date : 추가할 날짜 데이터
-    def paste_to_past_data(self, mode, ID, score, date):                      
-        curs = self.score_db.cursor()
-        if mode == 'easy':
-            sql = 'INSERT INTO past_easy_score (ID, score, date) VALUES (%s, %s, %s)'
-
-        if mode == 'hard':
-            sql = 'INSERT INTO past_hard_score (ID, score, date) VALUES (%s, %s, %s)'
-
-        curs.execute(sql, (ID, score, date))
-        self.score_db.commit()
-        curs.close()
 
     # ID 중복 체크하기    
     # mode : 난이도 (easy, hard)     ID : 검색할 ID
@@ -124,46 +96,6 @@ class Rank():
         if(len(data)>0): return 0   # 중복임
         else: return 1              # 중복아님
 
-    # 데이터 베이스의 데이터 모두 삭제하기
-    # term : 기간 (current, past)    mode : 난이도 (easy, hard)
-    def clear_data(self, term, mode):   
-        curs = self.score_db.cursor(pymysql.cursors.DictCursor)
-        if term == 'current':
-            if mode == 'easy':
-                sql = 'delete from current_easy_score'
-            elif mode == 'hard':
-                sql = 'delete from current_hard_score'
-
-        if term == 'past':
-            if mode == 'easy':
-                sql = 'delete from past_easy_score'
-            elif mode == 'hard':
-                sql = 'delete from past_hard_score'
-
-        curs.execute(sql)
-        self.score_db.commit()
-        curs.close()
-
-    # 이번 달 랭킹 데이터를 지난 달 랭킹 데이터로 옮기기
-    # mode : 난이도 (easy, hard) 
-    def move_data(self, mode):
-        data = self.load_data('current', mode)
-        for i in range(len(data)):
-            name = str(data[i]['ID'])
-            score = str(data[i]['score'])
-            date = str(data[i]['date'])
-            self.paste_to_past_data(mode, name, score, date)
-
-    # 랭킹 갱신하기
-    # 지난 달 랭킹 삭제 -> 이번 달 랭킹 지난달 랭킹으로 옮기기 -> 이번 달 랭킹 삭제 순으로 이루어짐      
-    def update_data(self):
-        self.clear_data('past', 'easy')
-        self.move_data('easy')
-        self.clear_data('past', 'hard')
-        self.move_data('hard')
-        self.clear_data('current', 'easy')
-        self.clear_data('current', 'hard')
-        print('updated')
 
     # 랭킹 갱신 여부 판단
     # 가장 최근에 기록된 랭킹의 날짜 데이터 받아와서 현재 날짜와 비교
