@@ -30,27 +30,11 @@ class LeaderBoardMenu:
     def rank(self):
         self.menu.clear()
         self.menu.add.label("   - RANKING -   ", selectable=False)
-        self.menu.add.button('     current ranking     ', self.current_rank)
-        self.menu.add.button('     past ranking     ', self.past_rank)
-        self.menu.add.button('         back         ', self.to_menu)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
-
-    # 이번 달 랭킹 메인 메뉴
-    def current_rank(self):
-        self.menu.clear()
-        self.menu.add.label("   - Current Rank -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
         self.menu.add.button('     rank search     ', self.show_current_rank_search)
-        self.menu.add.button('         back         ', self.rank)
-
-    # 저번 달 랭킹 메인 메뉴
-    def past_rank(self):
-        self.menu.clear()
-        self.menu.add.label("   - Past Rank -   ", selectable=False)
-        self.menu.add.button('     easy mode     ', self.get_past_easy_rank_from_scroll)
-        self.menu.add.button('     hard mode     ', self.get_past_hard_rank_from_scroll)
-        self.menu.add.button('         back         ', self.rank)
+        self.menu.add.button('         back         ', self.to_menu)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 이번 달 easy 모드 랭킹 보여주기
     def show_current_easy_rank(self):
@@ -65,11 +49,11 @@ class LeaderBoardMenu:
     def get_current_rank(self, mode):
             rank = Rank()
             self.menu.clear()
-            self.tens = 0
+            self.tens = 0 # 페이지 변수
 
             if(mode == 'easy'):
                 global easy_data
-                easy_data = rank.load_data('current','easy')
+                easy_data = rank.load_data('current','easy') # 데이터 불러옴
                 self.get_current_easy_rank_page(self.tens)
 
             elif(mode == 'hard'):
@@ -80,7 +64,7 @@ class LeaderBoardMenu:
     # 페이지화 된 이번 달 easy 모드 랭킹 보여주기
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
-        self.menu.add.label("--Current Easy Rank--",selectable=False,font_size=Menus.fontsize_30.value)
+        self.menu.add.label("--Easy Rank--",selectable=False,font_size=Menus.fontsize_30.value)
         if(len(easy_data) == 0): # 데이터가 없는 경우
             self.menu.add.vertical_margin(Menus.margin_100.value)
             self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
@@ -98,13 +82,13 @@ class LeaderBoardMenu:
                 name = str(easy_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(easy_data[tens*10+i]['score']))
                 date = str(easy_data[tens*10+i]['date'])
-                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
+                table.add_row([str(i+1+tens*10), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60) # 가로 300, 세로 60의 프레임 생성
             # 페이지 넘김을 위한 버튼 구성
             if(tens == 0):  # 1 페이지 일 때
                 prev_next_frame.pack(self.menu.add.label('  '),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
-                if(tens != len(easy_data)//10):  # 1 페이지가 마지막 페이지는 아닐 때
+                if(tens != len(easy_data)//10):  # 1 페이지가 마지막 페이지는 아닐 때 # 넘기는 버튼 > 
                     prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
             elif(tens == len(easy_data)//10): # 마지막 페이지 일 때
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
@@ -114,7 +98,7 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
-        self.menu.add.button('back', self.current_rank)
+        self.menu.add.button('back', self.rank)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 이번 달 easy 모드 랭킹에서 다음 페이지 보기
@@ -130,7 +114,7 @@ class LeaderBoardMenu:
     # 페이지화 된 이번 달 hard 모드 랭킹 보여주기
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
-        self.menu.add.label("--Current Hard Rank--",selectable=False,font_size=Menus.fontsize_30.value)
+        self.menu.add.label("--Hard Rank--",selectable=False,font_size=Menus.fontsize_30.value)
         if(len(hard_data) == 0): # 데이터가 없는 경우
             self.menu.add.vertical_margin(Menus.margin_100.value)
             self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
@@ -148,7 +132,7 @@ class LeaderBoardMenu:
                 name = str(hard_data[tens*10+i]['ID'])
                 score = '{0:>05s}'.format(str(hard_data[tens*10+i]['score']))
                 date = str(hard_data[tens*10+i]['date'])
-                table.add_row([str(i+1), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
+                table.add_row([str(i+1+tens*10), name, score, date], cell_align=pygame_menu.locals.ALIGN_CENTER, cell_border_color=Color.GRAY.value)
             prev_next_frame = self.menu.add.frame_h(300, 60) # 가로 300, 세로 60의 프레임 생성
             # 페이지 넘김을 위한 버튼 구성
             if(tens == 0):   # 1 페이지 일 때
@@ -164,7 +148,7 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
-        self.menu.add.button('back', self.current_rank)
+        self.menu.add.button('back', self.rank)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 이번 달 hard 모드 랭킹에서 다음 페이지 보기
@@ -196,7 +180,7 @@ class LeaderBoardMenu:
         ),align = ALIGN_CENTER)
         self.search_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
         self.search_frame.pack(self.menu.add.button('search',self.current_rank_search_result,font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.search_frame.pack(self.menu.add.button('back', self.current_rank, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
+        self.search_frame.pack(self.menu.add.button('back', self.rank, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
         self.result_frame = self.menu.add.frame_v(500, 180, background_color = Color.GRAY.value,align=ALIGN_CENTER) # 가로 500, 세로 180의 프레임 생성
         self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
 
@@ -231,16 +215,6 @@ class LeaderBoardMenu:
         ID = self.text_input.get_value()
         self.menu.remove_widget(self.result_frame)
         self.get_current_rank_search_result(ID)
-
-    # 저번 달 easy 모드 랭킹 조회 화면 불러오기
-    def get_past_easy_rank_from_scroll(self):
-        ScrollMenu = LeaderBoardScrollMenu(self.screen)
-        ScrollMenu.get_past_rank('easy')
-
-    # 저번 달 hard 모드 랭킹 조회 화면 불러오기
-    def get_past_hard_rank_from_scroll(self):
-        ScrollMenu = LeaderBoardScrollMenu(self.screen)
-        ScrollMenu.get_past_rank('hard')
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
