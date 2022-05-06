@@ -6,7 +6,7 @@ from menu.DifficultySelectMenu import *
 import pygame
 import pygame_menu
 import pymysql
-
+from Main import *
 from data.database_user import *
 from data.Defs import *
 
@@ -143,7 +143,7 @@ class Login:
         mytheme.widget_background_color = (150, 213, 252)
 
     def login_success(self):
-        DifficultySelectMenu(screen).show()
+        Main(screen).show()
 
     def signup_fail(self):
         menu.clear()
