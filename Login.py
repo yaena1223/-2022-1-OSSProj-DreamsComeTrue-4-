@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from os import system
 from turtle import color
-
+from menu.DifficultySelectMenu import *
 import pygame
 import pygame_menu
 import pymysql
@@ -73,6 +73,7 @@ class Login:
             if self.database.id_not_exists(self.id) is False:
                 if self.password and self.database.match_idpw(self.id, self.password):
                     print("로그인 성공")
+                    self.login_success()
                     # 계정의 coin,char 값 가져오기 => 아직 안함. 수정 필요
                     '''coin=self.database.load_exp_data(self.id) #로그인 성공하면 경험치 데이터베이스에서 받아오기
                     char=self.database.load_char_data(self.id)
@@ -141,7 +142,9 @@ class Login:
         menu.add.button('  Quit   ', pygame_menu.events.EXIT)
         mytheme.widget_background_color = (150, 213, 252)
 
-        
+    def login_success(self):
+        DifficultySelectMenu(screen).show()
+
     def signup_fail(self):
         menu.clear()
         menu.add.vertical_margin(10)
