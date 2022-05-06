@@ -26,12 +26,23 @@ class Main:
         #pygame.init()
         self.size = screen.get_size()
         self.screen = screen
-        self.mytheme = pygame_menu.themes.THEME_BLUE.copy()
+        
+        mytheme = pygame_menu.Theme(
+            widget_font = pygame_menu.font.FONT_8BIT,
+            widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
+            title_font = pygame_menu.font.FONT_BEBAS,
+            selection_color = (0,0,0), #선택됐을때 글씨색 설정
+            widget_font_color = (255,255,255), #글씨색 설정
+            title_background_color = (0,100,162),
+            title_font_color = (255,255,255),
+            title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
+        )
+        menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/login.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+        mytheme.background_color = menu_image 
+        
         self.menu = pygame_menu.Menu('Main', self.size[0], self.size[1],
-                            theme=self.mytheme)
-        self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.start.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        self.mytheme.background_color = self.menu_image 
-        self.background = pygame.image.load(Images.start.value)
+                            theme=mytheme)
+
 
 
        
