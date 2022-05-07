@@ -122,8 +122,8 @@ class Default(enum.Enum):
     }
     character = {
         "size": {
-            "x":70, 
-            "y":100
+            "x":40, 
+            "y":80
             },
         "invincible_period": 4.0,
         "missile":{
@@ -141,8 +141,8 @@ class Default(enum.Enum):
     item = {
         "duration":10.0,
         "size":{
-            "x":100, 
-            "y":50
+            "x":55, 
+            "y":30
         },
         "sound": "./Sound/Item/speedup.wav",
         "velocity":5,
