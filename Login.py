@@ -10,6 +10,8 @@ from Main import *
 from data.database_user import *
 from data.Defs import *
 
+from pvp import *
+
 class Display:
     w_init = 1/2
     h_init = 8/9

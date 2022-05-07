@@ -8,8 +8,8 @@ class Images(enum.Enum):
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"
     about = "./Image/AboutPage.jpg"
-    background_desert = "./Image/DESERT_modified_v3.jpg"
-    background_antarctic = "./Image/Antarctic_modified_v2.jpg"
+    background_map1 = "./Image/catthema/map1.png"
+    background_map2 = "./Image/catthema/map2.png"
     enemy_scrophion = "./Image/scorphion1-1.png"
     enemy_cactus = "./Image/Catus.png"
     missile_missile2 = "./Image/MISSILE_2.png"
@@ -122,7 +122,7 @@ class Default(enum.Enum):
     }
     character = {
         "size": {
-            "x":100, 
+            "x":70, 
             "y":100
             },
         "invincible_period": 4.0,
@@ -141,7 +141,7 @@ class Default(enum.Enum):
     item = {
         "duration":10.0,
         "size":{
-            "x":50, 
+            "x":100, 
             "y":50
         },
         "sound": "./Sound/Item/speedup.wav",
@@ -149,24 +149,24 @@ class Default(enum.Enum):
         "speedup":{
             "spawn_rate": 0.004,
             "frames":[
-                "./Image/Items/SpeedUp/frame-1.png", 
-                "./Image/Items/SpeedUp/frame-2.png", 
-                "./Image/Items/SpeedUp/frame-3.png", 
-                "./Image/Items/SpeedUp/frame-4.png", 
-                "./Image/Items/SpeedUp/frame-5.png",
-                "./Image/Items/SpeedUp/frame-1.png"
+                "./Image/catthema/item/item_milk.png", 
+                "./Image/catthema/item/item_milk.png", 
+                "./Image/catthema/item/item_milk.png", 
+                "./Image/catthema/item/item_milk.png", 
+                "./Image/catthema/item/item_milk.png",
+                "./Image/catthema/item/item_milk.png"
             ]
         },
         "powerup":{
             "spawn_rate": 0.004,
             "duration":10.0,
             "frames":[
-                "./Image/Items/PowerUp/frame-1.png", 
-                "./Image/Items/PowerUp/frame-2.png", 
-                "./Image/Items/PowerUp/frame-3.png", 
-                "./Image/Items/PowerUp/frame-4.png", 
-                "./Image/Items/PowerUp/frame-5.png",
-                "./Image/Items/PowerUp/frame-1.png"
+                "./Image/catthema/item/item_fish.png", 
+                "./Image/catthema/item/item_fish.png", 
+                "./Image/catthema/item/item_fish.png", 
+                "./Image/catthema/item/item_fish.png", 
+                "./Image/catthema/item/item_fish.png",
+                "./Image/catthema/item/item_fish.png"
             ]
         },
         "bomb":{
@@ -174,33 +174,33 @@ class Default(enum.Enum):
             "interval":1.0,
             "power":1000,
             "frames":[
-                "./Image/Items/Bomb/frame-1.png", 
-                "./Image/Items/Bomb/frame-2.png", 
-                "./Image/Items/Bomb/frame-3.png", 
-                "./Image/Items/Bomb/frame-4.png", 
-                "./Image/Items/Bomb/frame-5.png",
-                "./Image/Items/Bomb/frame-1.png"
+                "./Image/catthema/item/item_chu.png", 
+                "./Image/catthema/item/item_chu.png", 
+                "./Image/catthema/item/item_chu.png", 
+                "./Image/catthema/item/item_chu.png", 
+                "./Image/catthema/item/item_chu.png",
+                "./Image/catthema/item/item_chu.png"
             ]
         },
         "health":{
             "spawn_rate": 0.002,
             "frames":[
-                "./Image/Items/Health/frame-1.png", 
-                "./Image/Items/Health/frame-2.png", 
-                "./Image/Items/Health/frame-3.png", 
-                "./Image/Items/Health/frame-4.png",
-                "./Image/Items/Health/frame-1.png"
+                "./Image/catthema/item/item_heart.png", 
+                "./Image/catthema/item/item_heart.png", 
+                "./Image/catthema/item/item_heart.png", 
+                "./Image/catthema/item/item_heart.png",
+                "./Image/catthema/item/item_heart.png"
             ]
         },
         "coin":{
             "spawn_rate": 0.002,
             "frames":[
-                "./Image/Items/Coin/frame-1.png", 
-                "./Image/Items/Coin/frame-2.png", 
-                "./Image/Items/Coin/frame-3.png", 
-                "./Image/Items/Coin/frame-4.png", 
-                "./Image/Items/Coin/frame-5.png",
-                "./Image/Items/Coin/frame-1.png"
+                "./Image/catthema/item/item_coin.png", 
+                "./Image/catthema/item/item_coin.png", 
+                "./Image/catthema/item/item_coin.png", 
+                "./Image/catthema/item/item_coin.png", 
+                "./Image/catthema/item/item_coin.png",
+                "./Image/catthema/item/item_coin.png"
             ]
         }
     }
