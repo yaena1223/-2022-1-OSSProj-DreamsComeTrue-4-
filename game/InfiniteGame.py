@@ -55,8 +55,8 @@ class InfiniteGame:
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = "./Image/F5S3N.png"
-        self.background_image = "./Image/Space_modified_v1.jpg"
+        self.mob_image = "./Image/catthema/attack/dust.png"
+        self.background_image = "./Image/catthema/map1.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
         self.dy = 2

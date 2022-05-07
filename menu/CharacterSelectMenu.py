@@ -23,7 +23,7 @@ class CharacterSelectMenu(pygame_menu.menu.Menu):
         self.screen = screen
         self.size = screen.get_size()
 
-        menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/StartImage.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+        menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/Login.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
         mytheme.background_color = menu_image 
 
