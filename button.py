@@ -26,6 +26,19 @@ class button():   # 버튼 class
     def draw(self, win, outline=None):   # 버튼 보이게 만들기 
         if outline:
             draw_image(screen, self.image, self.x, self.y, self.width, self.height)
+            
+    def isOver(self, pos):   # 마우스의 위치에 따라 버튼 누르기 -> pos[0]: 마우스의 x 좌표 / pos[1]: 마우스의 y 좌표
+        if pos[0] > self.x - (self.width / 2) and pos[0] < self.x + (self.width / 2):   # 좌측 화면/우측 화면 넘어가기 전, 
+            if pos[1] > self.y - (self.height / 2) and pos[1] < self.y + (self.height / 2):   # 상/하단 화면 넘어가기 전, 
+                return True
+        return False
+
+    def isOver_2(self, pos):
+        #start 화면에서 single,pvp,help,setting을 위해서 y좌표 좁게 인식하도록
+        if pos[0] > self.x - (self.width / 2) and pos[0] < self.x + (self.width / 2):
+            if pos[1] > self.y - (self.height / 4) and pos[1] < self.y + (self.height / 4):#243줄에서의 2을 4로 바꿔주면서 좁게 인식할수 있도록함. 더 좁게 인식하고 싶으면 숫자 늘려주기#
+                return True
+        return False
 
 def draw_image(window, img_path, x, y, width, height):
     x = x - (width / 2)   # 이미지 그리는 위치: 좌측 상단 기준 -> 2로 나누기 
