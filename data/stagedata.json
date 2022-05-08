@@ -41,7 +41,7 @@
 					"Image/catthema/attack/cat_att.png",
 					"Image/catthema/attack/cat_att.png"
 				],
-				"./Image/catthema/attack/dust.png", 
+				"./Image/catthema/attack/dust.png",
 				"F5S1"
 			]
 		},
@@ -131,7 +131,7 @@
 					"Image/catthema/attack/snake.png",
 					"Image/catthema/attack/snake.png"
 				],
-				"Image/catthema/attack/dust.png", 
+				"Image/catthema/attack/dust.png",
 				"Tank"
 			]
 		}
