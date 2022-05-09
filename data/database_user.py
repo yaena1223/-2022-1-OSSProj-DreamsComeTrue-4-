@@ -26,16 +26,18 @@ class Database:
             return True
 
     def match_idpw(self, id, pw): #아이디와 비번이 일치하는지 비교
-        input_password =  bcrypt.hashpw(pw.encode('utf-8'),self.salt)
+        input_password =  pw
         curs = self.score_db.cursor(pymysql.cursors.DictCursor)
         sql = "SELECT * FROM users WHERE user_id=%s" 
         curs.execute(sql,id) #입력받은 id 서버로 전송
         data = curs.fetchone()  #입력받은 id와 일치하는 행 하나 선택
         curs.close()
-        check_password=False
+        check_password = bcrypt.checkpw(input_password.encode('utf-8'),data['user_password'].encode('utf-8')) #https://velog.io/@castleq90/bcrypt%EB%B9%84%ED%81%AC%EB%A6%BD%ED%8A%B8
+        '''check_password=False
         if(input_password == data['user_password'].encode('utf-8')):
             check_password = True
-        
+        print(input_password, "입력값") #이 방식을 사용할 경우, 껐다 키면 salt값이 변경되어 비밀번호가 틀렸다고 나옴''' 
+        print( data['user_password'].encode('utf-8'), "데이터베이스")
         return check_password
 
     def add_id(self, user_id): #아이디 추가
@@ -49,7 +51,7 @@ class Database:
     def add_pw(self, user_pw, user_id): #비밀번호 & coin 초기값 추가 * 캐릭터 초기값은 1로(캐릭터 숫자로 표현)
         initial_coin = 0 #가입시, 보유한 coin 0으로 설정
         initial_character = 1
-        hashed_pw = bcrypt.hashpw(user_pw.encode('utf-8'),self.salt).decode('utf-8')
+        hashed_pw = bcrypt.hashpw(user_pw.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
         #print(hashed_pw, "입력값")
         curs = self.score_db.cursor()
         sql = "UPDATE users SET user_password=%s WHERE user_id=%s"
