@@ -47,7 +47,6 @@ def draw_image(window, img_path, x, y, width, height):
     image = pygame.transform.smoothscale(image, (width, height))
     window.blit(image, (x, y))
 
-
 class Display:
     w_init = 1/2
     h_init = 8/9
@@ -60,26 +59,65 @@ class Utillization:
 
 pygame.init()
 infoObject = pygame.display.Info()
-size = [int(infoObject.current_w*Display.w_init),int(infoObject.current_h*Display.h_init)] #사이즈 설정(w,h) 
-screen = pygame.display.set_mode(size,pygame.RESIZABLE) #창크기 조정 가능 
-ww, wh= pygame.display.get_surface().get_size() 
-Default.game.value["size"]["x"] = size[0] #Default는 Defs.py에 선언되어 있는 클래스명
+size = [int(infoObject.current_w*Display.w_init),int(infoObject.current_h*Display.h_init)]
+screen = pygame.display.set_mode(size,pygame.RESIZABLE)
+ww, wh= pygame.display.get_surface().get_size()
+Default.game.value["size"]["x"] = size[0]
 Default.game.value["size"]["y"] = size[1]
-
-
-image1 = pygame.image.load("Image/Login.png") 
-image1 = pygame.transform.scale(image1, (size[0],size[1])) 
-screen.blit(image1, [0,0]) 
 
 board_width = 800   # 가로 위치
 board_height = 450   # 세로 위치
 
-#                board_width, board_height, x_rate, y_rate, width_rate, height_rate, img=''):
-button1 = button(400, board_height, 0.5, 0.9, 0.37, 0.17, "Image/Catus.png")
-button2 = button(board_width, board_height, 0.5, 0.9, 0.37, 0.17, "Image/Catus.png")
-#                     (screen, self.image, self.x, self.y, self.width, self.height)
+# 버튼 확인
+if __name__ == '__main__':
+    
+    while True:
+        events = pygame.event.get()
+        
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break
+            if event.type == pygame.VIDEORESIZE:
+                pass
 
-button1.draw(screen, (0, 0, 0))
-button2.draw(screen, (0, 0, 0))
+        if (size != screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            screen = pygame.display.set_mode(ratio_screen_size,pygame.RESIZABLE)
+            window_size = screen.get_size()
+            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            size = window_size
 
-pygame.display.update() # 0506 버튼 원하는 위치 설정, 근데 화면 바로 꺼짐.
+        
+        #방향키 설정
+        direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
+                    pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
+
+        direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
+                    pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
+
+
+        # 화면에 그리기
+        image1 = pygame.image.load("Image/Login.png") 
+        image1 = pygame.transform.scale(image1, (size[0],size[1])) 
+        screen.blit(image1, [0,0]) 
+
+        #                board_width, board_height, x_rate, y_rate, width_rate, height_rate, img=''):
+        button1 = button(100, 300, 1, 1, 1.5, 1, "Image/catthema/map1.png")
+        button2 = button(100, 300, 3, 1, 1.5, 1, "Image/catthema/map2.png")
+        button3 = button(100, 300, 5, 1, 1.5, 1, "Image/catthema/map3.png")
+        #                     (screen, self.image, self.x, self.y, self.width, self.height)
+
+        # 화면 비율에 맞춰서 크기 바뀌도록 수정해야함.0509
+        button1.draw(screen, (0, 0, 0))
+        button2.draw(screen, (0, 0, 0))
+        button3.draw(screen, (0, 0, 0))
+        pos = pygame.mouse.get_pos()
+        button1.isOver(pos)
+
+        pygame.display.flip()
