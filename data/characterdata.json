@@ -1,8 +1,8 @@
 {
     "Characters": [
         {
-            "name": "Meerkat",
-            "img_path": "./Image/Characters/Players/Meerkat.png",
+            "name": "cat1",
+            "img_path": "./Image/catthema/cat1_back.png",
             "velocity": 12,
             "missile_img": "./Image/Weapon/worm.png",
             "missile_size": {
@@ -15,8 +15,8 @@
             "is_unlocked": true
         },
         {
-            "name": "SnowMan",
-            "img_path": "./Image/Characters/Players/SnowMan.png",
+            "name": "cat2",
+            "img_path": "./Image/catthema/cat2_back.png",
             "velocity": 15,
             "missile_img": "./Image/Weapon/carrot.png",
             "missile_size": {
@@ -29,8 +29,8 @@
             "is_unlocked": true
         },
         {
-            "name": "Battleship",
-            "img_path": "./Image/Characters/Players/Battleship.png",
+            "name": "cat3",
+            "img_path": "./Image/catthema/cat3_back.png",
             "velocity": 10,
             "missile_img": "./Image/MISSILE_2.png",
             "missile_size": {
@@ -43,8 +43,8 @@
             "is_unlocked": true
         },
         {
-            "name": "Speedship",
-            "img_path": "./Image/Characters/Players/Speedship.png",
+            "name": "cat4",
+            "img_path": "./Image/catthema/cat4_back.png",
             "velocity": 15,
             "missile_img": "./Image/MISSILE_2.png",
             "missile_size": {

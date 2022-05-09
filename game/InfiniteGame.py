@@ -55,8 +55,8 @@ class InfiniteGame:
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = "./Image/F5S3N.png"
-        self.background_image = "./Image/Space_modified_v1.jpg"
+        self.mob_image = "./Image/catthema/attack/dust.png"
+        self.background_image = "./Image/catthema/map1.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
         self.dy = 2
@@ -89,9 +89,9 @@ class InfiniteGame:
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            background1_y += self.dy
+            '''background1_y += self.dy
             if background1_y > background_height:
-                background1_y = 0
+                background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
 

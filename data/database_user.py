@@ -12,6 +12,7 @@ class Database:
         passwd="dreamscometrue",
         charset = 'utf8'
         )
+        self.salt = bcrypt.gensalt()
 
     def id_not_exists(self,input_id):
         curs = self.score_db.cursor(pymysql.cursors.DictCursor) #Dictionary cursor -> row 결과를 dictionary 형태로 리턴
@@ -25,16 +26,18 @@ class Database:
             return True
 
     def match_idpw(self, id, pw): #아이디와 비번이 일치하는지 비교
-        #input_password = pw.encode('utf-8') #입력번호 비밀번호 인코딩(문자 -> byte값으로)
+        input_password =  pw
         curs = self.score_db.cursor(pymysql.cursors.DictCursor)
         sql = "SELECT * FROM users WHERE user_id=%s" 
         curs.execute(sql,id) #입력받은 id 서버로 전송
         data = curs.fetchone()  #입력받은 id와 일치하는 행 하나 선택
         curs.close()
-        #check_password=bcrypt.checkpw(input_password,data['user_password'].encode('utf-8')) #입력한 비밀번호와 데이터베이스에 저장된 비밀번호 비교
-        check_password= False
-        if pw == data['user_password']:
+        check_password = bcrypt.checkpw(input_password.encode('utf-8'),data['user_password'].encode('utf-8')) #https://velog.io/@castleq90/bcrypt%EB%B9%84%ED%81%AC%EB%A6%BD%ED%8A%B8
+        '''check_password=False
+        if(input_password == data['user_password'].encode('utf-8')):
             check_password = True
+        print(input_password, "입력값") #이 방식을 사용할 경우, 껐다 키면 salt값이 변경되어 비밀번호가 틀렸다고 나옴''' 
+        print( data['user_password'].encode('utf-8'), "데이터베이스")
         return check_password
 
     def add_id(self, user_id): #아이디 추가
@@ -48,15 +51,12 @@ class Database:
     def add_pw(self, user_pw, user_id): #비밀번호 & coin 초기값 추가 * 캐릭터 초기값은 1로(캐릭터 숫자로 표현)
         initial_coin = 0 #가입시, 보유한 coin 0으로 설정
         initial_character = 1
-        '''new_pw = user_pw.encode('utf-8') #문자열을 byte값으로
-        hashed_pw = bcrypt.hashpw(new_pw, bcrypt.gensalt()) #해싱
+        hashed_pw = bcrypt.hashpw(user_pw.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
+        #print(hashed_pw, "입력값")
         curs = self.score_db.cursor()
         sql = "UPDATE users SET user_password=%s WHERE user_id=%s"
-        curs.execute(sql, (hashed_pw, user_id)) #암호화된 비밀번호로 저장
-        self.score_db.commit()'''
-        curs = self.score_db.cursor()
-        sql = "UPDATE users SET user_password=%s WHERE user_id=%s"
-        curs.execute(sql,(user_pw, user_id))
+        curs.execute(sql,(hashed_pw, user_id))
+        #print(hashed_pw, "라라")
         self.score_db.commit()
         curs = self.score_db.cursor()
         sql = "UPDATE users SET user_coin=%s WHERE user_id=%s"

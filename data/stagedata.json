@@ -1,137 +1,137 @@
 {
 	"chapter": {
-		"Oasis": {
+		"Dongguk university": {
 			"1": [
-				"Oasis",
+				"map1",
 				1,
 				300,
-				"./Image/DESERT_modified_v3.jpg",
+				"./Image/catthema/map1.png",
 				"./Sound/bgm/bensound-epic.wav",
 				0,
 				1,
-				"./Image/scorphion1-1.png",
+				"./Image/catthema/attack/cat_att.png",
 				[],
 				"",
 				""
 			],
 			"2": [
-				"Oasis",
+				"map1",
 				2,
 				450,
-				"./Image/DESERT_modified_v3.jpg",
+				"./Image/catthema/map1.png",
 				"./Sound/bgm/bensound-epic.wav",
 				0,
 				1,
-				"./Image/scorphion1-1.png",
+				"./Image/catthema/attack/cat_att.png",
 				[],
 				"",
 				""
 			],
 			"3": [
-				"Oasis",
+				"map1",
 				3,
 				9999999999,
-				"./Image/DESERT_modified_v3.jpg",
+				"./Image/catthema/map1.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
 				1,
-				"./Image/scorphion1-1.png",
+				"./Image/catthema/attack/cat_att.png",
 				[
-					"Image/Boss/Body/tutankhamun_1.png",
-					"Image/Boss/Body/tutankhamun_2.png",
-					"Image/Boss/Body/tutankhamun_3.png"
+					"Image/catthema/attack/cat_att.png",
+					"Image/catthema/attack/cat_att.png",
+					"Image/catthema/attack/cat_att.png"
 				],
-				"./Image/Boss/Bullet/scorphion1-1.png",
+				"./Image/catthema/attack/dust.png",
 				"F5S1"
 			]
 		},
-		"Ice": {
+		"Night view": {
 			"1": [
-				"Ice",
+				"map2",
 				1,
 				300,
-				"./Image/Antarctic_modified_v3.jpg",
+				"./Image/catthema/map2.png",
 				"./Sound/bgm/bensound-adventure.wav",
 				0,
 				1,
-				"./Image/Catus.png",
+				"./Image/catthema/attack/dog.png",
 				[],
 				"",
 				""
 			],
 			"2": [
-				"Ice",
+				"map2",
 				2,
 				450,
-				"./Image/Antarctic_modified_v3.jpg",
+				"./Image/catthema/map2.png",
 				"./Sound/bgm/bensound-adventure.wav",
 				0,
 				1,
-				"./Image/Catus.png",
+				"./Image/catthema/attack/dog.png",
 				[],
 				"",
 				""
 			],
 			"3": [
-				"Ice",
+				"map2",
 				3,
 				9999999999,
-				"./Image/Antarctic_modified_v3.jpg",
+				"./Image/catthema/map2.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
 				1,
-				"./Image/Catus.png",
+				"./Image/catthema/attack/dog.png",
 				[
-					"Image/Boss/Body/penguin_boss_1.png",
-					"Image/Boss/Body/penguin_boss_2.png",
-					"Image/Boss/Body/penguin_boss_3.png"
+					"Image/catthema/attack/dog.png",
+					"Image/catthema/attack/dog.png",
+					"Image/catthema/attack/dog.png"
 				],
-				"./Image/Boss/Bullet/penguin_boss_3.png",
+				"./Image/catthema/attack/dust.png",
 				"F5S4"
 			]
 		},
-		"Space": {
+		"Namsan": {
 			"1": [
-				"Space",
+				"map3",
 				1,
 				300,
-				"./Image/Space_modified_v1.jpg",
+				"./Image/catthema/map3.png",
 				"./Sound/bgm/bensound-evolution.wav",
 				0,
 				1,
-				"./Image/F5S3N.png",
+				"./Image/catthema/attack/snake.png",
 				[],
 				"",
 				""
 			],
 			"2": [
-				"Space",
+				"map3",
 				2,
 				450,
-				"./Image/Space_modified_v1.jpg",
+				"./Image/catthema/map3.png",
 				"./Sound/bgm/bensound-evolution.wav",
 				0,
 				1,
-				"./Image/F5S3N.png",
+				"./Image/catthema/attack/snake.png",
 				[],
 				"",
 				""
 			],
 			"3": [
-				"Space",
+				"map3",
 				3,
 				9999999999,
-				"./Image/Space_modified_v1.jpg",
+				"./Image/catthema/map3.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
 				1,
-				"./Image/F5S3N.png",
+				"./Image/catthema/attack/snake.png",
 				[
-					"Image/Boss/Body/spacestation_1.png",
-					"Image/Boss/Body/spacestation_2.png",
-					"Image/Boss/Body/spacestation_3.png"
+					"Image/catthema/attack/snake.png",
+					"Image/catthema/attack/snake.png",
+					"Image/catthema/attack/snake.png"
 				],
-				"Image/Boss/Bullet/F5S3N.png",
+				"Image/catthema/attack/dust.png",
 				"Tank"
 			]
 		}

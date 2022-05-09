@@ -91,9 +91,9 @@ class StageGame:
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            background1_y += 2
+            '''background1_y += 2
             if background1_y > background_height:
-                background1_y = 0
+                background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
 
