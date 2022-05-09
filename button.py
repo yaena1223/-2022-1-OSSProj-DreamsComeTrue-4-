@@ -2,6 +2,7 @@ import pygame
 import pygame_menu
 from pygame.locals import *
 from data.Defs import *
+from menu.StageSelectMenu import *
 
 class button():   # 버튼 class
    
@@ -64,22 +65,11 @@ screen = pygame.display.set_mode(size,pygame.RESIZABLE)
 ww, wh= pygame.display.get_surface().get_size()
 Default.game.value["size"]["x"] = size[0]
 Default.game.value["size"]["y"] = size[1]
-
-board_width = 800   # 가로 위치
-board_height = 450   # 세로 위치
-
 # 버튼 확인
 if __name__ == '__main__':
     
     while True:
         events = pygame.event.get()
-        
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                break
-            if event.type == pygame.VIDEORESIZE:
-                pass
 
         if (size != screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = screen.get_size() #변경된 사이즈
@@ -107,17 +97,27 @@ if __name__ == '__main__':
         image1 = pygame.transform.scale(image1, (size[0],size[1])) 
         screen.blit(image1, [0,0]) 
 
+        board_width=changed_screen_size[0]
+        board_height=changed_screen_size[1]
+
         #                board_width, board_height, x_rate, y_rate, width_rate, height_rate, img=''):
-        button1 = button(100, 300, 1, 1, 1.5, 1, "Image/catthema/map1.png")
-        button2 = button(100, 300, 3, 1, 1.5, 1, "Image/catthema/map2.png")
-        button3 = button(100, 300, 5, 1, 1.5, 1, "Image/catthema/map3.png")
+        button1 = button(board_width, board_height, 0.2, 0.3, 0.2, 0.2, "Image/catthema/map1.png")
+        button2 = button(board_width, board_height, 0.5, 0.3, 0.2, 0.2, "Image/catthema/map2.png")
+        button3 = button(board_width, board_height, 0.8, 0.3, 0.2, 0.2, "Image/catthema/map3.png")
         #                     (screen, self.image, self.x, self.y, self.width, self.height)
 
-        # 화면 비율에 맞춰서 크기 바뀌도록 수정해야함.0509
+        # 
         button1.draw(screen, (0, 0, 0))
         button2.draw(screen, (0, 0, 0))
         button3.draw(screen, (0, 0, 0))
-        pos = pygame.mouse.get_pos()
-        button1.isOver(pos)
 
-        pygame.display.flip()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                break
+            pos = pygame.mouse.get_pos()
+
+            if event.type == pygame.MOUSEMOTION: # 마우스 모션이랑 겹치면
+                if button1.isOver(pos):
+                    StageSelectMenu(screen).show()  # 게임 이동
+                pygame.display.update()
