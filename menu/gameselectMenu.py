@@ -2,6 +2,14 @@ from button import *
 import pygame
 import pygame_menu
 from menu.CharacterSelectMenu import *
+import pygame
+import pygame_menu
+from data.CharacterDataManager import *
+from data.Stage import Stage
+from data.StageDataManager import *
+from game.StageGame import StageGame
+from pygame_menu.utils import make_surface
+from menu.CharacterSelectMenu import *
 
 class gameselectMenu:
 
@@ -17,22 +25,26 @@ class gameselectMenu:
         self.map2 = button(board_width, board_height, 0.5, 0.3, 0.2, 0.2, "Image/catthema/map2.png")
         self.map3 = button(board_width, board_height, 0.8, 0.3, 0.2, 0.2, "Image/catthema/map3.png")
 
-        self.level1_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level2_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level3_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
-
-        self.level1_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level2_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level3_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
-
-        self.level1_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level2_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
-        self.level3_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
-
-        self.buttonlist=[button1,button2,button3,level1_map1,level2_map1,level3_map1,level1_map2,level2_map2,
-        level3_map2,level1_map3,level2_map3,level3_map3]
+        self.level_map1 = button(board_width, board_height, 0.2, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.level_map2 = button(board_width, board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.level_map3 = button(board_width, board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        
+        self.buttonlist=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3]
 
         self.stage_level = 1
+
+        self.stage_data = StageDataManager.loadStageData()
+        self.selectedChapter = [list(self.stage_data["chapter"].keys())[0]]
+        self.selectedStage = ["1"]
+    
+    #Selector 위젯에는 아이템을 튜플 형태로 넣어줘야하므로 변환 함수
+    def toTuple(self,str):
+        return (str,str)
+
+    def start_stage_game(self):
+        # 현재 selector가 선택하고 있는 항목을 get_value로 가져오고, 그것의 키를 [0][0]을 통해 가져온다.
+        selected_chapter = self.chapterSelector.get_value()[0][0]
+        selected_stage = self.stageSelector.get_value()[0][0]
 
     def show(self,screen):
         # 버튼 draw
@@ -43,124 +55,43 @@ class gameselectMenu:
 
         if event.type == pygame.MOUSEMOTION:
 
-            if self.map1.isOver(pos): # map1
-                self.map1.image="Image/.png"
-                self.map1.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.map2.isOver(pos): # map2
-                self.map2.image="Image/.png"
-                self.map2.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.map3.isOver(pos): # map3
-                self.map3.image="Image/.png"
-                self.map3.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level1_map1.isOver(pos): # level 1일때, 마우스 위치하면 이미지 바뀜.
-                self.level1_map1.image="Image/.png"
-                self.level1_map1.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level2_map1.isOver(pos): # level 2일때, 마우스 위치하면 이미지 바뀜.
-                self.level2_map1.image="Image/.png"
-                self.level2_map1.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level3_map1.isOver(pos): # level 3일때, 마우스 위치하면 이미지 바뀜.
-                self.level3_map1.image="Image/.png"
-                self.level3_map1.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level1_map2.isOver(pos): # level 1일때, 마우스 위치하면 이미지 바뀜.
-                self.level1_map2.image="Image/.png"
-                self.level1_map2.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level2_map2.isOver(pos): # level 2일때, 마우스 위치하면 이미지 바뀜.
-                self.level2_map2.image="Image/.png"
-                self.level2_map2.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level3_map2.isOver(pos): # level 3일때, 마우스 위치하면 이미지 바뀜.
-                self.level3_map2.image="Image/.png"
-                self.level3_map2.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level1_map3.isOver(pos): # level 1일때, 마우스 위치하면 이미지 바뀜.
-                self.level1_map3.image="Image/.png"
-                self.level1_map3.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level2_map3.isOver(pos): # level 2일때, 마우스 위치하면 이미지 바뀜.
-                self.level2_map3.image="Image/.png"
-                self.level2_map3.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-            if self.level3_map3.isOver(pos): # level 3일때, 마우스 위치하면 이미지 바뀜.
-                self.level3_map3.image="Image/.png"
-                self.level3_map3.draw(screen, (0, 0, 0))
-            pygame.display.update()
-
-        elif event.type == pygame.MOUSEBUTTONDOWN:
-
             if self.map1.isOver(pos):
-                self.stage_level
+                self.map1.image="Image/catthema/map1_dark.png"
+                self.map1.draw(screen(0,0,0))
             pygame.display.update()
 
             if self.map2.isOver(pos):
-                self.stage_level
+                self.map2.image="Image/catthema/map2_dark.png"
+                self.map2.draw(screen(0,0,0))
             pygame.display.update()
 
             if self.map3.isOver(pos):
-                self.stage_level
+                self.map3.image="Image/catthema/map3_dark.png"
+                self.map3.draw(screen(0,0,0))
             pygame.display.update()
 
-            if self.level1_map1.isOver(pos):
-                self.level1_map1.image="Image/Catus1.png" # 2로
-                self.stage_level=2 # stage 변경
-            pygame.display.update()
+        if event.type == pygame.MOUSEBUTTONDOWN:
 
-            if self.level2_map1.isOver(pos):
-                self.level2_map1.image="Image/Catus1.png" # 2로
-                self.stage_level=3 # stage 변경
-            pygame.display.update()
+            if self.level_map1.isOver(pos):
+                if self.stage_level == 1 :
+                    self.level_map1.image= "Image/catthema/level2.png"
+                    self.stage_level = 2
+                    self.selectedStage = ["2"]
+                pygame.display.update()
 
-            if self.level3_map1.isOver(pos):
-                self.level3_map1.image="Image/Catus1.png" # 2로
-                self.stage_level=1 # stage 변경
-            pygame.display.update()
+                if self.stage_level == 2 :
+                    self.level_map1.image= "Image/catthema/level3.png"
+                    self.stage_level = 3
+                    self.selectedStage = ["3"]
+                pygame.display.update()
 
-            if self.level1_map2.isOver(pos):
-                self.level1_map2.image="Image/Catus1.png" # 2로
-                self.stage_level=2 # stage 변경
-            pygame.display.update()
+                if self.stage_level == 3 :
+                    self.level_map1.image= "Image/catthema/level1.png"
+                    self.stage_level = 1
+                    self.selectedStage = ["1"]
+                pygame.display.update()
 
-            if self.level2_map2.isOver(pos):
-                self.level2_map2.image="Image/Catus1.png" # 2로
-                self.stage_level=3 # stage 변경
-            pygame.display.update()
 
-            if self.level3_map2.isOver(pos):
-                self.level3_map2.image="Image/Catus1.png" # 2로
-                self.stage_level=1 # stage 변경
-            pygame.display.update()
-
-            if self.level1_map3.isOver(pos):
-                self.level1_map3.image="Image/Catus1.png" # 2로
-                self.stage_level=2 # stage 변경
-            pygame.display.update()
-
-            if self.level2_map3.isOver(pos):
-                self.level2_map3.image="Image/Catus1.png" # 2로
-                self.stage_level=3 # stage 변경
-            pygame.display.update()
-
-            if self.level3_map3.isOver(pos):
-                self.level3_map3.image="Image/Catus1.png" # 2로
-                self.stage_level=1 # stage 변경
-            pygame.display.update()
 
 
 
