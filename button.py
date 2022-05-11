@@ -75,13 +75,6 @@ if __name__ == '__main__':
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             size = window_size
 
-        
-        #방향키 설정
-        direction = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
-                    pygame.K_a: (-2, 0), pygame.K_d: (2, 0)}
-
-        direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
-                    pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)}
 
 
         # 화면에 그리기
@@ -107,9 +100,15 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 pygame.quit()
                 break
+
             pos = pygame.mouse.get_pos()
 
             if event.type == pygame.MOUSEMOTION: # 마우스 모션이랑 겹치면
                 if button1.isOver(pos):
-                    StageSelectMenu(screen).show()  # 게임 이동
+                    button1.image='Image/catthema/map2.png'
+                    button1.draw(screen, (0, 0, 0))
+                pygame.display.update()
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if button1.isOver(pos):
+                    StageSelectMenu(screen).show()
                 pygame.display.update()
