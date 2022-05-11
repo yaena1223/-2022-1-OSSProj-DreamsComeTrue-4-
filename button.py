@@ -3,6 +3,7 @@ import pygame_menu
 from pygame.locals import *
 from data.Defs import *
 from menu.StageSelectMenu import *
+from game.StageGame import StageGame
 
 class button():   # 버튼 class
    
@@ -75,8 +76,6 @@ if __name__ == '__main__':
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             size = window_size
 
-
-
         # 화면에 그리기
         image1 = pygame.image.load("Image/Login.png") 
         image1 = pygame.transform.scale(image1, (size[0],size[1])) 
@@ -85,16 +84,27 @@ if __name__ == '__main__':
         board_width=changed_screen_size[0]
         board_height=changed_screen_size[1]
 
-        #                board_width, board_height, x_rate, y_rate, width_rate, height_rate, img=''):
         button1 = button(board_width, board_height, 0.2, 0.3, 0.2, 0.2, "Image/catthema/map1.png")
         button2 = button(board_width, board_height, 0.5, 0.3, 0.2, 0.2, "Image/catthema/map2.png")
         button3 = button(board_width, board_height, 0.8, 0.3, 0.2, 0.2, "Image/catthema/map3.png")
-        #                     (screen, self.image, self.x, self.y, self.width, self.height)
+       
+        level1_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level2_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level3_map1 = button(board_width, board_height, 0.2, 0.5, 0.1, 0.1, "Image/Catus1.png")
 
+        level1_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level2_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level3_map2 = button(board_width, board_height, 0.5, 0.5, 0.1, 0.1, "Image/Catus1.png")
+
+        level1_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level2_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
+        level3_map3 = button(board_width, board_height, 0.8, 0.5, 0.1, 0.1, "Image/Catus1.png")
+
+        buttonlist=[button1,button2,button3,level1_map1,level2_map1,level3_map1,level1_map2,level2_map2,
+        level3_map2,level1_map3,level2_map3,level3_map3]
         # 
-        button1.draw(screen, (0, 0, 0))
-        button2.draw(screen, (0, 0, 0))
-        button3.draw(screen, (0, 0, 0))
+        for but in enumerate(buttonlist):
+            but[1].draw(screen,(0,0,0))
 
         for event in events:
             if event.type == pygame.QUIT:
@@ -103,12 +113,14 @@ if __name__ == '__main__':
 
             pos = pygame.mouse.get_pos()
 
-            if event.type == pygame.MOUSEMOTION: # 마우스 모션이랑 겹치면
+            if event.type == pygame.MOUSEMOTION:
                 if button1.isOver(pos):
                     button1.image='Image/catthema/map2.png'
                     button1.draw(screen, (0, 0, 0))
                 pygame.display.update()
+                
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button1.isOver(pos):
+                    #StageGame
                     StageSelectMenu(screen).show()
                 pygame.display.update()
