@@ -31,14 +31,21 @@ class gameselectMenu:
         
         self.buttonlist=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3]
 
-        self.stage_level = "1"
+        self.stage_level_map1 = "1"
+        self.stage_level_map2 = "1"
+        self.stage_level_map3 = "1"
 
         self.stage_data = StageDataManager.loadStageData() # 스테이지 데이터
         self.character_data = CharacterDataManager.load() # 캐릭터 데이터
         self.selectedChapter = [list(self.stage_data["chapter"].keys())[0]] 
         self.selectedStage = ["1"]
 
+        self.stay=0
+
     def show(self,screen): 
+
+        screen.fill((200, 200, 0))
+
         # 버튼 그리기
         for button in enumerate(self.buttonlist):
             button[1].draw(screen,(0,0,0))
@@ -69,59 +76,43 @@ class gameselectMenu:
                 pygame.display.update()
 
                 if self.level_map1.isOver(pos):
-                    print("")
+                    self.stay=0
                 pygame.display.update()
 
-                if self.level_map2.isOver(pos):
-                    self.level_map2.draw(screen,(0,0,0))
-                pygame.display.update()
+            if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
 
-                if self.level_map3.isOver(pos):
-                    self.level_map3.draw(screen,(0,0,0))
-                pygame.display.update()
-
-
-            if event.type == pygame.MOUSEBUTTONDOWN: # 마우스 클릭
-
-                if self.map1.isOver(pos):
-                    self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level])
+                if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                    self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
                     StageGame(self.character_data,self.character_data[0],self.stage_map).main()
                 pygame.display.update()
 
-                if self.stage_level == "1":
-                    if self.level_map1.isOver(pos):
-                        self.level_map1.image= "Image/catthema/level2.png"
-                        self.level_map1.draw(screen,(0,0,0))
-                        self.stage_level = "2" # 바뀐 레벨로 저장.
-                        self.selectedStage = ["2"]
-                    pygame.display.update()
+                if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                    self.stage_map=Stage(self.stage_data["chapter"]["Night view"][self.stage_level_map2])
+                    StageGame(self.character_data,self.character_data[0],self.stage_map).main()
+                pygame.display.update()
 
-                # if self.level_map1.isOver(pos): # 레벨 바꿈
-                #     if self.stage_level == "1" :
-                #         self.level_map1.image= "Image/catthema/level2.png"
-                #         self.level_map1.draw(screen,(0,0,0))
-                #         self.stage_level = "2" # 바뀐 레벨로 저장.
+                if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                    self.stage_map=Stage(self.stage_data["chapter"]["Namsan"][self.stage_level_map3])
+                    StageGame(self.character_data,self.character_data[0],self.stage_map).main()
+                pygame.display.update()
+
+                # if self.level_map1.isOver(pos): # 마우스 클릭하면 
+                    
+                #     if  self.stage_level_map1 == "1": # 스테이지 레벨이 1 일때,
+                #         self.level_map1.image= "Image/catthema/level2.png" # 이미지 바꾸기
+                #         self.level_map1.draw(screen,(0,0,0)) # 바뀐 이미지로 그리기
+                #         self.stage_level_map1 = "2" # 바뀐 레벨로 저장.
                 #         self.selectedStage = ["2"]
+                #         print(self.stage_level)
                 #     pygame.display.update()
 
-                #     if self.stage_level == "2" :
-                #         self.level_map1.image= "Image/catthema/level3.png"
-                #         self.level_map1.draw(screen,(0,0,0))
-                #         self.stage_level = "3"
+                # if self.level_map1.isOver(pos): # 마우스 클릭하면
+
+                #     if self.stage_level == "2": # 스테이지 레벨이 1 일때,
+                #         self.level_map1.image= "Image/catthema/level3.png" # 이미지 바꾸기
+                #         self.level_map1.draw(screen,(0,0,0)) # 바뀐 이미지로 그리기
+                #         self.stage_level = "3" # 바뀐 레벨로 저장.
                 #         self.selectedStage = ["3"]
+                #         print(self.stage_level)
                 #     pygame.display.update()
 
-                #     if self.stage_level == "3" :
-                #         self.level_map1.image= "Image/catthema/level1.png"
-                #         self.level_map1.draw(screen,(0,0,0))
-                #         self.stage_level = "1"
-                #         self.selectedStage = ["1"]
-                #     pygame.display.update()
-
-
-
-
-
-
-        
-        
