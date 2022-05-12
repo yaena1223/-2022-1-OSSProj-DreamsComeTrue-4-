@@ -12,7 +12,6 @@ from pygame_menu.widgets.core.widget import Widget
 
 from menu.LeaderBoardScrollMenu import *
 
-
 # 저자 및 라이선스 정보 확인 화면  
 class About:
     def __init__(self,screen):
@@ -48,15 +47,21 @@ class About:
             self.authors.append(item)
         self.frame_v.pack(self.menu.add.vertical_margin(20))
         self.frame_v.pack(self.menu.add.button("   - OPEN SOURCE -   ", selection_effect=None), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.vertical_margin(20))
+        self.frame_v.pack(self.menu.add.label("<Images>", selectable=False, font_size=22), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.label("All images created by our team(Dreams Come True)", selectable=False, font_size=15), ALIGN_CENTER)
+
         # Defs 파일의 Default 클래스의 about 키값에 해당되는 모든 스트링 값을 가져와 화면에 출력
         for title, val in Default.about.value["open_source"].items():
+
             label = self.frame_v.pack(self.menu.add.label("< "+title+" >", selectable=False, font_size=22), ALIGN_CENTER)
             self.sources.append(label)
             for key, value in val.items():
                 item = self.frame_v.pack(self.menu.add.button(key, self.open_link, value, font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
                 self.sources.append(item)
-            self.frame_v.pack(self.menu.add.vertical_margin(20))
 
+            self.frame_v.pack(self.menu.add.vertical_margin(20))
+        
         self.frame_v.pack(self.menu.add.label("""MIT License
 
 Copyright (c) 2021 CSID DGU
@@ -104,7 +109,7 @@ SOFTWARE.""",font_size=13),ALIGN_CENTER)
         self.frame_v.pack(self.menu.add.vertical_margin(30))
 
         self.frame_v.pack(self.menu.add.label("< "+"OUR CODE"+" >", selectable=False, font_size=22), ALIGN_CENTER)
-        self.frame_v.pack(self.menu.add.button("CSID-DGU/2021-2-OSSProj-PlusAlpha-9", self.open_link, "https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9", font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
+        self.frame_v.pack(self.menu.add.button("CSID-DGU/2022-1-OSSProj-DreamsComeTrue-4", self.open_link, "https://github.com/CSID-DGU/2022-1-OSSProj-DreamsComeTrue-4", font_size=20, selection_color=Color.BLUE.value, ), ALIGN_CENTER)
         
         self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)

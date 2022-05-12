@@ -2,6 +2,8 @@ import enum
 import math
 from sys import version
 
+class User:
+    user_id = ""
 
 class Images(enum.Enum):
     login = "./Image/Login.png"
@@ -268,20 +270,12 @@ class Default(enum.Enum):
     }
     about = {
         "authors": [
-            "Jibmin Jung",
-            "Heesu Ju", 
-            "Seyeong Lee",
+            "Yaena Lee",
+            "Mingyeong Jung", 
+            "Dahee Choi",
         ],
         "open_source": {
-            "IMAGES":{
-                "MillionthVector CC BY 4.0": "http://millionthvector.blogspot.com/p/free-sprites.html",
-                "You're Perfect Studio CC0 1.0":"https://opengameart.org/content/space-shoter-crosshairs",
-                "bevouliin.com CC0 1.0":"https://opengameart.org/content/shining-coin-shining-health-shining-power-up-sprite-sheets",
-                "Felis Chaus CC0 1.0":"https://opengameart.org/content/fire-explosion",
-                "9KeyStudio CC0 1.0":"https://opengameart.org/content/pixel-art-explosion-animation",
-                "Icons made by Freepik":'https://www.freepik.com',
-                "Flaticon":"https://www.flaticon.com/"
-            },
+
             "SOUNDS":{
                 "MATRIXXX_ CC0 1.0": "https://freesound.org/people/MATRIXXX_/sounds/441373/",
                 "simoneyoh3998 CC0 1.0": "https://freesound.org/people/simoneyoh3998/sounds/500673/",
@@ -291,7 +285,7 @@ class Default(enum.Enum):
             },
             "BASE CODE":{
                 "CSID-DGU/2021-1-OSSPC-MUHIRYO-4":"https://github.com/CSID-DGU/2021-1-OSSPC-MUHIRYO-4.git",
-                "TimurKhayrullin/Ultimate-Antivirus":"https://github.com/TimurKhayrullin/Ultimate-Antivirus"
+                "CSID-DGU/2021-2-OSSProj-PlusAlpha-9":"https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9"
             }
         }
     }
