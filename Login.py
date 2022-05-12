@@ -9,6 +9,7 @@ import pymysql
 from Main import *
 from data.database_user import *
 from data.Defs import *
+from data.Defs import User
 
 class Display:
     w_init = 1/2
@@ -29,12 +30,12 @@ Default.game.value["size"]["x"] = size[0] #Default는 Defs.py에 선언되어 �
 Default.game.value["size"]["y"] = size[1]
 font_size = 30
 class Login:
+    id = ''
+    password = ''
+    database = Database()
+    coin = 0
+    char = 1
     def __init__(self):
-        self.id = ''
-        self.password = ''
-        self.database = Database()
-        self.coin = 0
-        self.char = 1
         menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.login.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL) #메뉴 이미지, Images는 Defs.py에 선언되어 있는 클래스명
         self.mytheme = pygame_menu.Theme(
             widget_font = pygame_menu.font.FONT_8BIT,
@@ -65,8 +66,8 @@ class Login:
     def login_page(self): ##로그인 페이지
         self.menu.clear()
         #login.mytheme.widget_background_color = (0,0,0,0) #투명 배경
-        self.menu.add.text_input('ID : ', maxchar=100, onreturn=self.get_id)
-        self.menu.add.text_input('PASSWORD : ', maxchar=100, onreturn=self.get_pw,password=True, password_char='*')
+        self.menu.add.text_input('ID : ', maxchar=100, onchange=self.get_id)
+        self.menu.add.text_input('PASSWORD : ', maxchar=100, onchange=self.get_pw,password=True, password_char='*')
         b1 = self.menu.add.button('  Login  ', self.login)
         b2 = self.menu.add.button('  Back  ', self.first_page)
         b3 = self.menu.add.button('  Quit  ', pygame_menu.events.EXIT)
@@ -78,6 +79,8 @@ class Login:
             if self.database.id_not_exists(self.id) is False:
                 if self.password and self.database.match_idpw(self.id, self.password):
                     print("로그인 성공")
+                    print(self.id)
+                    User.user_id = self.id
                     self.login_success()
                     # 계정의 coin,char 값 가져오기 => 아직 안함. 수정 필요
                     '''coin=self.database.load_exp_data(self.id) #로그인 성공하면 경험치 데이터베이스에서 받아오기
@@ -89,6 +92,8 @@ class Login:
                     elif char==3:
                         Var.lst = Var.char3_lst
                     Var.user_id = self.id '''
+                    
+                   
 
                 else:
                     print("비밀번호 틀림")
@@ -118,8 +123,10 @@ class Login:
         self.menu.add.button('  back  ', self.login_page)
 
     #아이디 input값으로 변경
+
     def get_id(self,value):
         self.id = value
+        
 
     #비밀번호 입력값으로 변경
     def get_pw(self,value):
@@ -149,6 +156,7 @@ class Login:
 
     def login_success(self):
         Main(screen).show()
+       
 
     def signup_fail(self):
         self.menu.clear()

@@ -2,6 +2,8 @@ import enum
 import math
 from sys import version
 
+class User:
+    user_id = ""
 
 class Images(enum.Enum):
     login = "./Image/Login.png"

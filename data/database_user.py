@@ -37,7 +37,7 @@ class Database:
         if(input_password == data['user_password'].encode('utf-8')):
             check_password = True
         print(input_password, "입력값") #이 방식을 사용할 경우, 껐다 키면 salt값이 변경되어 비밀번호가 틀렸다고 나옴''' 
-        print( data['user_password'].encode('utf-8'), "데이터베이스")
+        #print( data['user_password'].encode('utf-8'), "데이터베이스")
         return check_password
 
     def add_id(self, user_id): #아이디 추가
