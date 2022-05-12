@@ -10,6 +10,7 @@ from Main import *
 from data.database_user import *
 from data.Defs import *
 from data.Defs import User
+from menu.gameselectMenu import gameselectMenu
 
 class Display:
     w_init = 1/2
@@ -155,7 +156,11 @@ class Login:
 
 
     def login_success(self):
-        Main(screen).show()
+        #Main(screen).show()
+        if __name__ == '__main__':
+            while True:
+                gameselectMenu(screen).show(screen)
+                pygame.display.flip()
        
 
     def signup_fail(self):
