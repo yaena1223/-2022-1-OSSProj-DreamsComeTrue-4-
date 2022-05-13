@@ -18,9 +18,17 @@ class LeaderBoardMenu:
         self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         self.mytheme.title_font_color = Color.WHITE.value
+        self.mytheme.title_font = pygame_menu.font.FONT_BEBAS
         self.mytheme.widget_font_size = self.font_size
-        self.menu = pygame_menu.Menu('LeaderBoard', self.size[0], self.size[1],
+        self.mytheme.title_background_color = (0,100,162)
+        self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
+        self.mytheme.widget_font = pygame_menu.font.FONT_BEBAS
+
+        
+        self.menu = pygame_menu.Menu('Rank', self.size[0], self.size[1],
                             theme=self.mytheme)
+
+
         # 페이지화를 위한 변수
         self.tens = 0
 
@@ -31,7 +39,6 @@ class LeaderBoardMenu:
     # 리더보드 메인 메뉴
     def rank(self):
         self.menu.clear()
-        self.menu.add.label("   - RANKING -   ", selectable=False)
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
         self.menu.add.button('     rank search     ', self.show_current_rank_search)

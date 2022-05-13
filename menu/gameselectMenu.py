@@ -16,7 +16,7 @@ from menu.MypageMenu import *
 from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
 
-class gameselectMenu:
+class GameselectMenu:
     def __init__(self,screen):
         
         self.size = screen.get_size()
