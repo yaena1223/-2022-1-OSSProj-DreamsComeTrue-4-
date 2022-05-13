@@ -5,12 +5,11 @@ from turtle import color
 from menu.DifficultySelectMenu import *
 import pygame
 import pygame_menu
-import pymysql
-from Main import *
 from data.database_user import *
 from data.Defs import *
 from data.Defs import User
-from menu.gameselectMenu import gameselectMenu
+from menu.gameselectMenu import *
+from Main import *
 
 class Display:
     w_init = 1/2

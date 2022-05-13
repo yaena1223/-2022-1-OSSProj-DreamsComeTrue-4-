@@ -14,15 +14,21 @@ from menu.DifficultySelectMenu import *
 from menu.HelpMenu import HelpMenu
 from menu.LeaderBoardMenu import *
 from menu.StageSelectMenu import *
+#from menu.MypageMenu import *
 from object.Character import *
 from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.utils import make_surface
 from pygame_menu.widgets.core.widget import Widget
-from menu.Mypage import *
+
 
 
 class Main:
-    mytheme = pygame_menu.Theme(
+    def __init__(self,screen):
+        #pygame.init()
+        self.size = screen.get_size()
+        self.screen = screen
+        
+        self.mytheme = pygame_menu.Theme(
             widget_font = pygame_menu.font.FONT_8BIT,
             widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
             title_font = pygame_menu.font.FONT_BEBAS,
@@ -32,17 +38,11 @@ class Main:
             title_font_color = (255,255,255),
             title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
         )
-    def __init__(self,screen):
-        #pygame.init()
-        self.size = screen.get_size()
-        self.screen = screen
-        
-        
         menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/login.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        Main.mytheme.background_color = menu_image 
+        self.mytheme.background_color = menu_image 
         
         self.menu = pygame_menu.Menu('Main', self.size[0], self.size[1],
-                            theme=Main.mytheme)
+                            theme=self.mytheme)
 
 
 
@@ -60,8 +60,8 @@ class Main:
         self.menu.add.vertical_margin(10)
         self.menu.add.button('Rank',self.show_rank)
         self.menu.add.vertical_margin(10)
-        self.menu.add.button('Mypage',self.show_mypage)
-        self.menu.add.vertical_margin(10)
+        #self.menu.add.button('Mypage',self.show_mypage)
+        #self.menu.add.vertical_margin(10)
         self.menu.add.button('Quit',pygame_menu.events.EXIT)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
@@ -69,7 +69,7 @@ class Main:
             self.menu.clear()
             self.menu.add.button('Infinite Game',self.show_difficulty_select_menu)
             self.menu.add.button('Stage Game',self.show_stage_select_menu)
-            self.menu.add.button('Mypage',self.show_mypage)
+            #self.menu.add.button('Mypage',self.show_mypage)
             self.menu.add.button('Back', self.back)
             self.menu.add.button('Quit', pygame_menu.events.EXIT)
 
@@ -107,8 +107,8 @@ class Main:
 
 
     # 마이페이지 보여주기 
-    def show_mypage(self):
-        Mypage(self.screen).show()
+    #def show_mypage(self):
+   #     Mypage(self.screen).show()
         
 
     def check_resize(self):
@@ -129,7 +129,7 @@ class Main:
             print(f'New menu size: {self.menu.get_size()}')  
             font_size = new_w * 30 //720
             #print(font_size)
-            Main.mytheme.widget_font_size = font_size            
+            self.mytheme.widget_font_size = font_size            
              
 
 
