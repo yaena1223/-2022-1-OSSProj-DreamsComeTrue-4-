@@ -14,6 +14,7 @@ from menu.LeaderBoardScrollMenu import *
 
 class Mypage:
     def __init__(self,screen):
+        self.database = Database()
         self.size = screen.get_size()
         self.screen = screen
         self.mytheme = pygame_menu.Theme(
@@ -40,8 +41,10 @@ class Mypage:
     def show(self):
         self.menu.clear()
         self.menu.add.vertical_margin(40)
-        self.menu.add.label(User.user_id)
+        self.menu.add.label("My ID : %s "%User.user_id)
+        self.menu.add.label("My Character : cat%d" % (self.database.show_mychar()+1)) #저장된 값은 인덱스라서 +1을 해줌
         self.menu.add.button("back", self.to_menu)
+        
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
