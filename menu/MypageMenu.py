@@ -19,15 +19,17 @@ class Mypage:
         self.screen = screen
         self.mytheme = pygame_menu.Theme(
                 widget_font = pygame_menu.font.FONT_BEBAS,
-                widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
+                #widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
                 title_font = pygame_menu.font.FONT_BEBAS,
                 selection_color = (0,0,0), #선택됐을때 글씨색 설정
-                widget_font_color = (255,255,255), #글씨색 설정
+                widget_font_color = (0,0,0), #글씨색 설정
                 title_background_color = (0,100,162),
                 title_font_color = (255,255,255),
+                background_color = (255,255,255),
                 title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
             )
 
+        
         self.menu = pygame_menu.Menu('Mypage', self.size[0], self.size[1],
                             theme=self.mytheme)
 
@@ -40,9 +42,18 @@ class Mypage:
     # 화면 표시
     def show(self):
         self.menu.clear()
-        self.menu.add.vertical_margin(40)
         self.menu.add.label("My ID : %s "%User.user_id)
-        self.menu.add.label("My Character : cat%d" % (self.database.show_mychar()+1)) #저장된 값은 인덱스라서 +1을 해줌
+        self.menu.add.vertical_margin(10)
+        self.charidx = self.database.show_mychar()
+        self.menu.add.label("My Character : cat%d" % (self.charidx+1)) #저장된 값은 인덱스라서 +1을 해줌
+        if self.charidx == 0:
+            self.menu.add.image(image_path=Images.cat1.value)
+        if self.charidx == 1:
+            self.menu.add.image(image_path=Images.cat2.value)
+        if self.charidx == 2:
+            self.menu.add.image(image_path=Images.cat3.value)
+        if self.charidx == 3:
+            self.menu.add.image(image_path=Images.cat4.value)
         self.menu.add.button("back", self.to_menu)
         
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
