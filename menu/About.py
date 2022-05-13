@@ -17,12 +17,13 @@ class About:
     def __init__(self,screen):
         self.size = screen.get_size()
         self.screen = screen
-
+        font_size = self.size[0] * 30 // 720
         self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.about.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         self.mytheme = pygame_menu.themes.THEME_DEFAULT.copy()
         self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         self.mytheme.title_font_color = Color.WHITE.value
+        self.mytheme.widget_font_size = font_size
         self.authors = []
         self.sources = []
         self.author_is_hidden = False
@@ -131,6 +132,8 @@ SOFTWARE.""",font_size=13),ALIGN_CENTER)
             self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
+            font_size = new_w * 30//720
+            self.mytheme.widget_font_size = font_size   
 
     # 항목 클릭 시 키값에 해당하는 링크를 기본 웹 브라우저에서 연다
     def open_link(self, url):

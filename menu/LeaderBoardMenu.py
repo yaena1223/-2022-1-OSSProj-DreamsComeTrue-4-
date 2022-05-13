@@ -13,10 +13,12 @@ class LeaderBoardMenu:
     def __init__(self,screen):
         self.size = screen.get_size()
         self.screen = screen
+        self.font_size = self.size[0] * 30//720
         self.mytheme = pygame_menu.themes.THEME_DEFAULT.copy()
         self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         self.mytheme.title_font_color = Color.WHITE.value
+        self.mytheme.widget_font_size = self.font_size
         self.menu = pygame_menu.Menu('LeaderBoard', self.size[0], self.size[1],
                             theme=self.mytheme)
         # 페이지화를 위한 변수
@@ -233,3 +235,5 @@ class LeaderBoardMenu:
             self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
+            font_size = new_w * 30//720
+            self.mytheme.widget_font_size = font_size   
