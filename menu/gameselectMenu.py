@@ -12,8 +12,9 @@ from data.Rank import Rank
 from data.Defs import *
 from menu.StageSelectMenu import *
 from menu.LeaderBoardMenu import *
-from menu.Mypage2 import *
-
+from menu.MypageMenu import *
+from menu.CharacterSelectMenu import *
+from menu.CharacterStoreMenu import *
 
 class gameselectMenu:
     def __init__(self,screen):
@@ -181,6 +182,11 @@ class gameselectMenu:
 
                 if self.rankpage.isOver(pos):
                     LeaderBoardMenu(self.screen).rank()
+
+                if self.store.isOver(pos):
+                    CharacterStoreMenu(self.screen).show()
+                
+
 
                 
                     
