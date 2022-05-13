@@ -4,6 +4,8 @@ from sys import version
 
 class User:
     user_id = ""
+    coin = 0
+    character = 0
 
 class Images(enum.Enum):
     login = "./Image/Login.png"

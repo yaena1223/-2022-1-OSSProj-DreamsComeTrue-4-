@@ -91,8 +91,8 @@ class Login:
                     elif char==2:
                         Var.lst = Var.char2_lst
                     elif char==3:
-                        Var.lst = Var.char3_lst
-                    Var.user_id = self.id '''
+                        Var.lst = Var.char3_lst'''
+
                     
                    
 
