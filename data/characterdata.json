@@ -26,7 +26,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 200,
             "fire_interval": 0.6,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "cat3",
@@ -40,7 +40,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 350,
             "fire_interval": 0.8,
-            "is_unlocked": true
+            "is_unlocked": false
         },
         {
             "name": "cat4",
@@ -54,7 +54,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 300,
             "fire_interval": 1.3,
-            "is_unlocked": true
+            "is_unlocked": false
         }
     ]
 }
