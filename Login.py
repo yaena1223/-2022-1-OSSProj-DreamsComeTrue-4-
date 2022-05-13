@@ -156,7 +156,7 @@ class Login:
 
     def login_success(self):
         #Main(screen).show()
-        game=gameselectMenu(screen)
+        game=GameselectMenu(screen)
         if __name__ == '__main__':
             while True:
                 game.show(screen)

@@ -32,6 +32,7 @@ class CharacterStoreMenu(pygame_menu.menu.Menu):
         mytheme.widget_font_color = (0,0,0) #글씨색 설정
         mytheme.title_background_color = (0,100,162)
         mytheme.title_font_color = (255,255,255)
+        mytheme.widget_font = pygame_menu.font.FONT_BEBAS
         #mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
         mytheme.background_color = menu_image 
 

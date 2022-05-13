@@ -17,7 +17,7 @@ class Mypage:
         self.size = screen.get_size()
         self.screen = screen
         self.mytheme = pygame_menu.Theme(
-                widget_font = pygame_menu.font.FONT_8BIT,
+                widget_font = pygame_menu.font.FONT_BEBAS,
                 widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
                 title_font = pygame_menu.font.FONT_BEBAS,
                 selection_color = (0,0,0), #선택됐을때 글씨색 설정
