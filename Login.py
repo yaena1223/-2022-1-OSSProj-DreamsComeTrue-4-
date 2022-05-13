@@ -154,14 +154,14 @@ class Login:
         self.menu.add.button('  back  ', self.first_page)
         self.menu.add.button('  Quit   ', pygame_menu.events.EXIT)
 
-
     def login_success(self):
         #Main(screen).show()
+        game=gameselectMenu(screen)
         if __name__ == '__main__':
             while True:
-                gameselectMenu(screen).show(screen)
+                game.show(screen)
                 pygame.display.flip()
-       
+
 
     def signup_fail(self):
         self.menu.clear()
