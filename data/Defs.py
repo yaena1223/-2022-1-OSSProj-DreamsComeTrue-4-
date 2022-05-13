@@ -48,6 +48,11 @@ class Images(enum.Enum):
     info_items = "./Image/Info_items.png"
     info_controls = "./Image/Info_controls.jpg"
 
+    cat1 = "./Image/catthema/cat1_front.png"
+    cat2 = "./Image/catthema/cat2_front.png"
+    cat3 = "./Image/catthema/cat3_front.png"
+    cat4 = "./Image/catthema/cat4_front.png"
+
 class Scales(enum.Enum):
     large = (2, 2)
     default = (1, 1)
