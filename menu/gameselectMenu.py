@@ -8,8 +8,10 @@ from game.StageGame import StageGame
 from pygame_menu.utils import make_surface
 from menu.CharacterSelectMenu import *
 from pygame.locals import *
+from data.Rank import Rank
 from data.Defs import *
 from menu.StageSelectMenu import *
+from menu.LeaderBoardMenu import *
 
 class gameselectMenu:
 
@@ -29,7 +31,13 @@ class gameselectMenu:
         self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
         self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
         
-        self.buttonlist=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3]
+        self.rankpage = button(self.board_height,self.board_height,0.8,0.1,0.1,0.05,"Image/catthema/RANK.png")
+        self.mypage = button(self.board_height,self.board_height,0.5,0.1,0.1,0.05,"Image/catthema/MYPAGE.png")
+        self.gamemode = button(self.board_height,self.board_height,0.3,0.1,0.1,0.05,"Image/catthema/STAGE.png")
+        self.store = button(self.board_height,self.board_height,0.1,0.1,0.1,0.05,"Image/catthema/STORE.png")
+
+        self.buttonlist=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
+        self.rankpage,self.mypage,self.gamemode,self.store]
 
         self.stage_level_map1 = "1"
         self.stage_level_map2 = "1"
@@ -166,6 +174,9 @@ class gameselectMenu:
                         self.stage_level_map3 = "1" # 바뀐 레벨로 저장.
 
                 pygame.display.update()
+
+                if self.rankpage.isOver(pos):
+                    LeaderBoardMenu(self.screen).rank()
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
