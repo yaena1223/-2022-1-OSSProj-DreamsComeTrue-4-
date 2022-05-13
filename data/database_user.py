@@ -77,3 +77,13 @@ class Database:
         self.score_db.commit()
         curs.close()
     
+    def show_mychar(self):
+        self.id = User.user_id
+        self.char = User.character
+        curs = self.score_db.cursor()
+        sql = "SELECT user_id,user_character FROM users WHERE user_id=%s"
+        curs.execute(sql,self.id) #입력받은 id 서버로 전송
+        data = curs.fetchone()  #입력받은 id와 일치하는 행 하나 선택
+        curs.close()
+        check_char = data[1]
+        return check_char
