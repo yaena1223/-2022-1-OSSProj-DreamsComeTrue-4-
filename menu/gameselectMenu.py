@@ -12,9 +12,10 @@ from data.Rank import Rank
 from data.Defs import *
 from menu.StageSelectMenu import *
 from menu.LeaderBoardMenu import *
+from menu.Mypage2 import *
+
 
 class gameselectMenu:
-
     def __init__(self,screen):
         
         self.size = screen.get_size()
@@ -175,9 +176,14 @@ class gameselectMenu:
 
                 pygame.display.update()
 
+                if self.mypage.isOver(pos):
+                    Mypage(self.screen).show()
+
                 if self.rankpage.isOver(pos):
                     LeaderBoardMenu(self.screen).rank()
 
+                
+                    
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
