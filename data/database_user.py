@@ -1,7 +1,7 @@
 #드림즈컴츄르 추가 파일
 import pymysql
 import bcrypt
-
+from data.Defs import User
 class Database:
     def __init__(self):     
         self.score_db = pymysql.connect(
@@ -50,7 +50,7 @@ class Database:
 
     def add_pw(self, user_pw, user_id): #비밀번호 & coin 초기값 추가 * 캐릭터 초기값은 1로(캐릭터 숫자로 표현)
         initial_coin = 0 #가입시, 보유한 coin 0으로 설정
-        initial_character = 1
+        initial_character = 0
         hashed_pw = bcrypt.hashpw(user_pw.encode('utf-8'),bcrypt.gensalt()).decode('utf-8')
         #print(hashed_pw, "입력값")
         curs = self.score_db.cursor()
@@ -68,5 +68,12 @@ class Database:
         self.score_db.commit()
         curs.close()
 
-
+    def set_char(self):
+        self.id = User.user_id
+        self.char = User.character
+        curs = self.score_db.cursor()
+        sql = "UPDATE users SET user_character=%s WHERE user_id = %s"
+        curs.execute(sql,(self.char, self.id))
+        self.score_db.commit()
+        curs.close()
     
