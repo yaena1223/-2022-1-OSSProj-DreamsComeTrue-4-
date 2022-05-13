@@ -29,7 +29,7 @@ screen = pygame.display.set_mode(size,pygame.RESIZABLE) #창크기 조정 가능
 ww, wh= pygame.display.get_surface().get_size() 
 Default.game.value["size"]["x"] = size[0] #Default는 Defs.py에 선언되어 있는 클래스명
 Default.game.value["size"]["y"] = size[1]
-font_size = 30
+font_size = ww * 30 //720
 class Login:
     id = ''
     password = ''
@@ -47,9 +47,10 @@ class Login:
             title_background_color = (0,100,162),
             title_font_color = (255,255,255),
             title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
-            widget_font_size = 30
+
         )
         self.mytheme.background_color = menu_image
+        self.mytheme.widget_font_size = font_size
         self.menu = pygame_menu.Menu('DreamsComeTrue', ww,wh,theme=self.mytheme) #상단바 
 
 
