@@ -10,9 +10,6 @@ from data.database_user import Database
 from game.InfiniteGame import *
 from pygame_menu.locals import ALIGN_RIGHT
 from pygame_menu.utils import make_surface
-from typing import TYPE_CHECKING
-if TYPE_CHECKING:
-    from gameselectMenu import GameselectMenu
 
 # 캐릭터 선택 메뉴
 class CharacterStoreMenu:
@@ -48,20 +45,19 @@ class CharacterStoreMenu:
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def to_menu(self):
-        #game=GameselectMenu(self.screen)
-        #game.show(self.screen)
         self.menu.disable()
 
     #메뉴 구성하고 보이기
     def show(self):  
         #캐릭터 선택 메뉴 구성
         characters = []
+        front_image_path = [Images.cat1.value,Images.cat2.value, Images.cat3.value, Images.cat4.value]
         for idx in range(len(self.character_data)):
             characters.append((self.character_data[idx].name, idx))
         self.character_imgs = []
-        for idx in range(len(self.character_data)):       
+        for idx in range(len(front_image_path)):       
             default_image = pygame_menu.BaseImage(
-                image_path=self.character_data[idx].img_path
+                image_path=front_image_path[idx]
             ).scale(0.5, 0.5)
             self.character_imgs.append(default_image.copy())
         
@@ -100,6 +96,7 @@ class CharacterStoreMenu:
         self.menu.add.vertical_margin(10)
         self.menu.add.button("    BACK    ",self.to_menu)
         self.update_from_selection(int(self.character_selector.get_value()[0][1]))
+        self.mytheme.widget_background_color = (0,0,0,0)
 
     def select_character(self): #게임 시작 함수
 
@@ -109,9 +106,11 @@ class CharacterStoreMenu:
         #캐릭터가 열려있는지 확인
         if (self.character_data[selected_idx].is_unlocked): #캐릭터가 열려있다면
             User.character = selected_idx
-            print(User.character)
+            #print(User.character)
             database = Database()
             database.set_char()
+
+            
             
             
 
@@ -120,34 +119,31 @@ class CharacterStoreMenu:
             print("character locked")
             print(self.character_data[selected_idx].name)
             self.showCharactereLockedScreen(self.character_data[selected_idx].name)
-            print(User.character)
+            #print(User.character)
+
             
 
 
 
     # 잠긴 캐릭터 선택 시 보여지는 화면
-    def showCharactereLockedScreen(self, character):
-        characterlocked_theme = pygame_menu.themes.THEME_DARK.copy()
-        characterlocked_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
-        characterlocked_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        characterlocked_theme.title_font_color = Color.WHITE.value
-        self.size = self.screen.get_size()
-        self.menu = pygame_menu.Menu('Character Locked!', self.size[0], self.size[1],
-                            theme=characterlocked_theme)
+    def showCharactereLockedScreen(self, character):       
+        self.menu.clear()
         if(character == 'cat2'):
-            self.menu.add.image(Images.F5S1_locked.value, scale=Scales.default.value)
+            self.menu.add.image(Images.F5S1_locked.value)
         elif(character == 'cat3'):
-            self.menu.add.image(Images.F5S4_locked.value, scale=Scales.default.value)
+            self.menu.add.image(Images.F5S4_locked.value)
         elif(character == 'cat4'):
-            self.menu.add.image(Images.Tank_locked.value, scale=Scales.default.value)
+            self.menu.add.image(Images.Tank_locked.value)
 
         self.menu.add.label("")
+        #self.mytheme.widget_background_color = (150, 213, 252)
         self.menu.add.button('back', self.back_from_locked)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def back_from_locked(self):
         self.menu.disable()
         self.__init__(self.screen)
+
 
 
     # 화면 크기 조정 감지 및 비율 고정
