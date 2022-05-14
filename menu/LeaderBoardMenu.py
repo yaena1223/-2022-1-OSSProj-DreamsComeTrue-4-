@@ -41,7 +41,7 @@ class LeaderBoardMenu:
         self.menu.clear()
         self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
         self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
-        self.menu.add.button('     rank search     ', self.show_current_rank_search)
+        #self.menu.add.button('     rank search     ', self.show_current_rank_search)
         self.menu.add.button('         back         ', self.to_menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
