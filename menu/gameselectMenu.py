@@ -33,17 +33,32 @@ class GameselectMenu:
         self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
         self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
         
+        self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+
         self.rankpage = button(self.board_height,self.board_height,0.8,0.1,0.1,0.05,"Image/catthema/RANK.png")
         self.mypage = button(self.board_height,self.board_height,0.5,0.1,0.1,0.05,"Image/catthema/MYPAGE.png")
         self.gamemode = button(self.board_height,self.board_height,0.3,0.1,0.1,0.05,"Image/catthema/STAGE.png")
         self.store = button(self.board_height,self.board_height,0.1,0.1,0.1,0.05,"Image/catthema/STORE.png")
 
-        self.buttonlist=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
-        self.rankpage,self.mypage,self.gamemode,self.store]
+        self.buttonlist1=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
+        self.rankpage,self.mypage,self.gamemode,self.store] # stagemode
+
+        self.buttonlist2=[self.map1,self.map2,self.map3,self.mode_map1,self.mode_map2,self.mode_map3,
+        self.rankpage,self.mypage,self.gamemode,self.store] # inf mode
 
         self.stage_level_map1 = "1"
         self.stage_level_map2 = "1"
         self.stage_level_map3 = "1"
+
+        self.inf_mode_map1 = 0
+        self.inf_mode_map2 = 0
+        self.inf_mode_map3 = 0
+
+        self.mode = [("EASY",InfiniteGame.EasyMode()),("HARD",InfiniteGame.HardMode())]
+
+        self.modestate="stage"
 
         self.temp1 = self.level_map1.image
         self.temp2 = self.level_map2.image
@@ -57,136 +72,248 @@ class GameselectMenu:
 
     def show(self,screen):        
 
-        screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
+        if self.modestate == "stage" : # stage mode
 
-        for self.button in enumerate(self.buttonlist): # 버튼 그리기
-            self.button[1].draw(screen,(0,0,0))
+            screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
 
-        for event in pygame.event.get():
+            for self.button in enumerate(self.buttonlist1): # 버튼 그리기
+                self.button[1].draw(screen,(0,0,0))
 
-            pos = pygame.mouse.get_pos() # mouse
+            for event in pygame.event.get():
 
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                break
+                pos = pygame.mouse.get_pos() # mouse
 
-            if event.type == pygame.MOUSEMOTION: # 마우스모션
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    break
 
-                if self.map1.isOver(pos): # 이미지 바꿈
-                    self.map1.image="Image/catthema/map1_dark.png"
-                else : self.map1.image="Image/catthema/map1.png" 
-                pygame.display.update()
+                if event.type == pygame.MOUSEMOTION: # 마우스모션
 
-                if self.map2.isOver(pos):
-                    self.map2.image="Image/catthema/map2_dark.png"
-                else : self.map2.image="Image/catthema/map2.png" 
-                pygame.display.update()
+                    if self.map1.isOver(pos): # 이미지 바꿈
+                        self.map1.image="Image/catthema/map1_dark.png"
+                    else : self.map1.image="Image/catthema/map1.png" 
+                    pygame.display.update()
 
-                if self.map3.isOver(pos):
-                    self.map3.image="Image/catthema/map3_dark.png"
-                else : self.map3.image="Image/catthema/map3.png" 
-                pygame.display.update()
-                
-                if self.level_map1.isOver(pos):
-                    if self.stage_level_map1 == "1":
-                        self.level_map1.image="Image/catthema/level2.png"
-                    elif self.stage_level_map1 == "2":
-                        self.level_map1.image="Image/catthema/level3.png"
-                    elif self.stage_level_map1 == "3":
-                        self.level_map1.image="Image/catthema/level1.png"
-                else : self.level_map1.image=self.temp1
-                pygame.display.update()
+                    if self.map2.isOver(pos):
+                        self.map2.image="Image/catthema/map2_dark.png"
+                    else : self.map2.image="Image/catthema/map2.png" 
+                    pygame.display.update()
 
-                if self.level_map2.isOver(pos):
-                    if self.stage_level_map2 == "1":
-                        self.level_map2.image="Image/catthema/level2.png"
-                    elif self.stage_level_map2 == "2":
-                        self.level_map2.image="Image/catthema/level3.png"
-                    elif self.stage_level_map2 == "3":
-                        self.level_map2.image="Image/catthema/level1.png"
-                else : self.level_map2.image=self.temp2
-                pygame.display.update()
-
-                if self.level_map3.isOver(pos):
-                    if self.stage_level_map3 == "1":
-                        self.level_map3.image="Image/catthema/level2.png"
-                    elif self.stage_level_map3 == "2":
-                        self.level_map3.image="Image/catthema/level3.png"
-                    elif self.stage_level_map3 == "3":
-                        self.level_map3.image="Image/catthema/level1.png"
-                else : self.level_map3.image=self.temp3
-                pygame.display.update()
-
-            if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
-
-                if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
-                    self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
-                    StageGame(self.character_data,self.character_data[0],self.stage_map).main()
-                pygame.display.update()
-
-                if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
-                    self.stage_map=Stage(self.stage_data["chapter"]["Night view"][self.stage_level_map2])
-                    StageGame(self.character_data,self.character_data[0],self.stage_map).main()
-                pygame.display.update()
-
-                if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
-                    self.stage_map=Stage(self.stage_data["chapter"]["Namsan"][self.stage_level_map3])
-                    StageGame(self.character_data,self.character_data[0],self.stage_map).main()
-                pygame.display.update()
-
-                if self.level_map1.isOver(pos):
-                    if self.stage_level_map1 == "1" :
-                        self.temp1 = "Image/catthema/level2.png" # 이미지 바꾸기
-                        self.stage_level_map1 = "2" # 바뀐 레벨로 저장.
+                    if self.map3.isOver(pos):
+                        self.map3.image="Image/catthema/map3_dark.png"
+                    else : self.map3.image="Image/catthema/map3.png" 
+                    pygame.display.update()
                     
-                    elif self.stage_level_map1 == "2" :
-                        self.temp1 = "Image/catthema/level3.png" # 이미지 바꾸기
-                        self.stage_level_map1 = "3" # 바뀐 레벨로 저장.
+                    if self.level_map1.isOver(pos):
+                        if self.stage_level_map1 == "1":
+                            self.level_map1.image="Image/catthema/level2.png"
+                        elif self.stage_level_map1 == "2":
+                            self.level_map1.image="Image/catthema/level3.png"
+                        elif self.stage_level_map1 == "3":
+                            self.level_map1.image="Image/catthema/level1.png"
+                    else : self.level_map1.image=self.temp1
+                    pygame.display.update()
+
+                    if self.level_map2.isOver(pos):
+                        if self.stage_level_map2 == "1":
+                            self.level_map2.image="Image/catthema/level2.png"
+                        elif self.stage_level_map2 == "2":
+                            self.level_map2.image="Image/catthema/level3.png"
+                        elif self.stage_level_map2 == "3":
+                            self.level_map2.image="Image/catthema/level1.png"
+                    else : self.level_map2.image=self.temp2
+                    pygame.display.update()
+
+                    if self.level_map3.isOver(pos):
+                        if self.stage_level_map3 == "1":
+                            self.level_map3.image="Image/catthema/level2.png"
+                        elif self.stage_level_map3 == "2":
+                            self.level_map3.image="Image/catthema/level3.png"
+                        elif self.stage_level_map3 == "3":
+                            self.level_map3.image="Image/catthema/level1.png"
+                    else : self.level_map3.image=self.temp3
+                    pygame.display.update()
+
+                    if self.gamemode.isOver(pos):
+                        self.gamemode.image="Image/catthema/INF.png"
+                    else : self.gamemode.image="Image/catthema/STAGE.png"
+                    pygame.display.update()
+
+                if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
+
+                    if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
+                        StageGame(self.character_data,self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=Stage(self.stage_data["chapter"]["Night view"][self.stage_level_map2])
+                        StageGame(self.character_data,self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=Stage(self.stage_data["chapter"]["Namsan"][self.stage_level_map3])
+                        StageGame(self.character_data,self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.level_map1.isOver(pos):
+                        if self.stage_level_map1 == "1" :
+                            self.temp1 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.stage_level_map1 = "2" # 바뀐 레벨로 저장.
+                        
+                        elif self.stage_level_map1 == "2" :
+                            self.temp1 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.stage_level_map1 = "3" # 바뀐 레벨로 저장.
+                        
+                        elif self.stage_level_map1 == "3" :
+                            self.temp1 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.stage_level_map1 = "1" # 바뀐 레벨로 저장.
+                    pygame.display.update()
+
+                    if self.level_map2.isOver(pos):
+                        if self.stage_level_map2 == "1" :
+                            self.temp2 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.stage_level_map2 = "2" # 바뀐 레벨로 저장.
+                
+                        elif self.stage_level_map2 == "2" :
+                            self.temp2 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.stage_level_map2 = "3" # 바뀐 레벨로 저장.
                     
-                    elif self.stage_level_map1 == "3" :
-                        self.temp1 = "Image/catthema/level1.png" # 이미지 바꾸기
-                        self.stage_level_map1 = "1" # 바뀐 레벨로 저장.
-                pygame.display.update()
+                        elif self.stage_level_map2 == "3" :
+                            self.temp2 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.stage_level_map2 = "1" # 바뀐 레벨로 저장.
+                    pygame.display.update()
 
-                if self.level_map2.isOver(pos):
-                    if self.stage_level_map2 == "1" :
-                        self.temp2 = "Image/catthema/level2.png" # 이미지 바꾸기
-                        self.stage_level_map2 = "2" # 바뀐 레벨로 저장.
-            
-                    elif self.stage_level_map2 == "2" :
-                        self.temp2 = "Image/catthema/level3.png" # 이미지 바꾸기
-                        self.stage_level_map2 = "3" # 바뀐 레벨로 저장.
-                
-                    elif self.stage_level_map2 == "3" :
-                        self.temp2 = "Image/catthema/level1.png" # 이미지 바꾸기
-                        self.stage_level_map2 = "1" # 바뀐 레벨로 저장.
-                pygame.display.update()
+                    if self.level_map3.isOver(pos):
+                        if self.stage_level_map3 == "1" :
+                            self.temp3 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.stage_level_map3 = "2" # 바뀐 레벨로 저장.
 
-                if self.level_map3.isOver(pos):
-                    if self.stage_level_map3 == "1" :
-                        self.temp3 = "Image/catthema/level2.png" # 이미지 바꾸기
-                        self.stage_level_map3 = "2" # 바뀐 레벨로 저장.
+                        elif self.stage_level_map3 == "2" :
+                            self.temp3 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.stage_level_map3 = "3" # 바뀐 레벨로 저장.
 
-                    elif self.stage_level_map3 == "2" :
-                        self.temp3 = "Image/catthema/level3.png" # 이미지 바꾸기
-                        self.stage_level_map3 = "3" # 바뀐 레벨로 저장.
+                        elif self.stage_level_map3 == "3" :
+                            self.temp3 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.stage_level_map3 = "1" # 바뀐 레벨로 저장.
+                    pygame.display.update()
 
-                    elif self.stage_level_map3 == "3" :
-                        self.temp3 = "Image/catthema/level1.png" # 이미지 바꾸기
-                        self.stage_level_map3 = "1" # 바뀐 레벨로 저장.
+                    if self.gamemode.isOver(pos):
+                        self.gamemode.image="Image/catthema/INF.png"
+                        self.modestate="inf"
+                    pygame.display.update()
 
-                pygame.display.update()
+                    if self.mypage.isOver(pos):
+                        Mypage(self.screen).show()
 
-                if self.mypage.isOver(pos):
-                    Mypage(self.screen).show()
+                    if self.rankpage.isOver(pos):
+                        LeaderBoardMenu(self.screen).rank()
 
-                if self.rankpage.isOver(pos):
-                    LeaderBoardMenu(self.screen).rank()
+                    if self.store.isOver(pos):
+                        CharacterStoreMenu(self.screen).show()
 
-                if self.store.isOver(pos):
-                    CharacterStoreMenu(self.screen).show()
-                
+        else :
+            screen.fill((255, 255, 20)) # 배경 나중에 바꾸기.
 
+            for self.button in enumerate(self.buttonlist2): # 버튼 그리기
+                self.button[1].draw(screen,(0,0,0))
+
+            for event in pygame.event.get():
+
+                pos = pygame.mouse.get_pos() # mouse
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    break
+
+                if event.type == pygame.MOUSEMOTION: # 마우스모션
+
+                    if self.map1.isOver(pos): # 이미지 바꿈
+                        self.map1.image="Image/catthema/map1_dark.png"
+                    else : self.map1.image="Image/catthema/map1.png" 
+                    pygame.display.update()
+
+                    if self.map2.isOver(pos):
+                        self.map2.image="Image/catthema/map2_dark.png"
+                    else : self.map2.image="Image/catthema/map2.png" 
+                    pygame.display.update()
+
+                    if self.map3.isOver(pos):
+                        self.map3.image="Image/catthema/map3_dark.png"
+                    else : self.map3.image="Image/catthema/map3.png" 
+                    pygame.display.update()
+
+                    if self.mode_map1.isOver(pos):
+                        pygame.display.update()
+
+                    if self.mode_map2.isOver(pos):
+                        pygame.display.update()
+
+                    if self.mode_map3.isOver(pos):
+                        pygame.display.update()
+
+                    if self.gamemode.isOver(pos):
+                        self.gamemode.image="Image/catthema/STAGE.png"
+                    else : self.gamemode.image="Image/catthema/INF.png"
+                    pygame.display.update()
+
+                if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
+
+                    if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=self.mode[self.inf_mode_map1][1]
+                        InfiniteGame(self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=self.mode[self.inf_mode_map2][1]
+                        InfiniteGame(self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
+                        self.stage_map=self.mode[self.inf_mode_map3][1]
+                        InfiniteGame(self.character_data[0],self.stage_map).main()
+                    pygame.display.update()
+
+                    if self.mode_map1.isOver(pos):
+                        if self.inf_mode_map1 == 0 :
+                            self.inf_mode_map1 = 1
+                            self.mode_map1.image="Image/catthema/level2.png"
+                        else :
+                            self.inf_mode_map1 = 0
+                            self.mode_map1.image="Image/catthema/level1.png"
+                    pygame.display.update()
+
+                    if self.mode_map2.isOver(pos):
+                        if self.inf_mode_map2 == 0 :
+                            self.inf_mode_map2 = 1
+                            self.mode_map2.image="Image/catthema/level2.png"
+                        else :
+                            self.inf_mode_map2 = 0
+                            self.mode_map2.image="Image/catthema/level1.png"
+                    pygame.display.update()
+
+                    if self.mode_map3.isOver(pos):
+                        if self.inf_mode_map3 == 0 :
+                            self.inf_mode_map3 = 1
+                            self.mode_map3.image="Image/catthema/level2.png"
+                        else :
+                            self.inf_mode_map3 = 0
+                            self.mode_map3.image="Image/catthema/level1.png"
+                    pygame.display.update()
+
+                    if self.gamemode.isOver(pos):
+                        self.gamemode.image="Image/catthema/STAGE.png"
+                        self.modestate="stage"
+                    pygame.display.update()
+
+                    if self.mypage.isOver(pos):
+                        Mypage(self.screen).show()
+
+                    if self.rankpage.isOver(pos):
+                        LeaderBoardMenu(self.screen).rank()
+
+                    if self.store.isOver(pos):
+                        CharacterStoreMenu(self.screen).show()
 
                 
                     
@@ -208,4 +335,3 @@ class GameselectMenu:
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
             self.menu._current._widgets_surface = make_surface(0,0)
-
