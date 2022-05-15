@@ -26,7 +26,7 @@ from pygame_menu.utils import make_surface
 
 class InfiniteGame:
 
-    def __init__(self,character,mode):
+    def __init__(self,character,mode,mapimg):
         # 1. 게임초기화 
         pygame.init()
 
@@ -56,7 +56,7 @@ class InfiniteGame:
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
         self.mob_image = "./Image/catthema/attack/dust.png"
-        self.background_image = "./Image/catthema/map1.png"
+        self.background_image = mapimg
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
         self.dy = 2
