@@ -7,7 +7,7 @@ from data.Defs import *
 from data.Stage import Stage
 from data.StageDataManager import *
 from game.InfiniteGame import *
-from game.StageGame import StageGame
+from game.StageGameplay import StageGame
 from pygame_menu.baseimage import IMAGE_MODE_FILL, IMAGE_MODE_SIMPLE
 from pygame_menu.locals import ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.utils import make_surface

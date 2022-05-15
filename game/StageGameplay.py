@@ -14,61 +14,65 @@ import pygame_menu
 from boss.Boss import Boss
 from boss.Bullet import Bullet
 from data.Animation import AnimationManager
+from data.CharacterDataManager import *
 from data.Defs import *
-from data.Rank import *
 from data.StageDataManager import *
-from object.Effect import *
 from object.Item import *
 from object.Mob import Mob
-from pygame_menu.locals import ALIGN_CENTER
 from pygame_menu.utils import make_surface
 
 
-class InfiniteGame:
 
-    def __init__(self,character,mode,mapimg):
+class StageGame:
+
+    def __init__(self,character_data,character,stage):
         # 1. 게임초기화 
         pygame.init()
+        self.stage_cleared = False
 
         # 2. 게임창 옵션 설정
         infoObject = pygame.display.Info()
-        title = "Infinite game"
+        title = "My game"
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
-        
 
+        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
+        self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
+                            theme=mytheme)
+        
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
-        self.mode = mode #Game mode = hard/easy
-        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_DEFAULT)
 
         # 4. 게임에 필요한 객체들을 담을 배열 생성, 변수 초기화
         self.animation = AnimationManager()
         self.mobList = []
         self.item_list = []
         self.effect_list = []
-        self.missileList = []
+        self.character_data = character_data
         self.character = character
+        self.stage = stage
+        self.goal_score = stage.goal_score
         self.score = 0
         self.life = 3
-        self.start_time = time.time()
+        self.startTime = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = "./Image/catthema/attack/dust.png"
-        self.background_image = mapimg
-        self.background_music = "./Sound/bgm/bensound-evolution.wav"
+        self.mob_image = stage.mob_image
+        self.background_image = stage.background_image
+        self.background_music = stage.background_music
+        self.k=0
         self.SB = 0
-        self.dy = 2
-        self.mob_velocity = 2
         self.coin = 0
 
-        
+        # 4-1. 보스 스테이지를 위한 변수 초기화
+        self.is_boss_stage = stage.is_boss_stage
+        if self.is_boss_stage:
+            self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
         self.enemyBullets =[]
 
         # 5. 캐릭터 초기화
         self.character.reinitialize(self)
-
+        
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
@@ -84,18 +88,16 @@ class InfiniteGame:
             self.screen.fill(Color.WHITE.value)
             # 배경 크기 변경 처리 및 그리기
             # 창크기가 바뀜에 따라 배경화면 크기 변경 필요
-            
             background1 =  pygame.image.load(self.background_image)
             background1 = pygame.transform.scale(background1, self.size)
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            '''background1_y += self.dy
+            '''background1_y += 2
             if background1_y > background_height:
                 background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
 
 
             # 입력 처리
@@ -107,7 +109,8 @@ class InfiniteGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
-                if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
+                        self.life +=1
+                if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
 
@@ -117,17 +120,24 @@ class InfiniteGame:
                     else:
                         width = int(height * (10/13))
                     
+                    w_ratio = width/self.size[0]
+                    h_ratio = height/self.size[1]
+
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
                     self.check_resize()
+
+                    if(self.is_boss_stage): #보스 스테이지라면 보스 리사이징
+                        self.boss.on_resize(self)
                     self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
+
             if(random.random()<self.mob_gen_rate):
-                newMob = Mob(self.mob_image,{"x":50, "y":50},self.mob_velocity,0)
-                newMob.set_XY((random.randrange(0,self.size[0]),0)) #set mob location randomly
+                newMob = Mob(self.mob_image,{"x":50, "y":50},2,0)
+                newMob.set_XY((random.randrange(0,self.size[0]),0))
                 self.mobList.append(newMob)
-            
+                
             if random.random() < Default.item.value["powerup"]["spawn_rate"]:
                 new_item = PowerUp(self.animation.animations["powerup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
@@ -152,7 +162,6 @@ class InfiniteGame:
                 new_item = SpeedUp(self.animation.animations["speedup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
-            
 
             #플레이어 객체 이동
             self.character.update(self)
@@ -166,6 +175,31 @@ class InfiniteGame:
 
             for effect in self.effect_list:
                 effect.move(self)
+
+            #보스 이동
+            #보스 업데이트
+
+            if(self.is_boss_stage):
+                self.boss.draw(self.screen)
+                self.boss.update(self.enemyBullets,self.character,self.size)
+                self.boss.check(self.character,self)
+
+                # 보스와 플레이어 충돌 감지
+                if(self.check_crash(self.boss,self.character)):
+                    if self.character.is_collidable == True:
+                        self.character.last_crashed = time.time()
+                        self.character.is_collidable = False
+                        self.life -=1
+
+                #보스의 총알과 플레이어 충돌 감지
+                for bullet in self.enemyBullets:
+                    if(bullet.check_crash(self.character)):
+                        if self.character.is_collidable == True:
+                            self.character.last_crashed = time.time()
+                            self.character.is_collidable = False
+                            self.life -=1
+                            self.enemyBullets.remove(bullet)
+
         
             #적 투사체 이동
             for bullet in self.enemyBullets:
@@ -175,6 +209,7 @@ class InfiniteGame:
             for item in list(self.item_list):
                 if item.rect_collide(self.character.rect):
                     item.use(self)
+
 
             #발사체와 몹 충돌 감지
             for missile in list(self.character.get_missiles_fired()):
@@ -196,49 +231,52 @@ class InfiniteGame:
                         mob.destroy(self)
                    
             #화면 그리기
+            #효과 그리기(폭탄 아이템)
             for effect in self.effect_list:
                 effect.show(self.screen)
             #플레이어 그리기
             self.character.show(self.screen)
-            
             #몹 그리기
             for mob in self.mobList:
                 mob.show(self.screen)
-
+            #아이템 그리기
             for item in list(self.item_list):
                 item.show(self.screen)
-
+            #플레이어 발사체 그리기
             for i in self.character.get_missiles_fired():
                 i.show(self.screen)
                 if hasattr(i, "crosshair"):
                     if i.locked_on == True:
                         i.crosshair.show(self.screen)
-            
+
             #점수와 목숨 표시
             font = pygame.font.Font(Default.font.value, self.size[0]//40)
             score_life_text = font.render("Score : {} Life: {} Bomb: {} Coin : {}".format(self.score,self.life,self.character.bomb_count, self.coin), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨 
             
             # 현재 흘러간 시간
-            play_time = (time.time() - self.start_time)
-            time_text = font.render("Time : {:.2f}".format(play_time), True, Color.YELLOW.value)
+            playTime = (time.time() - self.startTime)
+            time_text = font.render("Time : {:.2f}".format(playTime), True, Color.YELLOW.value)
             self.screen.blit(time_text,(self.size[0]//2,5))
 
             # 화면갱신
             pygame.display.flip() # 그려왔던데 화면에 업데이트가 됨
 
-
-            #목숨이 0 이하면 랭킹 등록 화면
-            if(self.life<1):
-                self.show_ranking_register_screen()
+            #점수가 목표점수 이상이면 스테이지 클리어 화면
+            if(self.score>=self.goal_score or self.stage_cleared):
+                StageDataManager.unlockNextStage(self.stage)
+                self.showStageClearScreen()
                 return
 
-            self.mode.update_difficulty(self)
+            #목숨이 0 이하면 게임 오버 화면
+            if(self.life<1):
+                self.showGameOverScreen()
+                return
 
 
-        # While 빠져나오면 랭킹등록 스크린 실행
-        self.show_ranking_register_screen()
-                
+        # While 빠져나오면 게임오버 스크린 실행
+        self.showGameOverScreen()
+
     #충돌 감지 함수
     def check_crash(self,o1,o2):
         o1_mask = pygame.mask.from_surface(o1.img)
@@ -252,85 +290,90 @@ class InfiniteGame:
         else:
             return False
 
+    def toMenu(self,menu):
+        menu.disable()
+        pygame.mixer.music.stop()
+
+    # 재시도 버튼 클릭 시 
+    def retry(self):
+        StageGame(self, self.character, self.stage).main()
+        self.menu.disable()
+
     #홈버튼 클릭 시
     def Home(self, menu):
         menu.disable()
         pygame.mixer.music.stop()
 
-    '''# 뒤로가기 버튼에 적용되는 함수
-    def to_menu(self):
+    #next stage 버튼 클릭 시
+    def nextstage(self):
+        if(self.stage.stage == 1):
+            self.stage.stage = 2
+            StageGame(self, self.character, self.stage).main()
+            self.menu.disable()
+        if(self.stage.stage == 2):
+            self.stage.stage = 3
+            StageGame(self, self.character, self.stage).main()
+            self.menu.disable()
+
+    # 클리어 화면
+    def showStageClearScreen(self):
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu('Stage Clear', self.size[0], self.size[1],
+                            theme=stageclear_theme)
+        '''# 해당 스테이지가 보상이 있는 보스 스테이지인지 확인하는 과정                    
+        if self.stage.unlock_char != "":
+            for character in self.character_data:
+                if character.name == self.stage.unlock_char:
+                    if character.is_unlocked == False:
+                        # 보상 지급
+                        character.is_unlocked = True
+                        CharacterDataManager.save(self.character_data)
+                        print(type(self.character_data), type(character))
+                        print(character.name)
+                        if(character.name == 'F5S1'):
+                            self.menu.add.image(Images.chapter_clear_oasis.value, scale=Scales.default.value)
+                        elif(character.name == 'F5S4'):
+                            self.menu.add.image(Images.chapter_clear_ice.value, scale=Scales.default.value)
+                        elif(character.name == 'Tank'):
+                            self.menu.add.image(Images.chapter_clear_space.value, scale=Scales.default.value)
+                    else:   # 이미 보상을 받은 경우
+                        self.menu.add.label(f"{self.stage.chapter}",font_size=Menus.fontsize_50, font_color=Color.BLACK.value)
+                        self.menu.add.image(Images.chapter_cleared, scale=Scales.default.value)
+                        self.menu.add.label("Already been rewarded", font_size=Menus.fontsize_default)
+                        self.menu.add.label("")
+
+
+        else: # 일반 스테이지인 경우
+            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=Menus.fontsize_50.value, font_color=Color.BLACK.value)
+            self.menu.add.image(Images.stage_clear.value, scale=Scales.default.value)
+            self.menu.add.label("")'''
         
-        self.menu.disable()
-        pygame.mixer.music.stop()
-
-    # 랭킹 등록 화면
-    def show_ranking_register_screen(self):
-        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_DEFAULT)
-        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)   # 가로 500, 세로 300의 프레임 생성
-        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=Menus.fontsize_25.value),align=ALIGN_CENTER)
-        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=Menus.ID_maxchar.value, input_underline='_', font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
-        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)'''
-
-    def show_ranking_register_screen(self):
-        ranking_register_screen = pygame_menu.themes.THEME_DARK.copy()
-        ranking_register_screen.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
-        ranking_register_screen.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
-        ranking_register_screen.title_font_color = Color.WHITE.value
-        self.menu = pygame_menu.Menu('Game Over', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_DEFAULT)
-        self.menu.add.image(Images.lose.value, scale=Scales.tiny.value)
-        self.menu.add.label("Score : {}".format(self.score))
-        self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
-        self.menu.add.button('Retry', self.retry)
+        self.menu.add.image(Images.win.value, scale=Scales.tiny.value)
+        self.menu.add.label("")
+        #self.menu.add.button('to Menu', self.toMenu,self.menu)
+        if(self.stage.stage !=  "3"):
+            self.menu.add.button('Next stage', self.nextstage)
         self.menu.add.button('Home', self.Home, self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
-        
-    '''def register_ranking(self):
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
-        name = User.user_id
-        rank = Rank()
-        if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
-            if(name == ''): # ID를 입력하지 않은 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            elif(rank.check_ID('easy', name) == 0): # ID가 중복되는 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            else: # 랭킹 등록이 완료된 경우
-                self.menu.clear() 
-                rank.add_data('current','easy',name,self.score)
-                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
-                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
-                self.menu.add.vertical_margin(Menus.margin_20.value)
-                self.menu.add.button('to Menu', self.to_menu)
 
-        else: # 하드모드인 경우
-            if(name == ''): # ID를 입력하지 않은 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            elif(rank.check_ID('hard', name) == 0): # ID가 중복되는 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            else: # 랭킹 등록이 완료된 경우
-                self.menu.clear()
-                rank.add_data('current','hard',name,self.score)
-                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
-                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
-                self.menu.add.vertical_margin(Menus.margin_20.value)
-                self.menu.add.button('to Menu', self.to_menu)'''
-
-
-    # 랭킹 등록 결과 화면
-    def show_register_result(self):
-        #self.menu.remove_widget(self.result_frame)
-        self.register_ranking()
+    # 실패 화면
+    def showGameOverScreen(self):
+        gameover_theme = pygame_menu.themes.THEME_DARK.copy()
+        gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        gameover_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu('Game Over', self.size[0], self.size[1],
+                            theme=gameover_theme)
+        self.menu.add.image(Images.lose.value, scale=Scales.tiny.value)
+        self.menu.add.label("stage: {}".format(self.stage.stage))
+        self.menu.add.label("Score : {}".format(self.score))
+        self.menu.add.button('Retry', self.retry)
+        self.menu.add.button('Home', self.Home, self.menu)
+        #self.menu.add.button('to Menu', self.toMenu,self.menu)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
@@ -349,36 +392,3 @@ class InfiniteGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
-
-    #재시도 버튼 클릭 시 실행
-    def retry(self):
-        InfiniteGame(self.character,self.mode, self.background_image).main()
-        self.menu.disable()
-    
-
-    #난이도를 나누는 모드 클래스 (상속하여 사용)
-    class Mode:
-        def update_difficulty():
-            pass
-
-    class EasyMode(Mode): #이지 모드
-        @staticmethod
-        def update_difficulty(game):
-            play_time = (time.time() - game.start_time) #게임 진행 시간
-            if(game.mob_gen_rate < 0.215): #최대값 제한
-                game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
-            if(game.dy<20):#최대값 제한
-                game.dy = play_time//5*2 + 2 #5초마다 dy(배경 이동 속도) 2 증가 (기본 2)
-            if(game.mob_velocity < 3):#최대값 제한
-                game.mob_velocity = play_time//10*1 + 2 #10초마다 mob_velocity(몹 이동 속도) 1 증가 (기본 2)
-
-    class HardMode(Mode): #하드 모드
-        @staticmethod
-        def update_difficulty(game):
-            play_time = (time.time() - game.start_time) #게임 진행 시간
-            if(game.mob_gen_rate < 0.315):#최대값 제한
-                game.mob_gen_rate = play_time//10/10 + 0.015 #10초마다 mob_gen_rate 0.1 증가(기본 0.015)
-            if(game.dy<20):#최대값 제한
-                game.dy = play_time//5*2 + 2 #5초마다 dy(배경 이동 속도) 2 증가 (기본 2)
-            if(game.mob_velocity < 6):#최대값 제한
-                game.mob_velocity = play_time//10*2 + 2 #10초마다 mob_velocity(몹 이동 속도) 2 증가 (기본 2)
