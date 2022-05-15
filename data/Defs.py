@@ -53,11 +53,14 @@ class Images(enum.Enum):
     cat3 = "./Image/catthema/cat3_front.png"
     cat4 = "./Image/catthema/cat4_front.png"
 
+    win = "./Image/catthema/win.png"
+    lose = "./Image/catthema/lose.png"
+
 class Scales(enum.Enum):
     large = (2, 2)
     default = (1, 1)
     small = (.6, .6)
-    tiny = (.3, .3)
+    tiny = (.1, .1)
     
 
 class Color(enum.Enum):
