@@ -1,3 +1,4 @@
+from pickle import TRUE
 from button import *
 import pygame
 import pygame_menu
@@ -19,11 +20,11 @@ from menu.CharacterStoreMenu import *
 class GameselectMenu:
     def __init__(self,screen):
         
-        self.size = screen.get_size()
+        self.size = screen.get_size() 
         self.screen = screen
-        changed_screen_size = screen.get_size()
-        self.board_width=changed_screen_size[0] # x
-        self.board_height=changed_screen_size[1] # y
+        self.changed_screen_size = self.screen.get_size()
+        self.board_width=self.changed_screen_size[0] # x
+        self.board_height=self.changed_screen_size[1] # y
 
         self.map1 = button(self.board_width, self.board_height, 0.2, 0.3, 0.2, 0.2, "Image/catthema/map1.png")
         self.map2 = button(self.board_width, self.board_height, 0.5, 0.3, 0.2, 0.2, "Image/catthema/map2.png")
@@ -68,15 +69,16 @@ class GameselectMenu:
         self.character_data = CharacterDataManager.load() # 캐릭터 데이터
         self.selectedChapter = [list(self.stage_data["chapter"].keys())[0]] 
 
-        self.stay=0
+        self.stay=0 
 
-    def show(self,screen):        
+    def show(self,screen):     
 
         if self.modestate == "stage" : # stage mode
 
             screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
 
             for self.button in enumerate(self.buttonlist1): # 버튼 그리기
+                self.button[1].change(screen.get_size()[0],screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
                 self.button[1].draw(screen,(0,0,0))
 
             for event in pygame.event.get():
@@ -216,6 +218,7 @@ class GameselectMenu:
             screen.fill((255, 255, 20)) # 배경 나중에 바꾸기.
 
             for self.button in enumerate(self.buttonlist2): # 버튼 그리기
+                self.button[1].change(screen.get_size()[0],screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
                 self.button[1].draw(screen,(0,0,0))
 
             for event in pygame.event.get():
@@ -314,22 +317,3 @@ class GameselectMenu:
 
                     if self.store.isOver(pos):
                         CharacterStoreMenu(self.screen).show()
-                    
-    # 화면 크기 조정 감지 및 비율 고정
-    def check_resize(self):
-        if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
-            changed_screen_size = self.screen.get_size() #변경된 사이즈
-            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
-            if(ratio_screen_size[0]<320): #최소 x길이 제한
-                ratio_screen_size = (494,537)
-            if(ratio_screen_size[1]>783): #최대 y길이 제한
-                ratio_screen_size = (720,783)
-            self.screen = pygame.display.set_mode(ratio_screen_size,
-                                                    pygame.RESIZABLE)
-            window_size = self.screen.get_size()
-            new_w, new_h = 1 * window_size[0], 1 * window_size[1]
-            self.menu.resize(new_w, new_h)
-            self.menu.get_current().resize(new_w,new_h)
-            self.size = window_size
-            print(f'New menu size: {self.menu.get_size()}')
-            self.menu._current._widgets_surface = make_surface(0,0)
