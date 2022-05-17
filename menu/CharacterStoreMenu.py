@@ -129,11 +129,11 @@ class CharacterStoreMenu:
     def showCharactereLockedScreen(self, character):       
         self.menu.clear()
         if(character == 'cat2'):
-            self.menu.add.image(Images.F5S1_locked.value)
+            self.menu.add.image(Images.lock.value)
         elif(character == 'cat3'):
-            self.menu.add.image(Images.F5S4_locked.value)
+            self.menu.add.image(Images.lock.value)
         elif(character == 'cat4'):
-            self.menu.add.image(Images.Tank_locked.value)
+            self.menu.add.image(Images.lock.value)
 
         self.menu.add.label("")
         #self.mytheme.widget_background_color = (150, 213, 252)
