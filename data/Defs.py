@@ -8,6 +8,7 @@ class User:
     character = 0
 
 class Images(enum.Enum):
+    lock = "./Image/catthema/lock.jpg"
     login = "./Image/Login.png"
     start = "./Image/StartImage.png"
     how_to_play = "./Image/howtoplay.png"
