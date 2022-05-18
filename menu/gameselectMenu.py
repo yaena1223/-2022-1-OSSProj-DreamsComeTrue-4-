@@ -16,6 +16,7 @@ from menu.LeaderBoardMenu import *
 from menu.MypageMenu import *
 from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
+from Login import *
 
 class GameselectMenu:
     def __init__(self,screen):
@@ -26,28 +27,33 @@ class GameselectMenu:
         self.board_width=self.changed_screen_size[0] # x
         self.board_height=self.changed_screen_size[1] # y
 
-        self.map1 = button(self.board_width, self.board_height, 0.2, 0.3, 0.2, 0.2, "Image/catthema/map1.png")
-        self.map2 = button(self.board_width, self.board_height, 0.5, 0.3, 0.2, 0.2, "Image/catthema/map2.png")
-        self.map3 = button(self.board_width, self.board_height, 0.8, 0.3, 0.2, 0.2, "Image/catthema/map3.png")
+        self.map1 = button(self.board_width, self.board_height, 0.2, 0.4, 0.2, 0.3, "Image/catthema/map1.png")
+        self.map2 = button(self.board_width, self.board_height, 0.5, 0.4, 0.2, 0.3, "Image/catthema/map2.png")
+        self.map3 = button(self.board_width, self.board_height, 0.8, 0.4, 0.2, 0.3, "Image/catthema/map3.png")
 
-        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
-        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
-        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
         
-        self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
-        self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
-        self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.5, 0.2, 0.05, "Image/catthema/level1.png")
+        self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
+        self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
+        self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
 
-        self.rankpage = button(self.board_height,self.board_height,0.8,0.1,0.1,0.05,"Image/catthema/RANK.png")
-        self.mypage = button(self.board_height,self.board_height,0.5,0.1,0.1,0.05,"Image/catthema/MYPAGE.png")
-        self.gamemode = button(self.board_height,self.board_height,0.3,0.1,0.1,0.05,"Image/catthema/STAGE.png")
-        self.store = button(self.board_height,self.board_height,0.1,0.1,0.1,0.05,"Image/catthema/STORE.png")
+        self.rankpage = button(self.board_height,self.board_height,0.766,0.05,0.1,0.05,"Image/catthema/rank.png")
+        self.mypage = button(self.board_height,self.board_height,0.5,0.05,0.1,0.05,"Image/catthema/mypage.png")
+        self.gamemode = button(self.board_height,self.board_height,0.366,0.05,0.1,0.05,"Image/catthema/stage.png")
+        self.store = button(self.board_height,self.board_height,0.233,0.05,0.1,0.05,"Image/catthema/store.png")
+        self.setting = button(self.board_height,self.board_height,0.1,0.05,0.1,0.05,"Image/catthema/setting.png")
+        self.logout= button(self.board_height,self.board_height,0.9,0.05,0.1,0.05,"Image/catthema/logout.png")
+        self.help = button(self.board_height,self.board_height,0.633,0.05,0.1,0.05,"Image/catthema/help.png")
 
-        self.buttonlist1=[self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
-        self.rankpage,self.mypage,self.gamemode,self.store] # stagemode
+        self.barcol = button(self.board_height,self.board_height,0.5,0.0,1,0.2,"Image/catthema/bar.png")
 
-        self.buttonlist2=[self.map1,self.map2,self.map3,self.mode_map1,self.mode_map2,self.mode_map3,
-        self.rankpage,self.mypage,self.gamemode,self.store] # inf mode
+        self.buttonlist1=[self.barcol,self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
+        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help] # stagemode
+
+        self.buttonlist2=[self.barcol,self.map1,self.map2,self.map3,self.mode_map1,self.mode_map2,self.mode_map3,
+        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help] # inf mode
 
         self.stage_level_map1 = "1"
         self.stage_level_map2 = "1"
@@ -108,37 +114,37 @@ class GameselectMenu:
                     
                     if self.level_map1.isOver(pos):
                         if self.stage_level_map1 == "1":
-                            self.level_map1.image="Image/catthema/level2.png"
+                            self.level_map1.image="Image/catthema/LEVEL2.png"
                         elif self.stage_level_map1 == "2":
-                            self.level_map1.image="Image/catthema/level3.png"
+                            self.level_map1.image="Image/catthema/LEVEL3.png"
                         elif self.stage_level_map1 == "3":
-                            self.level_map1.image="Image/catthema/level1.png"
+                            self.level_map1.image="Image/catthema/LEVEL1.png"
                     else : self.level_map1.image=self.temp1
                     pygame.display.update()
 
                     if self.level_map2.isOver(pos):
                         if self.stage_level_map2 == "1":
-                            self.level_map2.image="Image/catthema/level2.png"
+                            self.level_map2.image="Image/catthema/LEVEL2.png"
                         elif self.stage_level_map2 == "2":
-                            self.level_map2.image="Image/catthema/level3.png"
+                            self.level_map2.image="Image/catthema/LEVEL3.png"
                         elif self.stage_level_map2 == "3":
-                            self.level_map2.image="Image/catthema/level1.png"
+                            self.level_map2.image="Image/catthema/LEVEL1.png"
                     else : self.level_map2.image=self.temp2
                     pygame.display.update()
 
                     if self.level_map3.isOver(pos):
                         if self.stage_level_map3 == "1":
-                            self.level_map3.image="Image/catthema/level2.png"
+                            self.level_map3.image="Image/catthema/LEVEL2.png"
                         elif self.stage_level_map3 == "2":
-                            self.level_map3.image="Image/catthema/level3.png"
+                            self.level_map3.image="Image/catthema/LEVEL3.png"
                         elif self.stage_level_map3 == "3":
-                            self.level_map3.image="Image/catthema/level1.png"
+                            self.level_map3.image="Image/catthema/LEVEL1.png"
                     else : self.level_map3.image=self.temp3
                     pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/INF.png"
-                    else : self.gamemode.image="Image/catthema/STAGE.png"
+                        self.gamemode.image="Image/catthema/inf.png"
+                    else : self.gamemode.image="Image/catthema/stage.png"
                     pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
@@ -160,48 +166,48 @@ class GameselectMenu:
 
                     if self.level_map1.isOver(pos):
                         if self.stage_level_map1 == "1" :
-                            self.temp1 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.temp1 = "Image/catthema/LEVEL2.png" # 이미지 바꾸기
                             self.stage_level_map1 = "2" # 바뀐 레벨로 저장.
                         
                         elif self.stage_level_map1 == "2" :
-                            self.temp1 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.temp1 = "Image/catthema/LEVEL3.png" # 이미지 바꾸기
                             self.stage_level_map1 = "3" # 바뀐 레벨로 저장.
                         
                         elif self.stage_level_map1 == "3" :
-                            self.temp1 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.temp1 = "Image/catthema/LEVEL1.png" # 이미지 바꾸기
                             self.stage_level_map1 = "1" # 바뀐 레벨로 저장.
                     pygame.display.update()
 
                     if self.level_map2.isOver(pos):
                         if self.stage_level_map2 == "1" :
-                            self.temp2 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.temp2 = "Image/catthema/LEVEL2.png" # 이미지 바꾸기
                             self.stage_level_map2 = "2" # 바뀐 레벨로 저장.
                 
                         elif self.stage_level_map2 == "2" :
-                            self.temp2 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.temp2 = "Image/catthema/LEVEL3.png" # 이미지 바꾸기
                             self.stage_level_map2 = "3" # 바뀐 레벨로 저장.
                     
                         elif self.stage_level_map2 == "3" :
-                            self.temp2 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.temp2 = "Image/catthema/LEVEL1.png" # 이미지 바꾸기
                             self.stage_level_map2 = "1" # 바뀐 레벨로 저장.
                     pygame.display.update()
 
                     if self.level_map3.isOver(pos):
                         if self.stage_level_map3 == "1" :
-                            self.temp3 = "Image/catthema/level2.png" # 이미지 바꾸기
+                            self.temp3 = "Image/catthema/LEVEL2.png" # 이미지 바꾸기
                             self.stage_level_map3 = "2" # 바뀐 레벨로 저장.
 
                         elif self.stage_level_map3 == "2" :
-                            self.temp3 = "Image/catthema/level3.png" # 이미지 바꾸기
+                            self.temp3 = "Image/catthema/LEVEL3.png" # 이미지 바꾸기
                             self.stage_level_map3 = "3" # 바뀐 레벨로 저장.
 
                         elif self.stage_level_map3 == "3" :
-                            self.temp3 = "Image/catthema/level1.png" # 이미지 바꾸기
+                            self.temp3 = "Image/catthema/LEVEL1.png" # 이미지 바꾸기
                             self.stage_level_map3 = "1" # 바뀐 레벨로 저장.
                     pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/INF.png"
+                        self.gamemode.image="Image/catthema/inf.png"
                         self.modestate="inf"
                     pygame.display.update()
 
@@ -214,8 +220,9 @@ class GameselectMenu:
                     if self.store.isOver(pos):
                         CharacterStoreMenu(self.screen).show()
 
+
         else :
-            screen.fill((255, 255, 20)) # 배경 나중에 바꾸기.
+            screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
 
             for self.button in enumerate(self.buttonlist2): # 버튼 그리기
                 self.button[1].change(screen.get_size()[0],screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
@@ -256,8 +263,8 @@ class GameselectMenu:
                         pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/STAGE.png"
-                    else : self.gamemode.image="Image/catthema/INF.png"
+                        self.gamemode.image="Image/catthema/stage.png"
+                    else : self.gamemode.image="Image/catthema/inf.png"
                     pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
@@ -280,32 +287,32 @@ class GameselectMenu:
                     if self.mode_map1.isOver(pos):
                         if self.inf_mode_map1 == 0 :
                             self.inf_mode_map1 = 1
-                            self.mode_map1.image="Image/catthema/level2.png"
+                            self.mode_map1.image="Image/catthema/HARD.png"
                         else :
                             self.inf_mode_map1 = 0
-                            self.mode_map1.image="Image/catthema/level1.png"
+                            self.mode_map1.image="Image/catthema/EASY.png"
                     pygame.display.update()
 
                     if self.mode_map2.isOver(pos):
                         if self.inf_mode_map2 == 0 :
                             self.inf_mode_map2 = 1
-                            self.mode_map2.image="Image/catthema/level2.png"
+                            self.mode_map2.image="Image/catthema/HARD.png"
                         else :
                             self.inf_mode_map2 = 0
-                            self.mode_map2.image="Image/catthema/level1.png"
+                            self.mode_map2.image="Image/catthema/EASY.png"
                     pygame.display.update()
 
                     if self.mode_map3.isOver(pos):
                         if self.inf_mode_map3 == 0 :
                             self.inf_mode_map3 = 1
-                            self.mode_map3.image="Image/catthema/level2.png"
+                            self.mode_map3.image="Image/catthema/HARD.png"
                         else :
                             self.inf_mode_map3 = 0
-                            self.mode_map3.image="Image/catthema/level1.png"
+                            self.mode_map3.image="Image/catthema/EASY.png"
                     pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/STAGE.png"
+                        self.gamemode.image="Image/catthema/stage.png"
                         self.modestate="stage"
                     pygame.display.update()
 
