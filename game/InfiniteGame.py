@@ -8,7 +8,7 @@ import random
 import time
 from collections import OrderedDict
 from typing import Sized
-
+from menu.LeaderBoardMenu import *
 import pygame
 import pygame_menu
 from boss.Boss import Boss
@@ -22,6 +22,8 @@ from object.Item import *
 from object.Mob import Mob
 from pygame_menu.locals import ALIGN_CENTER
 from pygame_menu.utils import make_surface
+from data.database_user import *
+from data.Defs import User
 
 
 class InfiniteGame:
@@ -62,12 +64,14 @@ class InfiniteGame:
         self.dy = 2
         self.mob_velocity = 2
         self.coin = 0
-
-        
         self.enemyBullets =[]
 
         # 5. 캐릭터 초기화
         self.character.reinitialize(self)
+
+        # user
+        self.database = Database()
+        self.user=User.user_id
 
     def main(self):
         # 메인 이벤트
@@ -95,7 +99,6 @@ class InfiniteGame:
                 background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
 
 
             # 입력 처리
@@ -257,27 +260,6 @@ class InfiniteGame:
         menu.disable()
         pygame.mixer.music.stop()
 
-    '''# 뒤로가기 버튼에 적용되는 함수
-    def to_menu(self):
-        
-        self.menu.disable()
-        pygame.mixer.music.stop()
-
-    # 랭킹 등록 화면
-    def show_ranking_register_screen(self):
-        self.menu = pygame_menu.Menu('Game Over!!', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_DEFAULT)
-        self.register_frame = self.menu.add.frame_v(500, 300, align=ALIGN_CENTER)   # 가로 500, 세로 300의 프레임 생성
-        self.register_frame.pack(self.menu.add.label('register your rank', selectable=False, font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.label("Record : {}".format(self.score),font_size=Menus.fontsize_25.value),align=ALIGN_CENTER)
-        self.text_input = self.register_frame.pack(self.menu.add.text_input('Name: ', maxchar=Menus.ID_maxchar.value, input_underline='_', font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
-        self.register_frame.pack(self.menu.add.button('Register Ranking', self.show_register_result, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('Retry', self.retry, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.register_frame.pack(self.menu.add.button('to Menu', self.to_menu, font_size = Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)'''
-
     def show_ranking_register_screen(self):
         ranking_register_screen = pygame_menu.themes.THEME_DARK.copy()
         ranking_register_screen.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -287,45 +269,30 @@ class InfiniteGame:
                             theme=pygame_menu.themes.THEME_DEFAULT)
         self.menu.add.image(Images.lose.value, scale=Scales.tiny.value)
         self.menu.add.label("Score : {}".format(self.score))
-        self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
+        # self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
+        self.menu.add.button('Ranking', self.show_register_result) # 랭킹화면으로 넘어가도록 설정했음.
         self.menu.add.button('Retry', self.retry)
-        self.menu.add.button('Home', self.Home, self.menu)
+        self.menu.add.button('to Home', self.Home, self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
-        
-    '''def register_ranking(self):
-        self.result_frame = self.menu.add.frame_v(500, 100, align=ALIGN_CENTER, background_color = Color.GRAY.value) # 가로 500, 세로 100의 프레임 생성
-        name = User.user_id
-        rank = Rank()
-        if(isinstance(self.mode,InfiniteGame.EasyMode)): #이지모드인 경우
-            if(name == ''): # ID를 입력하지 않은 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            elif(rank.check_ID('easy', name) == 0): # ID가 중복되는 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            else: # 랭킹 등록이 완료된 경우
-                self.menu.clear() 
-                rank.add_data('current','easy',name,self.score)
-                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
-                self.menu.add.label("Easy Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
-                self.menu.add.vertical_margin(Menus.margin_20.value)
-                self.menu.add.button('to Menu', self.to_menu)
-
-        else: # 하드모드인 경우
-            if(name == ''): # ID를 입력하지 않은 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Please type name.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            elif(rank.check_ID('hard', name) == 0): # ID가 중복되는 경우
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label("Duplicated name. Try another.", selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-            else: # 랭킹 등록이 완료된 경우
-                self.menu.clear()
-                rank.add_data('current','hard',name,self.score)
-                self.menu.add.image(Images.icon_award.value, scale=Scales.large.value)
-                self.menu.add.label("Hard Mode Score Registered!", selectable=False, font_size=Menus.fontsize_default.value)
-                self.menu.add.vertical_margin(Menus.margin_20.value)
-                self.menu.add.button('to Menu', self.to_menu)'''
-
+    
+    def register_ranking(self): # 랭크 기록
+        current_score = self.score # 현재 게임 기록
+        print(self.user)
+        print(current_score)
+        if(isinstance(self.mode,InfiniteGame.EasyMode)): # easy mode
+            if self.database.rank_not_exists(self.user,"easy") is True : # 기록 없는 경우
+                self.database.update_score2("easy",current_score) # 기록추가
+                print("enter")
+            else : 
+                if (self.database.high_score("easy") <= current_score) : # 데이터 베이스에 저장되어 있는 점수 비교 후 등록
+                    self.database.update_score('easy',current_score) # 새로운 점수가 더 높으면 기록           
+        else : # hard mode
+            if self.database.rank_not_exists(self.user,"hard") is True : # 기록 없는 경우
+                self.database.update_score2("hard",current_score)
+            else :
+                if (self.database.high_score("hard") <= current_score) : # 데이터 베이스에 저장되어 있는 점수 비교 후 등록
+                    self.database.update_score('hard',current_score) 
+        LeaderBoardMenu(self.screen).rank()               
 
     # 랭킹 등록 결과 화면
     def show_register_result(self):
