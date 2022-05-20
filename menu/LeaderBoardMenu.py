@@ -7,6 +7,7 @@ from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.utils import make_surface
 from pygame_menu.widgets.core.widget import Widget
 from menu.LeaderBoardScrollMenu import *
+from data.database_user import *
 
 # 리더보드 관련 메뉴
 class LeaderBoardMenu:
@@ -56,18 +57,18 @@ class LeaderBoardMenu:
     # 데이터 베이스에서 이번 달 랭킹 정보 가져오기
     # mode : 난이도 (easy, hard)
     def get_current_rank(self, mode):
-            rank = Rank()
+            rank = Database()
             self.menu.clear()
             self.tens = 0 # 페이지 변수
 
             if(mode == 'easy'):
                 global easy_data
-                easy_data = rank.load_data('current','easy') # 데이터 불러옴
+                easy_data = rank.load_data('easy') # 데이터 불러옴
                 self.get_current_easy_rank_page(self.tens)
 
             elif(mode == 'hard'):
                 global hard_data
-                hard_data = rank.load_data('current','hard')
+                hard_data = rank.load_data('hard')
                 self.get_current_hard_rank_page(self.tens)
 
     # 페이지화 된 이번 달 easy 모드 랭킹 보여주기
