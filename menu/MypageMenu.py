@@ -1,62 +1,129 @@
 
-import webbrowser
-from sys import argv
 
 import pygame
 import pygame_menu
+from data.CharacterDataManager import *
 from data.Defs import *
-from data.Rank import *
-from pygame_menu.locals import ALIGN_CENTER
+from data.Stage import Stage
+from data.StageDataManager import *
+from data.database_user import Database
+from game.InfiniteGame import *
+from pygame_menu.locals import ALIGN_RIGHT
 from pygame_menu.utils import make_surface
-from pygame_menu.widgets.core.widget import Widget
-from Login import *
-from menu.LeaderBoardScrollMenu import *
 
+# 캐릭터 선택 메뉴
 class Mypage:
-    def __init__(self,screen):
-        self.database = Database()
-        self.size = screen.get_size()
-        self.screen = screen
-        self.mytheme = pygame_menu.Theme(
-                widget_font = pygame_menu.font.FONT_BEBAS,
-                #widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
-                title_font = pygame_menu.font.FONT_BEBAS,
-                selection_color = (0,0,0), #선택됐을때 글씨색 설정
-                widget_font_color = (0,0,0), #글씨색 설정
-                title_background_color = (0,100,162),
-                title_font_color = (255,255,255),
-                background_color = (255,255,255),
-                title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
-            )
+    image_widget: 'pygame_menu.widgets.Image'
+   # item_description_widget: 'pygame_menu.widgets.Label'
 
-        
-        self.menu = pygame_menu.Menu('Mypage', self.size[0], self.size[1],
+    def __init__(self,screen):
+        # 화면 받고 화면 크기 값 받기
+        self.screen = screen
+        self.size = screen.get_size()
+
+        #menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/Login.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
+        self.mytheme = pygame_menu.themes.THEME_ORANGE.copy()
+        #mytheme.widget_font = pygame_menu.font.FONT_8BIT
+        #mytheme.widget_background_color = (150, 213, 252) #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
+        self.mytheme.title_font = pygame_menu.font.FONT_BEBAS
+        self.mytheme.selection_color = (0,0,0) #선택됐을때 글씨색 설정
+        self.mytheme.widget_font_color = (0,0,0) #글씨색 설정
+        self.mytheme.title_background_color = (0,100,162)
+        self.mytheme.title_font_color = (255,255,255)
+        self.mytheme.widget_font = pygame_menu.font.FONT_BEBAS
+        #self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
+        self.mytheme.background_color = (255,255,255)
+
+        self.menu = pygame_menu.Menu('My Page', self.size[0], self.size[1],
                             theme=self.mytheme)
 
 
-        self.mytheme.widget_font_size = self.size[0] * 30//720
+        #캐릭터 데이터를 json에서 불러온다
+        self.character_data = CharacterDataManager.load()
+
+        self.show()
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def to_menu(self):
         self.menu.disable()
 
-    # 화면 표시
-    def show(self):
-        self.menu.clear()
+    #메뉴 구성하고 보이기
+    def show(self):  
         self.menu.add.label("My ID : %s "%User.user_id)
         self.menu.add.vertical_margin(10)
-        self.charidx = self.database.show_mychar()
-        self.menu.add.label("My Character : cat%d" % (self.charidx+1)) #저장된 값은 인덱스라서 +1을 해줌
-        if self.charidx == 0:
-            self.menu.add.image(image_path=Images.cat1.value)
-        if self.charidx == 1:
-            self.menu.add.image(image_path=Images.cat2.value)
-        if self.charidx == 2:
-            self.menu.add.image(image_path=Images.cat3.value)
-        if self.charidx == 3:
-            self.menu.add.image(image_path=Images.cat4.value)
-        self.menu.add.button("back", self.to_menu)
+        self.menu.add.label("My coin : %d "%User.coin)
+        #캐릭터 선택 메뉴 구성
+        characters = []
         
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        curs = Database().dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        curs.close()
+        '''char1 = data[1] # char1의 정보는 첫번째 인덱스에 저장되어 있음
+        char2 = data[2]
+        char3 = data[3]
+        char4 = data[4]'''
+        self.character_data = CharacterDataManager.load()
+        front_image_path = [Images.cat1.value,Images.cat2.value, Images.cat3.value, Images.cat4.value]
+        self.character_imgs = []
+        for i in range(1,5):
+            char = data[i]
+            
+            if(char == True):
+                default_image = pygame_menu.BaseImage(
+                image_path=front_image_path[i-1]
+                ).scale(0.5, 0.5)
+                characters.append((self.character_data[i-1].name, i-1))
+                self.character_imgs.append(default_image.copy())
+            
+        
+        self.character_selector = self.menu.add.selector(
+            title='Character :\t',
+            items=characters,
+            onchange=self.on_selector_change
+        )
+        self.image_widget = self.menu.add.image(
+            image_path=self.character_imgs[0],
+            padding=(25, 0, 0, 0)  # top, right, bottom, left
+        )
+        #self.item_description_widget = self.menu.add.label(title = "Unlocked" if self.character_data[0].is_unlocked == True else "Locked")
+        self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
+        # 각 캐릭터의 능력치 표시
+        self.power = self.frame_v.pack(self.menu.add.progress_bar(
+            title="Power",
+            default=int((self.character_data[0].missile_power/Default.character.value["max_stats"]["power"])*100),
+            progress_text_enabled = False,
+            box_progress_color = Color.RED.value
+        ), ALIGN_RIGHT)
+        self.fire_rate = self.frame_v.pack(self.menu.add.progress_bar(
+            title="Fire Rate",
+            default=int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[0].org_fire_interval)*100),
+            progress_text_enabled = False,
+            box_progress_color =Color.BLUE.value
+        ), ALIGN_RIGHT)
+        self.velocity = self.frame_v.pack(self.menu.add.progress_bar(
+            title="Mobility",
+            default=int((self.character_data[0].org_velocity/Default.character.value["max_stats"]["mobility"])*100),
+            progress_text_enabled = False,
+            box_progress_color = Color.GREEN.value
+        ), ALIGN_RIGHT)
+        self.mytheme.widget_background_color = (150, 213, 252)
+        self.menu.add.button("SELECT",self.select_character)
+        self.menu.add.vertical_margin(10)
+        self.menu.add.button("    BACK    ",self.to_menu)
+        self.update_from_selection(int(self.character_selector.get_value()[0][1]))
+        self.mytheme.widget_background_color = (0,0,0,0)
+
+    def select_character(self): #게임 시작 함수
+
+        # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
+        selected_idx = self.character_selector.get_value()[0][1]
+        User.character = selected_idx
+        database = Database()
+        database.set_char()
+
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
@@ -72,12 +139,19 @@ class Mypage:
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
             self.menu.resize(new_w, new_h)
-            self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
+            self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
-            font_size = new_w * 30 //720
-            self.mytheme.widget_font_size = font_size    
-   
 
-    def to_menu(self):
-        self.menu.disable()
+    # 캐릭터 변경 시 실행
+    def on_selector_change(self, selected, value: int) -> None:
+        self.update_from_selection(value)
+
+    # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
+    def update_from_selection(self, selected_value, **kwargs) -> None:
+        self.current = selected_value
+        self.image_widget.set_image(self.character_imgs[selected_value])
+        self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
+        self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
+        self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
+
