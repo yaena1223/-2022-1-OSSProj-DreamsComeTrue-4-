@@ -99,7 +99,7 @@ class Bomb(Item):
             game.item_list.remove(self)
 
 class Coin(Item):
-    # 코인 아이템: 획득 시 점수 증가
+    # 코인 아이템: 획득 시 보유하고 있는 코인 증가
     def __init__(self, animation):
         super().__init__(animation.frames, animation.frames_trans, "coin")
 
@@ -107,7 +107,7 @@ class Coin(Item):
     def use(self, game):
         if self.is_collidable == True:
             self.sfx.play()
-            game.score += 50
+            game.coin += 1
             self.is_collidable = False
             game.item_list.remove(self)
 
