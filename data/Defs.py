@@ -62,6 +62,10 @@ class Images(enum.Enum):
     win = "./Image/catthema/win.png"
     lose = "./Image/catthema/lose.png"
 
+    lock_cat2 = "./Image/catthema/lock_cat2.png"
+    lock_cat3 = "./Image/catthema/lock_cat3.png"
+    lock_cat4 = "./Image/catthema/lock_cat4.png"
+
 class Scales(enum.Enum):
     large = (2, 2)
     default = (1, 1)
