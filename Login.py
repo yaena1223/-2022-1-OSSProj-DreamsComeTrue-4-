@@ -83,6 +83,7 @@ class Login:
                     print(self.id)
                     User.user_id = self.id
                     User.character = self.database.show_mychar()
+                    User.coin = self.database.show_mycoin()
                     self.login_success()
                     # 계정의 coin,char 값 가져오기 => 아직 안함. 수정 필요
                     '''coin=self.database.load_exp_data(self.id) #로그인 성공하면 경험치 데이터베이스에서 받아오기

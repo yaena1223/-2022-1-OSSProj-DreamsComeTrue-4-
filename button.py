@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from data.Defs import *
 from menu.StageSelectMenu import *
-from game.StageGame import StageGame
+from game.StageGameplay import StageGame
 
 class button():   # 버튼 class
    
