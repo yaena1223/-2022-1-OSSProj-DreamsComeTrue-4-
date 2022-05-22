@@ -93,6 +93,27 @@ class Database:
         check_char = data[1] #user_id는 인덱스 0에, user_character는 인덱스 1에 저장되어 있음
         return check_char
 
+    def show_mycoin(self):
+        self.id = User.user_id
+        self.coin = User.coin
+        curs = self.dct_db.cursor()
+        sql = "SELECT user_id,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        curs.close()
+        check_coin = data[1] #user_id는 인덱스 0에, user_coin 인덱스 1에 저장되어 있음
+        return check_coin
+
+    def set_coin(self):
+        self.id = User.user_id
+        self.coin = User.coin
+        curs = self.dct_db.cursor()
+        sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+        curs.execute(sql,(self.coin, self.id))
+        self.dct_db.commit()
+        curs.close()
+
+
     # 유저 게임기록 업데이트
     def update_score(self,mode,new_score):
         self.id = User.user_id

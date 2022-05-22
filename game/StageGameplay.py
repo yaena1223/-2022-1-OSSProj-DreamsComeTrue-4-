@@ -20,6 +20,8 @@ from data.StageDataManager import *
 from object.Item import *
 from object.Mob import Mob
 from pygame_menu.utils import make_surface
+from data.Defs import User
+from data.database_user import *
 
 
 
@@ -372,6 +374,10 @@ class StageGame:
         self.menu.add.button('Home', self.Home, self.menu)
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        User.coin = User.coin + self.coin
+        print(User.coin)
+        self.database = Database()
+        self.database.set_coin()
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
