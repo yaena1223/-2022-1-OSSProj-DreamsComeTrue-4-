@@ -375,7 +375,7 @@ class StageGame:
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         User.coin = User.coin + self.coin
-        print(User.coin)
+        #print(User.coin)
         self.database = Database()
         self.database.set_coin()
 

@@ -274,6 +274,10 @@ class InfiniteGame:
         self.menu.add.button('Retry', self.retry)
         self.menu.add.button('to Home', self.Home, self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        User.coin = User.coin + self.coin
+        #print(User.coin)
+        self.database = Database()
+        self.database.set_coin()
     
     def register_ranking(self): # 랭크 기록
         current_score = self.score # 현재 게임 기록
