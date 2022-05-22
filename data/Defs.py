@@ -1,11 +1,16 @@
 import enum
 import math
+from operator import truediv
 from sys import version
 
 class User:
     user_id = ""
     coin = 0
     character = 0
+    cat1 = True
+    cat2 = False
+    cat3 = False
+    cat4 = False
 
 class Images(enum.Enum):
     lock = "./Image/catthema/lock.jpg"

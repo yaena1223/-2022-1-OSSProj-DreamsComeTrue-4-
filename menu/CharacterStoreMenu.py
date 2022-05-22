@@ -40,6 +40,7 @@ class CharacterStoreMenu:
 
         #캐릭터 데이터를 json에서 불러온다
         self.character_data = CharacterDataManager.load()
+        self.cat = [User.cat1, User.cat2, User.cat3, User.cat4]
 
         self.show()
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
@@ -51,9 +52,19 @@ class CharacterStoreMenu:
     def show(self):  
         #캐릭터 선택 메뉴 구성
         characters = []
-        front_image_path = [Images.cat1.value,Images.cat2.value, Images.cat3.value, Images.cat4.value]
-        for idx in range(len(self.character_data)):
+        #소유한 캐릭터 확인
+        count = 0
+        if(User.cat2 != True):
+            count +=1 
+        if(User.cat3 != True):
+            count +=1
+        if(User.cat4 != True):
+            count +=1          
+
+        front_image_path = [Images.cat2.value, Images.cat3.value, Images.cat4.value]
+        for idx in range(len(front_image_path)):
             characters.append((self.character_data[idx].name, idx))
+
         self.character_imgs = []
         for idx in range(len(front_image_path)):       
             default_image = pygame_menu.BaseImage(
@@ -70,7 +81,8 @@ class CharacterStoreMenu:
             image_path=self.character_imgs[0],
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
-        self.item_description_widget = self.menu.add.label(title = "Unlocked" if self.character_data[0].is_unlocked == True else "Locked")
+        
+        self.item_description_widget = self.menu.add.label("Locked")
         self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
         # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.menu.add.progress_bar(
@@ -92,12 +104,31 @@ class CharacterStoreMenu:
             box_progress_color = Color.GREEN.value
         ), ALIGN_RIGHT)
         self.mytheme.widget_background_color = (150, 213, 252)
-        self.menu.add.button("SELECT",self.select_character)
+        #self.item_description_widget = self.show_price
+        #self.menu.add.label(self.character_data[idx].price)
+        self.menu.add.button("Buy",self.buy_character)
         self.menu.add.vertical_margin(10)
         self.menu.add.button("    BACK    ",self.to_menu)
-        self.update_from_selection(int(self.character_selector.get_value()[0][1]))
+        #self.update_from_selection(int(self.character_selector.get_value()[0][1]))
         self.mytheme.widget_background_color = (0,0,0,0)
 
+    def buy_character(self):
+        # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
+        selected_idx = self.character_selector.get_value()[0][1]
+        self.cat[selected_idx] = True
+        self.item_description_widget.set_title(title = "Unlocked" if self.cat[selected_idx] == True else "Locked")
+        database = Database()
+        database.set_char()
+
+    #가격표시
+    def show_price(self, character):
+        if(character == 'cat2'):
+            self.menu.add.label('200')
+        if(character == 'cat3'):
+            self.menu.add.label('300')
+        if(character == 'cat4'):
+            self.menu.add.label('400')
+    '''
     def select_character(self): #게임 시작 함수
 
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
@@ -110,11 +141,6 @@ class CharacterStoreMenu:
             database = Database()
             database.set_char()
 
-            
-            
-            
-
-            
         else:
             print("character locked")
             print(self.character_data[selected_idx].name)
@@ -143,7 +169,7 @@ class CharacterStoreMenu:
     def back_from_locked(self):
         self.menu.disable()
         self.__init__(self.screen)
-
+'''
 
 
     # 화면 크기 조정 감지 및 비율 고정
@@ -170,9 +196,10 @@ class CharacterStoreMenu:
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
+        selected_idx = self.character_selector.get_value()[0][1]
         self.current = selected_value
         self.image_widget.set_image(self.character_imgs[selected_value])
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
-        self.item_description_widget.set_title(title = "Unlocked" if self.character_data[selected_value].is_unlocked == True else "Locked")
+        self.item_description_widget.set_title(title = "Unlocked" if self.cat[selected_idx] == True else "Locked")
