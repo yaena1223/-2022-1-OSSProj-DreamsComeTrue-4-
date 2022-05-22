@@ -65,6 +65,7 @@ class StageGame:
         self.k=0
         self.SB = 0
         self.coin = 0
+        self.infowindow_image = "Image/catthema/map1_dark.png" # 안내창 이미지
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         self.is_boss_stage = stage.is_boss_stage
@@ -74,6 +75,13 @@ class StageGame:
 
         # 5. 캐릭터 초기화
         self.character.reinitialize(self)
+
+    def main_info(self):
+        self.screen.fill(Color.WHITE.value)
+        infowindow = pygame.image.load(self.infowindow_image)
+        infowindow = pygame.transform.scale(infowindow, self.size)
+        self.screen.blit(infowindow, [0,0])
+        self.main()
         
     def main(self):
         # 메인 이벤트
