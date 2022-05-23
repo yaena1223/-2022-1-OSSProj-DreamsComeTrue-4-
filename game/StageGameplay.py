@@ -23,6 +23,8 @@ from pygame_menu.utils import make_surface
 from data.Defs import User
 from data.database_user import *
 
+import time
+
 
 
 class StageGame:
@@ -63,6 +65,7 @@ class StageGame:
         self.background_image = stage.background_image
         self.background_music = stage.background_music
         self.k=0
+        self.run=0
         self.SB = 0
         self.coin = 0
         self.infowindow_image = "Image/catthema/map1_dark.png" # 안내창 이미지
@@ -81,6 +84,8 @@ class StageGame:
         infowindow = pygame.image.load(self.infowindow_image)
         infowindow = pygame.transform.scale(infowindow, self.size)
         self.screen.blit(infowindow, [0,0])
+        pygame.display.flip()
+        time.sleep(3) # 3초뒤에 게임 시작.
         self.main()
         
     def main(self):
