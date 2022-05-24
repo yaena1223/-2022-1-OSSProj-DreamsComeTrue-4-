@@ -151,17 +151,17 @@ class GameselectMenu:
 
                     if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main()
+                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Night view"][self.stage_level_map2])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main()
+                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Namsan"][self.stage_level_map3])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main()
+                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.level_map1.isOver(pos):
