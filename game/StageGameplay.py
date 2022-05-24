@@ -65,10 +65,10 @@ class StageGame:
         self.background_image = stage.background_image
         self.background_music = stage.background_music
         self.k=0
-        self.run=0
         self.SB = 0
         self.coin = 0
-        self.infowindow_image = "Image/catthema/map1_dark.png" # 안내창 이미지
+        # 0524_다희_이미지 나중에 바꿀것.
+        self.infowindow_image = "Image/catthema/map{}_dark.png".format(self.stage.stage)
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         self.is_boss_stage = stage.is_boss_stage
@@ -80,10 +80,15 @@ class StageGame:
         self.character.reinitialize(self)
 
     def main_info(self):
-        self.screen.fill(Color.WHITE.value)
+        self.menu.add.image(self.infowindow_image, scale=Scales.default.value)
         infowindow = pygame.image.load(self.infowindow_image)
         infowindow = pygame.transform.scale(infowindow, self.size)
         self.screen.blit(infowindow, [0,0])
+        font = pygame.font.Font(Default.font.value, self.size[0]//15)
+        info_stage_test = font.render("stage {} ".format(self.stage.stage), True, Color.WHITE.value) 
+        info_score_text = font.render("목표점수는 {} 입니다.".format(self.goal_score), True, Color.WHITE.value) 
+        self.screen.blit(info_stage_test,(90,140)) 
+        self.screen.blit(info_score_text,(45,170))
         pygame.display.flip()
         time.sleep(3) # 3초뒤에 게임 시작.
         self.main()
