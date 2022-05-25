@@ -7,10 +7,11 @@ class User:
     user_id = ""
     coin = 0
     character = 0
-    cat1 = True
-    cat2 = False
-    cat3 = False
-    cat4 = False
+    cat1 = 1
+    cat2 = 0
+    cat3 = 0
+    cat4 = 0
+    cat = [cat1, cat2, cat3, cat4]
 
 class Images(enum.Enum):
     lock = "./Image/catthema/lock.jpg"
