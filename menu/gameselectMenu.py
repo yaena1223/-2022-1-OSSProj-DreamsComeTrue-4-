@@ -55,6 +55,8 @@ class GameselectMenu:
         self.buttonlist2=[self.barcol,self.map1,self.map2,self.map3,self.mode_map1,self.mode_map2,self.mode_map3,
         self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help] # inf mode
 
+        self.attchar=["./Image/catthema/attack/cat_att.png","./Image/catthema/attack/dog.png","./Image/catthema/attack/snake.png"]
+
         self.stage_level_map1 = "1"
         self.stage_level_map2 = "1"
         self.stage_level_map3 = "1"
@@ -78,6 +80,8 @@ class GameselectMenu:
         self.stay=0 
 
     def show(self,screen):     
+
+        self.check_resize(screen)
 
         if self.modestate == "stage" : # stage mode
 
@@ -220,6 +224,9 @@ class GameselectMenu:
                     if self.store.isOver(pos):
                         CharacterStoreMenu(self.screen).show()
 
+                    if self.help.isOver(pos):
+                        HelpMenu(self.screen).show()
+
 
         else :
             screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
@@ -271,17 +278,17 @@ class GameselectMenu:
 
                     if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map1][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map1.png" ).main()
+                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map1.png",self.attchar[0]).main()
                     pygame.display.update()
 
                     if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map2][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map2.png" ).main()
+                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map2.png",self.attchar[1]).main()
                     pygame.display.update()
 
                     if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map3][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map3.png" ).main()
+                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map3.png",self.attchar[2]).main()
                     pygame.display.update()
 
                     if self.mode_map1.isOver(pos):
@@ -324,3 +331,18 @@ class GameselectMenu:
 
                     if self.store.isOver(pos):
                         CharacterStoreMenu(self.screen).show()
+
+                    if self.help.isOver(pos):
+                        HelpMenu(self.screen).show()
+
+    # 화면 크기 조정 감지 및 비율 고정
+    def check_resize(self,screen):
+        if (self.size != screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            screen = pygame.display.set_mode(ratio_screen_size,
+                                                    pygame.RESIZABLE)

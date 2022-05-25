@@ -28,7 +28,7 @@ from data.Defs import User
 
 class InfiniteGame:
 
-    def __init__(self,character,mode,mapimg):
+    def __init__(self,character,mode,mapimg,attimg):
         # 1. 게임초기화 
         pygame.init()
 
@@ -57,7 +57,7 @@ class InfiniteGame:
         self.life = 3
         self.start_time = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = "./Image/catthema/attack/dust.png"
+        self.mob_image = attimg
         self.background_image = mapimg
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.SB = 0
