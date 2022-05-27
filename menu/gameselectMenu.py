@@ -16,7 +16,7 @@ from menu.LeaderBoardMenu import *
 from menu.MypageMenu import *
 from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
-from Login import *
+from Main import *
 
 class GameselectMenu:
     def __init__(self,screen):
@@ -226,6 +226,9 @@ class GameselectMenu:
 
                     if self.help.isOver(pos):
                         HelpMenu(self.screen).show()
+
+                    if self.logout.isOver(pos):
+                        Login(self.screen).show()
 
 
         else :
