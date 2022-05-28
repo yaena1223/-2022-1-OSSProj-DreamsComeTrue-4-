@@ -9,7 +9,6 @@ from data.database_user import *
 from data.Defs import *
 from data.Defs import User
 from menu.gameselectMenu import *
-from Main import *
 
 class Display:
     w_init = 1/3
@@ -23,17 +22,17 @@ class Utillization:
 
 
 class Login:
-    id = ''
-    password = ''
-    database = Database()
-    coin = 0
-    char = 1
     def __init__(self,screen):
-        
+        self.database = Database()
+         # 1. 게임초기화 
+        pygame.init()
 
-        self.size = screen.get_size()
-        self.screen = pygame.display.set_mode(self.size,
-                                            pygame.RESIZABLE)
+        # 2. 게임창 옵션 설정
+        infoObject = pygame.display.Info()
+
+        self.size = [infoObject.current_w,infoObject.current_h]
+        self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
+
         self.font_size = self.size[0] * 30 //720
         menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.login.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL) #메뉴 이미지, Images는 Defs.py에 선언되어 있는 클래스명
         self.mytheme = pygame_menu.Theme(
@@ -165,11 +164,11 @@ class Login:
 
     def login_success(self):
         #Main(screen).show()
-        game=GameselectMenu(screen)
-        if __name__ == '__main__':
-            while True:
-                game.show(screen)
-                pygame.display.flip()
+        game=GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()
 
 
     def signup_fail(self):
@@ -184,6 +183,27 @@ class Login:
         self.menu.add.button('  back  ', self.first_page)
 
 
+    def main(self):
+        while True:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    break
+                if event.type == pygame.VIDEORESIZE:
+                    pass
+
+
+            # 화면에 메뉴 그리기
+            screen.fill((25, 0, 50)) #값 변경해보고 지워봤는데 큰 변화 없음. 없어도 되는 기능인듯?
+            
+            login.menu.update(events)
+            login.menu.draw(screen)
+            #pygame.draw.rect(screen,color,input_rect,2)
+
+
+            pygame.display.flip() #화면이 계속 업데이트 될 수 있도록 설정
+
   
 
 if __name__ == '__main__':
@@ -194,25 +214,6 @@ if __name__ == '__main__':
     ww, wh= pygame.display.get_surface().get_size() 
     Default.game.value["size"]["x"] = size[0] #Default는 Defs.py에 선언되어 있는 클래스명
     Default.game.value["size"]["y"] = size[1]
-
     login = Login(screen)
 
-    while True:
-        events = pygame.event.get()
-        for event in events:
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                break
-            if event.type == pygame.VIDEORESIZE:
-                pass
-
-
-        # 화면에 메뉴 그리기
-        screen.fill((25, 0, 50)) #값 변경해보고 지워봤는데 큰 변화 없음. 없어도 되는 기능인듯?
-        
-        login.menu.update(events)
-        login.menu.draw(screen)
-        #pygame.draw.rect(screen,color,input_rect,2)
-
-
-        pygame.display.flip() #화면이 계속 업데이트 될 수 있도록 설정
+    
