@@ -22,10 +22,8 @@ from object.Mob import Mob
 from pygame_menu.utils import make_surface
 from data.Defs import User
 from data.database_user import *
-
+from data.Stage import Stage
 import time
-
-
 
 class StageGame:
 
@@ -67,8 +65,7 @@ class StageGame:
         self.k=0
         self.SB = 0
         self.coin = 0
-        # 0524_다희_이미지 나중에 바꿀것.
-        self.infowindow_image = "Image/catthema/map{}_dark.png".format(self.stage.stage)
+        self.infowindow_image = "Image/catthema/{}_dark.png".format(self.stage.chapter)
 
         # 4-1. 보스 스테이지를 위한 변수 초기화
         self.is_boss_stage = stage.is_boss_stage
