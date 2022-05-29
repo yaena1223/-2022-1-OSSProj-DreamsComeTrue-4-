@@ -13,6 +13,7 @@ class User:
     cat3 = 0
     cat4 = 0
     cat = [cat1, cat2, cat3, cat4]
+    price = [0, 100, 100, 200]
 
 class Images(enum.Enum):
     lock = "./Image/catthema/lock.jpg"

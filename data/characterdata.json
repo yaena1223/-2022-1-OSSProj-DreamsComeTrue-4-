@@ -12,7 +12,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 200,
             "fire_interval": 1.3,
-            "is_unlocked": true
+            "price": 0
         },
         {
             "name": "Merry",
@@ -26,7 +26,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 300,
             "fire_interval": 1.0,
-            "is_unlocked": true
+            "price": 100
         },
         {
             "name": "Haengal",
@@ -40,7 +40,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 400,
             "fire_interval": 0.8,
-            "is_unlocked": false
+            "price": 100
         },
         {
             "name": "Kongchi",
@@ -54,7 +54,7 @@
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 450,
             "fire_interval": 0.6,
-            "is_unlocked": false
+            "price": 200
         }
     ]
 }

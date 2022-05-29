@@ -113,6 +113,31 @@ class Database:
         self.dct_db.commit()
         curs.close()
 
+    def buy_char(self):
+        self.id = User.user_id
+        self.buy = User.buy_character
+        self.coin = User.coin
+        self.price = User.price
+        curs = self.dct_db.cursor()
+        if(self.buy == 1):
+            sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
+            curs.execute(sql, (1, self.id))
+            sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+            curs.execute(sql, (self.coin-100, self.id))
+            self.dct_db.commit()
+        if(self.buy == 2):
+            sql = "UPDATE users2 SET char3=%s WHERE user_id = %s"
+            curs.execute(sql, (1, self.id))
+            sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+            curs.execute(sql, (self.coin-100, self.id))
+            self.dct_db.commit()
+        if(self.buy == 3):
+            sql = "UPDATE users2 SET char4=%s WHERE user_id = %s"
+            curs.execute(sql, (1, self.id))
+            sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+            curs.execute(sql, (self.coin-200, self.id))
+            self.dct_db.commit()
+        curs.close()
 
     # 유저 게임기록 업데이트
     def update_score(self,mode,new_score):
