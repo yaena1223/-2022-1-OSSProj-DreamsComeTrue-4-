@@ -225,8 +225,11 @@ class Database:
         curs.execute(sql,self.id) 
         data = curs.fetchone()  
         curs.close()
-        easy_score = data[1] #user_id는 인덱스 0에, score 인덱스 1에 저장되어 있음
-        User.easy_score  = easy_score
+        if data == None:
+            User.easy_score = "None"
+        else: 
+            easy_score = data[1] #user_id는 인덱스 0에, score 인덱스 1에 저장되어 있음
+            User.easy_score  = easy_score
 
 
     def my_hard_rank(self):
@@ -236,5 +239,8 @@ class Database:
         curs.execute(sql,self.id) 
         data = curs.fetchone()  
         curs.close()
-        hard_score = data[1] #user_id는 인덱스 0에, score 인덱스 1에 저장되어 있음
-        User.hard_score  = hard_score
+        if data == None:
+            User.hard_score = "None"
+        else: 
+            hard_score = data[1] #user_id는 인덱스 0에, score 인덱스 1에 저장되어 있음
+            User.hard_score  = hard_score
