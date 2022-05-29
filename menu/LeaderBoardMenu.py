@@ -171,61 +171,7 @@ class LeaderBoardMenu:
         self.tens -= 1
         self.get_current_hard_rank_page(self.tens)
 
-    # 이번 달 랭킹 검색 화면
-    def show_current_rank_search(self):
-        self.menu.clear()
-        self.menu.add.label("--Current Rank Search--",selectable=False,font_size=Menus.fontsize_30.value)
-        self.menu.add.vertical_margin(Menus.margin_50.value)
-        self.search_frame = self.menu.add.frame_v(600, 250, align=ALIGN_CENTER) # 가로 600, 세로 250의 프레임 생성
-        self.search_frame.pack(self.menu.add.label('search your rank', selectable=False, font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        # ID 입력
-        self.text_input = self.search_frame.pack(self.menu.add.text_input('ID :', maxchar=Menus.ID_maxchar.value, input_underline='_', font_size=Menus.fontsize_default.value),align=ALIGN_CENTER)
-        self.search_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
-        # 난이도 선택
-        difficulty = [('easy', (0)), ('hard', (0))]
-        self.selector = self.search_frame.pack(self.menu.add.selector(
-            title = 'difficulty:\t',
-            items = difficulty,
-            font_size = Menus.fontsize_default.value
-        ),align = ALIGN_CENTER)
-        self.search_frame.pack(self.menu.add.vertical_margin(Menus.margin_20.value))
-        self.search_frame.pack(self.menu.add.button('search',self.current_rank_search_result,font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.search_frame.pack(self.menu.add.button('back', self.rank, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER)
-        self.result_frame = self.menu.add.frame_v(500, 180, background_color = Color.GRAY.value,align=ALIGN_CENTER) # 가로 500, 세로 180의 프레임 생성
-        self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-
-    # 검색 결과 프레임
-    def get_current_rank_search_result(self, ID):
-        rank = Rank()
-        self.result_frame = self.menu.add.frame_v(500, 180, background_color = Color.GRAY.value, align=ALIGN_CENTER)
-        if(self.selector.get_index() == 0): # easy 모드로 검색한 경우
-            rank_result = rank.search_data('current', 'easy', ID)
-            if(rank_result == 0):   # 검색 결과가 없는 경우
-                self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label('Rank not found. Please search again.',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-            else:   # 검색 결과가 있는 경우, 현재 랭킹 알려주기
-                self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-                self.result_frame.pack(self.menu.add.image(Images.icon_award.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label('Rank : '+str(rank_result),selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-       
-        if(self.selector.get_index() == 1): # hard 모드로 검색한 경우
-            rank_result = rank.search_data('current', 'hard', ID)
-            if(rank_result == 0):   # 검색 결과가 없는 경우
-                self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-                self.result_frame.pack(self.menu.add.image(Images.icon_caution.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label('Rank not found. Please search again.',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-            else:   # 검색 결과가 있는 경우, 현재 랭킹 알려주기
-                self.result_frame.pack(self.menu.add.label('----------------------------result----------------------------',selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-                self.result_frame.pack(self.menu.add.image(Images.icon_award.value, scale=Scales.default.value), align=ALIGN_CENTER)
-                self.result_frame.pack(self.menu.add.label('Current Rank : '+str(rank_result),selectable=False, font_size=Menus.fontsize_default.value), align=ALIGN_CENTER, margin=Menus.ranking_search_result_margin.value)
-
-    # 이번 달 랭킹 검색 화면에 검색 결과 프레임 반영
-    def current_rank_search_result(self):
-        ID = self.text_input.get_value()
-        self.menu.remove_widget(self.result_frame)
-        self.get_current_rank_search_result(ID)
-
+    
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경

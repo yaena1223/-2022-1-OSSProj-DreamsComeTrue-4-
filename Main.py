@@ -33,7 +33,6 @@ class Login:
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
 
-        self.font_size = self.size[0] * 30 //720
         menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.login.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL) #메뉴 이미지, Images는 Defs.py에 선언되어 있는 클래스명
         self.mytheme = pygame_menu.Theme(
             widget_font = pygame_menu.font.FONT_8BIT,
@@ -44,9 +43,10 @@ class Login:
             title_background_color = (0,100,162),
             title_font_color = (255,255,255),
             title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
-            widget_font_size = self.font_size
+            widget_font_size = self.size[0] * 30 //720
 
         )
+       
         self.mytheme.background_color = menu_image
         
         self.menu = pygame_menu.Menu('DreamsComeTrue', self.size[0],self.size[1],theme=self.mytheme) #상단바 
@@ -65,12 +65,15 @@ class Login:
                                                     pygame.RESIZABLE)
             window_size = self.screen.get_size()
             new_w, new_h = 1 * window_size[0], 1 * window_size[1]
+            font_size = new_w * 30 //720
+            self.mytheme.widget_font_size = font_size
             self.menu.resize(new_w, new_h)
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
-            font_size = new_w * 30 //720
-            self.mytheme.widget_font_size = font_size
+            
+            return True
+        return False
 
     def first_page(self): # 첫화면 
         self.menu.clear()
