@@ -50,7 +50,11 @@ class Mypage:
     #메뉴 구성하고 보이기
     def show(self):  
         self.menu.add.label("My ID : %s "%User.user_id)
-        self.menu.add.vertical_margin(10)
+        self.menu.add.vertical_margin(2)
+        Database().my_easy_rank()
+        Database().my_hard_rank()
+        self.menu.add.label("Easy Score : %d, Hard Score : %d"%(User.easy_score,User.hard_score))
+        self.menu.add.vertical_margin(2)
         self.menu.add.label("My coin : %d "%User.coin)
         #캐릭터 선택 메뉴 구성
         characters = []
