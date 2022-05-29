@@ -23,7 +23,7 @@ class Character(Object):
     # missile_power : 미사일의 공격력 (int)
     # org_fire_interval : 발사 간격 기본값 (float)
     # fire_interval : 발사 간격(값이 작을 수록 발사속도 빠름) (float)
-    # is_unlocked : 캐릭터 해금여부 (bool)
+    # price : 캐릭터 가격 (int)
     # bomb_count : 현재 소지하고 있는 폭탄 개수 (int)
     # fire_count : 현재 발사체 개수 (int)
     # missiles_fired : 발사된 미사일 리스트 (list)
@@ -34,7 +34,7 @@ class Character(Object):
     # auto_target : 유도탄 발사 여부 (bool)
     # is_booasted : 속도 증가 여부 (bool)
     def __init__(self, name, img_path, velocity, missile_img, missile_size, 
-                missile_sfx, missile_power, fire_interval, is_unlocked):
+                missile_sfx, missile_power, fire_interval, price):
         super().__init__(img_path, Default.character.value["size"], velocity)
         self.name = name
         self.org_velocity = velocity
@@ -48,7 +48,7 @@ class Character(Object):
         self.missile_power = missile_power
         self.org_fire_interval = fire_interval
         self.fire_interval = fire_interval
-        self.is_unlocked = is_unlocked
+        self.price = price
 
     # 게임 시작 시 캐릭터 초기화를 위해 필수적으로 실행
     def reinitialize(self, game):
@@ -211,5 +211,5 @@ class Character(Object):
             "missile_sfx": self.missile_sfx_path,
             "missile_power": self.missile_power,
             "fire_interval": self.org_fire_interval,
-            "is_unlocked": self.is_unlocked
+            "price": self.price
         }

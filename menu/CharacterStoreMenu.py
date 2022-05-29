@@ -1,5 +1,8 @@
 
 
+from os import name
+from tokenize import String
+from turtle import title
 import pygame
 import pygame_menu
 from data.CharacterDataManager import *
@@ -10,6 +13,7 @@ from data.database_user import Database
 from game.InfiniteGame import *
 from pygame_menu.locals import ALIGN_RIGHT
 from pygame_menu.utils import make_surface
+from object.Character import *
 
 # 캐릭터 선택 메뉴
 class CharacterStoreMenu:
@@ -34,13 +38,12 @@ class CharacterStoreMenu:
         #self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
         self.mytheme.background_color = (0,0,0)
 
-        self.menu = pygame_menu.Menu('Select Character...', self.size[0], self.size[1],
+        self.menu = pygame_menu.Menu('Character Store', self.size[0], self.size[1],
                             theme=self.mytheme)
 
 
         #캐릭터 데이터를 json에서 불러온다
         self.character_data = CharacterDataManager.load()
-        self.cat = [User.cat1, User.cat2, User.cat3, User.cat4]
 
         self.show()
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
@@ -50,28 +53,45 @@ class CharacterStoreMenu:
 
     #메뉴 구성하고 보이기
     def show(self):  
+        self.menu.add.label("My coin : %d "%User.coin)
         #캐릭터 선택 메뉴 구성
         characters = []
-        #소유한 캐릭터 확인
-        count = 0
-        if(User.cat2 != True):
-            count +=1 
-        if(User.cat3 != True):
-            count +=1
-        if(User.cat4 != True):
-            count +=1          
 
-        front_image_path = [Images.cat2.value, Images.cat3.value, Images.cat4.value]
-        for idx in range(len(front_image_path)):
-            characters.append((self.character_data[idx].name, idx))
+        curs = Database().dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        curs.close()        
+
+        self.character_data = CharacterDataManager.load()
+
+        front_image_path = [Images.cat1.value, Images.cat2.value, Images.cat3.value, Images.cat4.value]
 
         self.character_imgs = []
-        for idx in range(len(front_image_path)):       
-            default_image = pygame_menu.BaseImage(
-                image_path=front_image_path[idx]
-            ).scale(0.5, 0.5)
-            self.character_imgs.append(default_image.copy())
+        self.character_imgs2 = []
+        self.price = []
+
+        for idx in range(1,5):
+            char = data[idx] 
+
+            if(char == False):    
+                default_image = pygame_menu.BaseImage(
+                    image_path=front_image_path[idx-1]
+                ).scale(0.5, 0.5)
+                characters.append((self.character_data[idx-1].name, idx-1))
+                self.character_imgs.append(default_image.copy())
         
+        for i in range(4): 
+                default_image = pygame_menu.BaseImage(
+                image_path=front_image_path[i]
+                ).scale(0.5, 0.5)
+     
+                self.character_imgs2.append(default_image.copy())
+
+        for i in range(0,4):
+           self.price.append(User.price[i]) 
+            
         self.character_selector = self.menu.add.selector(
             title='Character :\t',
             items=characters,
@@ -82,7 +102,8 @@ class CharacterStoreMenu:
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
         
-        self.item_description_widget = self.menu.add.label("Locked")
+
+        self.item_description_widget = self.menu.add.label("")
         self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
         # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.menu.add.progress_bar(
@@ -105,71 +126,64 @@ class CharacterStoreMenu:
         ), ALIGN_RIGHT)
         self.mytheme.widget_background_color = (150, 213, 252)
         #self.item_description_widget = self.show_price
-        #self.menu.add.label(self.character_data[idx].price)
-        self.menu.add.button("Buy",self.buy_character)
+        
+        self.menu.add.button("Buy", self.buy_character)
         self.menu.add.vertical_margin(10)
         self.menu.add.button("    BACK    ",self.to_menu)
-        #self.update_from_selection(int(self.character_selector.get_value()[0][1]))
+        self.lock()
+
+        self.update_from_selection(int(self.character_selector.get_value()[0][1]))
         self.mytheme.widget_background_color = (0,0,0,0)
+        
 
     def buy_character(self):
+        curs = Database().dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char1,char2,char3,char4,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        curs.close()
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_idx = self.character_selector.get_value()[0][1]
-        self.cat[selected_idx] = True
-        self.item_description_widget.set_title(title = "Unlocked" if self.cat[selected_idx] == True else "Locked")
-        database = Database()
-        database.set_char()
-
-    #가격표시
-    def show_price(self, character):
-        if(character == 'cat2'):
-            self.menu.add.label('200')
-        if(character == 'cat3'):
-            self.menu.add.label('300')
-        if(character == 'cat4'):
-            self.menu.add.label('400')
-    '''
-    def select_character(self): #게임 시작 함수
-
-        # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
-        selected_idx = self.character_selector.get_value()[0][1]
-
-        #캐릭터가 열려있는지 확인
-        if (self.character_data[selected_idx].is_unlocked): #캐릭터가 열려있다면
-            User.character = selected_idx
-            #print(User.character)
+        if(User.coin >= self.price[selected_idx]):
+            User.buy_character = selected_idx
             database = Database()
-            database.set_char()
+            database.buy_char()
+            self.item_description_widget.set_title(title = "Unlocked" )
 
+        
+        
+    #잠금 표시
+    def lock(self):
+        curs = Database().dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        curs.close()
+
+        selected_idx = self.character_selector.get_value()[0][1]
+        #self.item_description_widget.set_title(title = "Unlocked" if data[selected_idx] == True else "Locked")
+
+        if(data[2] == 0):
+            self.item_description_widget.set_title(title = "Locked")
         else:
-            print("character locked")
-            print(self.character_data[selected_idx].name)
-            self.showCharactereLockedScreen(self.character_data[selected_idx].name)
-            #print(User.character)
+            self.item_description_widget.set_title(title = "Unlocked" if data[selected_idx] == True else "Locked")
+        
+        if(data[3] == 0):
+            self.item_description_widget.set_title(title = "Locked")
+        else:
+            self.item_description_widget.set_title(title = "Unlocked" if data[selected_idx] == True else "Locked")
+        
+        if(data[4] == 0):
+            self.item_description_widget.set_title(title = "Locked")
+        else:
+            self.item_description_widget.set_title(title = "Unlocked" if data[selected_idx] == True else "Locked")
+        
+    
 
-            
 
-
-
-    # 잠긴 캐릭터 선택 시 보여지는 화면
-    def showCharactereLockedScreen(self, character):       
-        self.menu.clear()
-        if(character == 'cat2'):
-            self.menu.add.image(Images.lock.value)
-        elif(character == 'cat3'):
-            self.menu.add.image(Images.lock.value)
-        elif(character == 'cat4'):
-            self.menu.add.image(Images.lock.value)
-
-        self.menu.add.label("")
-        #self.mytheme.widget_background_color = (150, 213, 252)
-        self.menu.add.button('back', self.back_from_locked)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
-
-    def back_from_locked(self):
-        self.menu.disable()
-        self.__init__(self.screen)
-'''
+    
 
 
     # 화면 크기 조정 감지 및 비율 고정
@@ -196,10 +210,10 @@ class CharacterStoreMenu:
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
-        selected_idx = self.character_selector.get_value()[0][1]
+        #selected_idx = self.character_selector.get_value()[0][1]
         self.current = selected_value
-        self.image_widget.set_image(self.character_imgs[selected_value])
+        self.image_widget.set_image(self.character_imgs2[selected_value])
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
-        self.item_description_widget.set_title(title = "Unlocked" if self.cat[selected_idx] == True else "Locked")
+        self.item_description_widget.set_title(title = self.price[selected_value])
