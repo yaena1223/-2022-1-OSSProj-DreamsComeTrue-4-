@@ -67,7 +67,8 @@ class Mypage:
         char4 = data[4]'''
         self.character_data = CharacterDataManager.load()
         front_image_path = [Images.cat1.value,Images.cat2.value, Images.cat3.value, Images.cat4.value]
-        self.character_imgs = []
+        self.character_imgs = [] #보유하고 있는 이미지만 들어 있는 파일
+        self.character_imgs2 = [] #전체 이미지 들어 있는 파일
         for i in range(1,5):
             char = data[i]
             
@@ -75,14 +76,22 @@ class Mypage:
                 default_image = pygame_menu.BaseImage(
                 image_path=front_image_path[i-1]
                 ).scale(0.5, 0.5)
+                #print("이미지경로",front_image_path[i-1])
                 characters.append((self.character_data[i-1].name, i-1))
                 self.character_imgs.append(default_image.copy())
+
+        for i in range(4): 
+                default_image = pygame_menu.BaseImage(
+                image_path=front_image_path[i]
+                ).scale(0.5, 0.5)
+     
+                self.character_imgs2.append(default_image.copy())
             
-        
+        #print("이미지리스트",self.character_imgs)
         self.character_selector = self.menu.add.selector(
             title='Character :\t',
             items=characters,
-            onchange=self.on_selector_change
+            onchange=self.on_selector_change #이미지 수정 코드
         )
         self.image_widget = self.menu.add.image(
             image_path=self.character_imgs[0],
@@ -117,7 +126,6 @@ class Mypage:
         self.mytheme.widget_background_color = (0,0,0,0)
 
     def select_character(self): #게임 시작 함수
-
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_idx = self.character_selector.get_value()[0][1]
         User.character = selected_idx
@@ -150,7 +158,7 @@ class Mypage:
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
         self.current = selected_value
-        self.image_widget.set_image(self.character_imgs[selected_value])
+        self.image_widget.set_image(self.character_imgs2[selected_value])
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))

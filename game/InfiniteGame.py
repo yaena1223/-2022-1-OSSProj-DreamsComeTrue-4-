@@ -233,6 +233,7 @@ class InfiniteGame:
 
             #목숨이 0 이하면 랭킹 등록 화면
             if(self.life<1):
+                self.register_ranking()
                 self.show_ranking_register_screen()
                 return
 
@@ -240,6 +241,7 @@ class InfiniteGame:
 
 
         # While 빠져나오면 랭킹등록 스크린 실행
+        self.register_ranking()
         self.show_ranking_register_screen()
                 
     #충돌 감지 함수
@@ -296,12 +298,13 @@ class InfiniteGame:
             else :
                 if (self.database.high_score("hard") <= current_score) : # 데이터 베이스에 저장되어 있는 점수 비교 후 등록
                     self.database.update_score('hard',current_score) 
-        LeaderBoardMenu(self.screen).rank()               
+                     
 
     # 랭킹 등록 결과 화면
     def show_register_result(self):
         #self.menu.remove_widget(self.result_frame)
-        self.register_ranking()
+        
+        LeaderBoardMenu(self.screen).rank()  
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
