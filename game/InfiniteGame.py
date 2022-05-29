@@ -38,6 +38,8 @@ class InfiniteGame:
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
+        self.font_size = self.size[0] * 40 //720
+        self.scale = (self.size[0]*0.00015,self.size[1]*0.00015)
         
 
         # 3. 게임 내 필요한 설정
@@ -263,19 +265,20 @@ class InfiniteGame:
         pygame.mixer.music.stop()
 
     def show_ranking_register_screen(self):
-        ranking_register_screen = pygame_menu.themes.THEME_DARK.copy()
+        ranking_register_screen = pygame_menu.themes.THEME_DEFAULT.copy()
         ranking_register_screen.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         ranking_register_screen.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         ranking_register_screen.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Game Over', self.size[0], self.size[1],
-                            theme=pygame_menu.themes.THEME_DEFAULT)
-        self.menu.add.image(Images.lose.value, scale=Scales.tiny.value)
-        self.menu.add.label("Score : {}".format(self.score))
+                            theme=ranking_register_screen)
+        self.menu.add.image(Images.lose.value, scale=self.scale)
+        self.menu.add.label("Score : {}".format(self.score),font_size = self.font_size)
         # self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
-        self.menu.add.button('Ranking', self.show_register_result) # 랭킹화면으로 넘어가도록 설정했음.
-        self.menu.add.button('Retry', self.retry)
-        self.menu.add.button('to Home', self.Home, self.menu)
+        self.menu.add.button('Ranking', self.show_register_result,font_size = self.font_size) # 랭킹화면으로 넘어가도록 설정했음.
+        self.menu.add.button('Retry', self.retry, font_size = self.font_size)
+        self.menu.add.button('to Home', self.Home, self.menu,font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        pygame.display.flip()
         User.coin = User.coin + self.coin
         #print(User.coin)
         self.database = Database()
@@ -323,10 +326,13 @@ class InfiniteGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
+            font_size = new_w * 40 //720
+            self.font_size = font_size
+            self.scale = (new_w*0.00015,new_h*0.00015)
 
     #재시도 버튼 클릭 시 실행
     def retry(self):
-        InfiniteGame(self.character,self.mode, self.background_image).main()
+        InfiniteGame(self.character,self.mode, self.background_image,self.mob_image).main()
         self.menu.disable()
     
 
