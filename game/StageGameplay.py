@@ -77,15 +77,16 @@ class StageGame:
         self.character.reinitialize(self)
 
     def main_info(self):
+        self.check_resize()
         self.menu.add.image(self.infowindow_image, scale=Scales.default.value)
         infowindow = pygame.image.load(self.infowindow_image)
         infowindow = pygame.transform.scale(infowindow, self.size)
         self.screen.blit(infowindow, [0,0])
         font = pygame.font.Font(Default.font.value, self.size[0]//15)
         info_stage_test = font.render("stage {} ".format(self.stage.stage), True, Color.WHITE.value) 
-        info_score_text = font.render("목표점수는 {} 입니다.".format(self.goal_score), True, Color.WHITE.value) 
-        self.screen.blit(info_stage_test,(90,140)) 
-        self.screen.blit(info_score_text,(45,170))
+        info_score_text = font.render("목표점수는 {} 입니다.".format(self.goal_score), True, Color.WHITE.value)
+        self.screen.blit(info_stage_test,(self.size[0]*0.35,self.size[1]*0.35)) 
+        self.screen.blit(info_score_text,(self.size[0]*0.15,self.size[1]*0.45))
         pygame.display.flip()
         time.sleep(3) # 3초뒤에 게임 시작.
         self.main()
