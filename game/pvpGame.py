@@ -39,11 +39,10 @@ class pvp :
 
         # 2. 게임창 옵션 설정
         infoObject = pygame.display.Info()
-        title = "My game"
+        title = "PVP game"
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
-        
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
 
@@ -53,7 +52,7 @@ class pvp :
         self.item_list = []
         self.effect_list = []
         self.character_data = character_data
-        self.stage = stage
+        #self.stage = stage
 
         self.goal_time = 120 # play 120초
         self.character1 = character1 # player1 character
@@ -65,19 +64,14 @@ class pvp :
 
         self.startTime = time.time()
         self.mob_gen_rate = 0.01
-        self.mob_image = stage.mob_image
-        self.background_image = stage.background_image
-        self.background_music = stage.background_music
+        #self.mob_image = stage.mob_image
+        #self.background_image = stage.background_image
+        self.background_image = "Image/catthema/map1.png"
+        self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.k = 0
         self.SB = 0
         self.coin = 0 
-        self.infowindow_image = "Image/catthema/map1.png"
-
-        # 4-1. 보스 스테이지를 위한 변수 초기화
-        self.is_boss_stage = stage.is_boss_stage
-        if self.is_boss_stage:
-            self.boss = Boss(self.size,stage.boss_image,stage.boss_bullet_image)
-        self.enemyBullets =[]
+        #self.infowindow_image = "Image/catthema/map1.png"
 
         # 방향키 
         self.direction1 = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
@@ -114,3 +108,5 @@ class pvp :
 
             self.screen.blit(background1,  [0,0]) 
             self.screen.blit(background1, [self.size[0]/2, 0])
+
+            pygame.display.flip()

@@ -9,6 +9,7 @@ from data.database_user import *
 from data.Defs import *
 from data.Defs import User
 from menu.gameselectMenu import *
+from game.pvpGame import *
 
 class Display:
     w_init = 1/3
@@ -48,6 +49,14 @@ class Login:
 
         )
         self.mytheme.background_color = menu_image
+
+        #pvp 관련
+        self.pvpcharacter_data = PvpCharacterDataManager.load() #pvp 캐릭터 데이터
+        self.mode = ("EASY",InfiniteGame.EasyMode())
+        self.changed_screen_size = self.screen.get_size()
+        self.board_width=self.changed_screen_size[0] # x
+        self.board_height=self.changed_screen_size[1] # y
+
         
         self.menu = pygame_menu.Menu('DreamsComeTrue', self.size[0],self.size[1],theme=self.mytheme) #상단바 
         self.first_page()
@@ -179,8 +188,13 @@ class Login:
         self.menu.add.button('  back  ', self.show_signup)
 
     def pvp_page(self): #2인 플레이어
-        self.menu.clear()
-        self.menu.add.button('  back  ', self.first_page)
+        pvpgame=pvp(self.pvpcharacter_data, self.pvpcharacter_data[0], self.pvpcharacter_data[1], self.mode)
+        pvpgame.main()
+        '''while True:
+            pvpgame.main()'''
+            
+
+        #self.menu.add.button('  back  ', self.first_page)
 
 
     def main(self):
