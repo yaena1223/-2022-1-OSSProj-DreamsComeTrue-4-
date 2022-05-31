@@ -115,7 +115,7 @@ class Default(enum.Enum):
     }
     sound = {
         "sfx":{
-            "volume":0.2
+            "volume": 0.1
         }
     }
     font = "./Font/DXHanlgrumStd-Regular.otf"
