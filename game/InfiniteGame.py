@@ -74,6 +74,14 @@ class InfiniteGame:
         self.database = Database()
         self.user=User.user_id
 
+
+        #일시정지 버튼 
+        self.changed_screen_size = self.screen.get_size()
+        self.board_width=self.changed_screen_size[0] # x
+        self.board_height=self.changed_screen_size[1] # y
+        import button
+        self.stop = button.button(self.board_width, self.board_height, 0.95,0.05,0.1,0.1, "Image/catthema/stop.png")
+
     def main(self):
         from menu.gameselectMenu import soundset
         # 메인 이벤트
@@ -101,7 +109,8 @@ class InfiniteGame:
                 background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
+            self.stop.change(self.screen.get_size()[0],self.screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
+            self.stop.draw(self.screen,(0,0,0))
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
