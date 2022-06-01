@@ -25,7 +25,6 @@ from pygame_menu.utils import make_surface
 from data.database_user import *
 from data.Defs import User
 
-
 class InfiniteGame:
 
     def __init__(self,character,mode,mapimg,attimg):
@@ -84,11 +83,12 @@ class InfiniteGame:
         self.stop = button.button(self.board_width, self.board_height, 0.95,0.05,0.1,0.1, "Image/catthema/stop.png")
 
     def main(self):
+        from menu.gameselectMenu import soundset
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(soundset)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.

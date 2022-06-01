@@ -67,6 +67,7 @@ class StageGame:
         self.SB = 0
         self.coin = 0
         self.infowindow_image = "Image/catthema/{}_dark.png".format(self.stage.chapter)
+        self.soundvol=0.1
 
         #일시정지 버튼 
         self.changed_screen_size = self.screen.get_size()
@@ -100,11 +101,14 @@ class StageGame:
         self.main()
         
     def main(self):
+        print("ch_vol " ,Default.sound.value['sfx']['volume'])
+        from menu.gameselectMenu import soundset
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(soundset)
+        print("sound volume ", soundset)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.

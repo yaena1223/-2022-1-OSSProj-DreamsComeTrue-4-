@@ -1,22 +1,24 @@
+from email.policy import default
 from pickle import TRUE
 from button import *
 import pygame
-import pygame_menu
+# import pygame_menu
 from data.CharacterDataManager import *
-from data.Stage import Stage
+# from data.Stage import Stage
 from data.StageDataManager import *
 from game.StageGameplay import StageGame
+from game.InfiniteGame import InfiniteGame
 from pygame_menu.utils import make_surface
-from menu.CharacterSelectMenu import *
 from pygame.locals import *
-from data.Rank import Rank
 from data.Defs import *
-from menu.StageSelectMenu import *
-from menu.LeaderBoardMenu import *
+# from menu.LeaderBoardMenu import *
 from menu.MypageMenu import *
 from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
+from menu.HelpMenu import *
 
+global soundset
+soundset = 0.1
 
 class GameselectMenu:
     def __init__(self,screen):
@@ -43,9 +45,10 @@ class GameselectMenu:
         self.mypage = button(self.board_height,self.board_height,0.5,0.05,0.1,0.05,"Image/catthema/mypage.png")
         self.gamemode = button(self.board_height,self.board_height,0.366,0.05,0.1,0.05,"Image/catthema/stage.png")
         self.store = button(self.board_height,self.board_height,0.233,0.05,0.1,0.05,"Image/catthema/store.png")
-        self.setting = button(self.board_height,self.board_height,0.1,0.05,0.1,0.05,"Image/catthema/setting.png")
         self.logout= button(self.board_height,self.board_height,0.9,0.05,0.1,0.05,"Image/catthema/logout.png")
         self.help = button(self.board_height,self.board_height,0.633,0.05,0.1,0.05,"Image/catthema/help.png")
+        
+        self.setting = button(self.board_height,self.board_height,0.1,0.05,0.05,0.05,"Image/catthema/on.png") # sound on/off
 
         self.barcol = button(self.board_height,self.board_height,0.5,0.0,1,0.2,"Image/catthema/bar.png")
 
@@ -65,6 +68,8 @@ class GameselectMenu:
         self.inf_mode_map2 = 0
         self.inf_mode_map3 = 0
 
+        self.sound = "on"
+
         self.mode = [("EASY",InfiniteGame.EasyMode()),("HARD",InfiniteGame.HardMode())]
 
         self.modestate="stage"
@@ -79,8 +84,8 @@ class GameselectMenu:
 
         self.stay=0 
 
-    def show(self,screen):     
-
+    def show(self,screen):  
+        global soundset   
         self.check_resize(screen)
 
         if self.modestate == "stage" : # stage mode
@@ -231,6 +236,20 @@ class GameselectMenu:
                         import Main 
                         Main.Login(self.screen).show()
 
+                    if self.setting.isOver(pos):
+                        if self.sound == "on" :
+                            self.setting.image = "Image/catthema/off.png"
+                            self.sound = "off"
+                            soundset = 0
+                            print(soundset)
+                            Default.sound.value['sfx']['volume'] = 0
+                        else :
+                            self.setting.image = "Image/catthema/on.png"
+                            self.sound = "on"
+                            soundset = 0.1
+                            print(soundset)
+                            Default.sound.value['sfx']['volume'] = 0.1
+
 
         else :
             screen.fill((255, 255, 255)) # 배경 나중에 바꾸기.
@@ -338,6 +357,20 @@ class GameselectMenu:
 
                     if self.help.isOver(pos):
                         HelpMenu(self.screen).show()
+
+                    if self.setting.isOver(pos):
+                        if self.sound == "on" :
+                            self.setting.image = "Image/catthema/off.png"
+                            self.sound = "off"
+                            soundset = 0
+                            print(soundset)
+                            Default.sound.value['sfx']['volume'] = 0
+                        else :
+                            self.setting.image = "Image/catthema/on.png"
+                            self.sound = "on"
+                            soundset = 0.1
+                            print(soundset)
+                            Default.sound.value['sfx']['volume'] = 0.1
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self,screen):
