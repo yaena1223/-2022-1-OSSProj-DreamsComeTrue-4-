@@ -139,7 +139,11 @@ class StageGame:
                 if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
                     if event.key == pygame.K_x:
                         self.SB=1
-
+                pos = pygame.mouse.get_pos() # mouse
+                if event.type == pygame.MOUSEBUTTONUP: 
+                    if self.stop.isOver(pos): #마우스로 일시정지 버튼 클릭하면
+                        self.StopGame()
+    
                 if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
@@ -334,6 +338,14 @@ class StageGame:
         menu.disable()
         pygame.mixer.music.stop()
 
+    def gameselectmenu(self):
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()
+
     #next stage 버튼 클릭 시
     def nextstage(self):
         if(self.stage.stage == 1):
@@ -381,6 +393,25 @@ class StageGame:
         #print(User.coin)
         self.database = Database()
         self.database.set_coin()
+        
+    # 일시정지 화면
+    def StopGame(self):
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu('Paused', self.size[0], self.size[1],
+                            theme=stageclear_theme)        
+        self.menu.add.image(Images.win.value, scale=self.scale)
+        self.menu.add.label("")
+        #self.menu.add.button('to Menu', self.toMenu,self.menu)
+
+        self.menu.add.label('Paused')
+        self.menu.add.button('Continue', self.Home, self.menu, font_size = self.font_size)
+        self.menu.add.button("Restart",self.retry)
+        
+        self.menu.add.button("Home",self.gameselectmenu)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):

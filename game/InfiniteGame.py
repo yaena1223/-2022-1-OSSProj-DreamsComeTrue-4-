@@ -121,6 +121,10 @@ class InfiniteGame:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
                         self.score += 30
+                pos = pygame.mouse.get_pos() # mouse
+                if event.type == pygame.MOUSEBUTTONUP: 
+                    if self.stop.isOver(pos): #마우스로 일시정지 버튼 클릭하면
+                        self.StopGame()
                 if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
@@ -317,6 +321,33 @@ class InfiniteGame:
         #self.menu.remove_widget(self.result_frame)
         
         LeaderBoardMenu(self.screen).rank()  
+
+    def gameselectmenu(self):
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()    
+        
+    # 일시정지 화면
+    def StopGame(self):
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu('Paused', self.size[0], self.size[1],
+                            theme=stageclear_theme)        
+        self.menu.add.image(Images.win.value, scale=self.scale)
+        self.menu.add.label("")
+        #self.menu.add.button('to Menu', self.toMenu,self.menu)
+
+        self.menu.add.label('Paused')
+        self.menu.add.button('Continue', self.Home, self.menu, font_size = self.font_size)
+        self.menu.add.button("Restart",self.retry)
+        
+        self.menu.add.button("Home",self.gameselectmenu)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
