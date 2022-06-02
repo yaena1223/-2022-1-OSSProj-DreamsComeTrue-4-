@@ -20,7 +20,7 @@ class Mypage:
         # 화면 받고 화면 크기 값 받기
         self.screen = screen
         self.size = screen.get_size()
-
+        self.font_size = self.size[0] * 25 //720
         #menu_image = pygame_menu.baseimage.BaseImage(image_path='./Image/Login.png',drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
         self.mytheme = pygame_menu.themes.THEME_ORANGE.copy()
         #mytheme.widget_font = pygame_menu.font.FONT_8BIT
@@ -33,7 +33,7 @@ class Mypage:
         self.mytheme.widget_font = pygame_menu.font.FONT_BEBAS
         #self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
         self.mytheme.background_color = (255,255,255)
-
+        self.mytheme.widget_font_size = self.font_size
         self.menu = pygame_menu.Menu('My Page', self.size[0], self.size[1],
                             theme=self.mytheme)
 
@@ -50,8 +50,14 @@ class Mypage:
     #메뉴 구성하고 보이기
     def show(self):  
         self.menu.add.label("My ID : %s "%User.user_id)
-        self.menu.add.vertical_margin(10)
+        self.menu.add.vertical_margin(5)
+        Database().my_easy_rank()
+        Database().my_hard_rank()
+        self.menu.add.label("Easy Score : %s"%User.easy_score)
+        self.menu.add.label("Hard Score : %s"%User.hard_score)
+        self.menu.add.vertical_margin(5)
         self.menu.add.label("My coin : %d "%User.coin)
+        self.menu.add.vertical_margin(5)
         #캐릭터 선택 메뉴 구성
         characters = []
         

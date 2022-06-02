@@ -14,6 +14,8 @@ class User:
     cat4 = 0
     cat = [cat1, cat2, cat3, cat4]
     price = [0, 100, 100, 200]
+    easy_score = 0
+    hard_score = 0
 
 class Images(enum.Enum):
     lock = "./Image/catthema/lock.jpg"
@@ -113,7 +115,7 @@ class Default(enum.Enum):
     }
     sound = {
         "sfx":{
-            "volume":0.2
+            "volume": 0.1
         }
     }
     font = "./Font/DXHanlgrumStd-Regular.otf"

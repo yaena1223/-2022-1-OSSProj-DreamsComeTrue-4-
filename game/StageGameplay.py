@@ -38,7 +38,8 @@ class StageGame:
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
-
+        self.font_size = self.size[0] * 40 //720
+        self.scale = (self.size[0]*0.00015,self.size[1]*0.00015)
         mytheme = pygame_menu.themes.THEME_ORANGE.copy()
         self.menu = pygame_menu.Menu('Select Stage...', self.size[0], self.size[1],
                             theme=mytheme)
@@ -66,7 +67,15 @@ class StageGame:
         self.SB = 0
         self.coin = 0
         self.infowindow_image = "Image/catthema/{}_dark.png".format(self.stage.chapter)
+        self.soundvol=0.1
 
+        #일시정지 버튼 
+        self.changed_screen_size = self.screen.get_size()
+        self.board_width=self.changed_screen_size[0] # x
+        self.board_height=self.changed_screen_size[1] # y
+        import button
+        self.stop = button.button(self.board_width, self.board_height, 0.95,0.05,0.1,0.1, "Image/catthema/stop.png")
+        
         # 4-1. 보스 스테이지를 위한 변수 초기화
         self.is_boss_stage = stage.is_boss_stage
         if self.is_boss_stage:
@@ -92,11 +101,14 @@ class StageGame:
         self.main()
         
     def main(self):
+        print("ch_vol " ,Default.sound.value['sfx']['volume'])
+        from menu.gameselectMenu import soundset
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
-        pygame.mixer.music.set_volume(0.1)
+        pygame.mixer.music.set_volume(soundset)
+        print("sound volume ", soundset)
         background1_y = 0 # 배경 움직임을 위한 변수
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
@@ -116,7 +128,9 @@ class StageGame:
                 background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
-
+            
+            self.stop.change(self.screen.get_size()[0],self.screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
+            self.stop.draw(self.screen,(0,0,0))
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
@@ -338,56 +352,29 @@ class StageGame:
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Stage Clear', self.size[0], self.size[1],
-                            theme=stageclear_theme)
-        '''# 해당 스테이지가 보상이 있는 보스 스테이지인지 확인하는 과정                    
-        if self.stage.unlock_char != "":
-            for character in self.character_data:
-                if character.name == self.stage.unlock_char:
-                    if character.is_unlocked == False:
-                        # 보상 지급
-                        character.is_unlocked = True
-                        CharacterDataManager.save(self.character_data)
-                        print(type(self.character_data), type(character))
-                        print(character.name)
-                        if(character.name == 'F5S1'):
-                            self.menu.add.image(Images.chapter_clear_oasis.value, scale=Scales.default.value)
-                        elif(character.name == 'F5S4'):
-                            self.menu.add.image(Images.chapter_clear_ice.value, scale=Scales.default.value)
-                        elif(character.name == 'Tank'):
-                            self.menu.add.image(Images.chapter_clear_space.value, scale=Scales.default.value)
-                    else:   # 이미 보상을 받은 경우
-                        self.menu.add.label(f"{self.stage.chapter}",font_size=Menus.fontsize_50, font_color=Color.BLACK.value)
-                        self.menu.add.image(Images.chapter_cleared, scale=Scales.default.value)
-                        self.menu.add.label("Already been rewarded", font_size=Menus.fontsize_default)
-                        self.menu.add.label("")
-
-
-        else: # 일반 스테이지인 경우
-            self.menu.add.label(f"{self.stage.chapter} - {self.stage.stage}",font_size=Menus.fontsize_50.value, font_color=Color.BLACK.value)
-            self.menu.add.image(Images.stage_clear.value, scale=Scales.default.value)
-            self.menu.add.label("")'''
-        
-        self.menu.add.image(Images.win.value, scale=Scales.tiny.value)
+                            theme=stageclear_theme)        
+        self.menu.add.image(Images.win.value, scale=self.scale)
         self.menu.add.label("")
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
         if(self.stage.stage !=  "3"):
-            self.menu.add.button('Next stage', self.nextstage)
-        self.menu.add.button('Home', self.Home, self.menu)
+            self.menu.add.button('Next stage', self.nextstage, font_size = self.font_size)
+        self.menu.add.button('Home', self.Home, self.menu, font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 실패 화면
     def showGameOverScreen(self):
+        #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         gameover_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Game Over', self.size[0], self.size[1],
                             theme=gameover_theme)
-        self.menu.add.image(Images.lose.value, scale=Scales.tiny.value)
-        self.menu.add.label("stage: {}".format(self.stage.stage))
-        self.menu.add.label("Score : {}".format(self.score))
-        self.menu.add.button('Retry', self.retry)
-        self.menu.add.button('Home', self.Home, self.menu)
+        self.menu.add.image(Images.lose.value, scale=self.scale)
+        self.menu.add.label("stage: {}".format(self.stage.stage),font_size = self.font_size)
+        self.menu.add.label("Score : {}".format(self.score) ,font_size = self.font_size)
+        self.menu.add.button('Retry', self.retry, font_size = self.font_size)
+        self.menu.add.button('Home', self.Home, self.menu,font_size = self.font_size)
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         User.coin = User.coin + self.coin
@@ -412,3 +399,6 @@ class StageGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
+            font_size = new_w * 40 //720
+            self.font_size = font_size
+            self.scale = (new_w*0.00015,new_h*0.00015)
