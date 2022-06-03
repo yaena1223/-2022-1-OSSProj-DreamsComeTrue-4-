@@ -243,12 +243,14 @@ class GameselectMenu:
                             soundset = 0
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0
+                            self.character_data = CharacterDataManager.load() # volume 적용
                         else :
                             self.setting.image = "Image/catthema/on.png"
                             self.sound = "on"
                             soundset = 0.1
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0.1
+                            self.character_data = CharacterDataManager.load() # volume 적용
 
 
         else :
@@ -365,12 +367,14 @@ class GameselectMenu:
                             soundset = 0
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0
+                            self.character_data = CharacterDataManager.load()# volume 적용
                         else :
                             self.setting.image = "Image/catthema/on.png"
                             self.sound = "on"
                             soundset = 0.1
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0.1
+                            self.character_data = CharacterDataManager.load()# volume 적용
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self,screen):
