@@ -131,9 +131,14 @@ class Mypage:
     def select_character(self): #게임 시작 함수
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_idx = self.character_selector.get_value()[0][1]
-        User.character = selected_idx
-        database = Database()
-        database.set_char()
+        if User.cat_lock[selected_idx] == False:
+            User.character = selected_idx
+            database = Database()
+            database.set_char()
+        else:
+            print("character locked")
+            self.showCharactereLockedScreen(self.character_data[selected_idx].name)
+            
 
 
     # 화면 크기 조정 감지 및 비율 고정
@@ -157,6 +162,26 @@ class Mypage:
     # 캐릭터 변경 시 실행
     def on_selector_change(self, selected, value: int) -> None:
         self.update_from_selection(value)
+
+
+
+    # 잠긴 캐릭터 선택 시 보여지는 화면
+    def showCharactereLockedScreen(self, character):       
+        self.menu.clear()
+        if(character == 'Merry'):
+            self.menu.add.image(Images.lock_cat2.value,scale=Scales.small.value)
+        elif(character == 'Haengal'):
+            self.menu.add.image(Images.lock_cat3.value,scale=Scales.small.value)
+        elif(character == 'Kongchi'):
+            self.menu.add.image(Images.lock_cat4.value,scale=Scales.small.value)
+        self.menu.add.label("")
+        self.menu.add.button('back', self.back_from_locked)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+
+    def back_from_locked(self):
+        self.menu.clear()
+        self.show()
+        
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
