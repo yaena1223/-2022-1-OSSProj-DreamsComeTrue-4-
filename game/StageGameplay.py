@@ -393,6 +393,7 @@ class StageGame:
     # 실패 화면
     def showGameOverScreen(self):
         pygame.mixer.music.stop()
+        Database().reduce_char_life()
         #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE

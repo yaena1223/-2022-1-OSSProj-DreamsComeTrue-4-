@@ -121,19 +121,19 @@ class Database:
         curs = self.dct_db.cursor()
         if(self.buy == 1):
             sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
-            curs.execute(sql, (1, self.id))
+            curs.execute(sql, (5, self.id))
             sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
             curs.execute(sql, (self.coin-100, self.id))
             self.dct_db.commit()
         if(self.buy == 2):
             sql = "UPDATE users2 SET char3=%s WHERE user_id = %s"
-            curs.execute(sql, (1, self.id))
+            curs.execute(sql, (5, self.id))
             sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
             curs.execute(sql, (self.coin-100, self.id))
             self.dct_db.commit()
         if(self.buy == 3):
             sql = "UPDATE users2 SET char4=%s WHERE user_id = %s"
-            curs.execute(sql, (1, self.id))
+            curs.execute(sql, (5, self.id))
             sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
             curs.execute(sql, (self.coin-200, self.id))
             self.dct_db.commit()
@@ -244,3 +244,29 @@ class Database:
         else: 
             hard_score = data[1] #user_id는 인덱스 0에, score 인덱스 1에 저장되어 있음
             User.hard_score  = hard_score
+
+    def reduce_char_life(self):#게임에서 죽으면 보유하고 있는 캐릭터의 목숨이 줄어들도록 함. 
+        self.id = User.user_id
+        self.char = User.character #cat2는 1, cat3는 2, cat4는 3으로 되어 있음. 
+        curs = self.dct_db.cursor()
+        sql = "SELECT user_id,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 char 2,3,4 선택(char1은 목숨 무제한)
+        curs.execute(sql,self.id)
+        data = curs.fetchone()  
+        curs.close()
+
+        curs = self.dct_db.cursor()
+        if(data[self.char]>0): #목숨이 0이상일때만 1을 줄임. 
+            if(self.char == 1): #선택한 캐릭터가 cat2면, cat2의 목숨을 1개 줄임. 
+                sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
+                curs.execute(sql, (data[self.char]-1, self.id))
+                self.dct_db.commit()
+            if(self.char == 2): #선택한 캐릭터가 cat3면, cat3의 목숨을 1개 줄임. 
+                sql = "UPDATE users2 SET char3=%s WHERE user_id = %s"
+                curs.execute(sql, (data[self.char]-1, self.id))
+                self.dct_db.commit()
+            if(self.char == 3): #선택한 캐릭터가 cat4면, cat4의 목숨을 1개 줄임. 
+                sql = "UPDATE users2 SET char4=%s WHERE user_id = %s"
+                curs.execute(sql, (data[self.char]-1, self.id))
+                self.dct_db.commit()
+            curs.close()
+
