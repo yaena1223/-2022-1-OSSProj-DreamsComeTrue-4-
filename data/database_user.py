@@ -270,3 +270,17 @@ class Database:
                 self.dct_db.commit()
             curs.close()
 
+        if(data[self.char]==0):
+            User.cat_lock[i] = True
+
+    def char_lock(self):
+        self.id = User.user_id
+        curs = self.dct_db.cursor()
+        sql = "SELECT user_id,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 char 2,3,4 선택(char1은 목숨 무제한)
+        curs.execute(sql,self.id)
+        data = curs.fetchone()  
+        curs.close()
+
+        for i in range(1,4):
+            if data[i] == 0:
+                User.cat_lock[i] = True

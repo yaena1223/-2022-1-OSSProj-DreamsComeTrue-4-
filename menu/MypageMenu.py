@@ -14,7 +14,7 @@ from pygame_menu.utils import make_surface
 # 캐릭터 선택 메뉴
 class Mypage:
     image_widget: 'pygame_menu.widgets.Image'
-   # item_description_widget: 'pygame_menu.widgets.Label'
+    item_description_widget: 'pygame_menu.widgets.Label'
 
     def __init__(self,screen):
         # 화면 받고 화면 크기 값 받기
@@ -50,14 +50,11 @@ class Mypage:
     #메뉴 구성하고 보이기
     def show(self):  
         self.menu.add.label("My ID : %s "%User.user_id)
-        self.menu.add.vertical_margin(5)
         Database().my_easy_rank()
         Database().my_hard_rank()
         self.menu.add.label("Easy Score : %s"%User.easy_score)
         self.menu.add.label("Hard Score : %s"%User.hard_score)
-        self.menu.add.vertical_margin(5)
         self.menu.add.label("My coin : %d "%User.coin)
-        self.menu.add.vertical_margin(5)
         #캐릭터 선택 메뉴 구성
         characters = []
         
@@ -78,13 +75,13 @@ class Mypage:
         for i in range(1,5):
             char = data[i]
             
-            if(char > -1):
+            if(char > -1): 
                 default_image = pygame_menu.BaseImage(
                 image_path=front_image_path[i-1]
                 ).scale(0.5, 0.5)
                 #print("이미지경로",front_image_path[i-1])
-                characters.append((self.character_data[i-1].name, i-1))
-                self.character_imgs.append(default_image.copy())
+                characters.append((self.character_data[i-1].name, i-1)) #보유하고 있는 캐릭터 이름만 저장
+                self.character_imgs.append(default_image.copy()) #보유하고 있는 캐릭터만 배열에 이미지 저장
 
         for i in range(4): 
                 default_image = pygame_menu.BaseImage(
@@ -103,8 +100,8 @@ class Mypage:
             image_path=self.character_imgs[0],
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
-        #self.item_description_widget = self.menu.add.label(title = "Unlocked" if self.character_data[0].is_unlocked == True else "Locked")
-        self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
+        self.item_description_widget = self.menu.add.label(title = "Unlocked" if User.cat_lock[0] == False else "Locked")
+        self.frame_v = self.menu.add.frame_v(350, 160, margin=(5, 0))
         # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.menu.add.progress_bar(
             title="Power",
@@ -126,7 +123,7 @@ class Mypage:
         ), ALIGN_RIGHT)
         self.mytheme.widget_background_color = (150, 213, 252)
         self.menu.add.button("SELECT",self.select_character)
-        self.menu.add.vertical_margin(10)
+        self.menu.add.vertical_margin(5)
         self.menu.add.button("    BACK    ",self.to_menu)
         self.update_from_selection(int(self.character_selector.get_value()[0][1]))
         self.mytheme.widget_background_color = (0,0,0,0)
@@ -168,4 +165,4 @@ class Mypage:
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
-
+        self.item_description_widget.set_title(title = "Unlocked" if User.cat_lock[selected_value] == False else "Locked")
