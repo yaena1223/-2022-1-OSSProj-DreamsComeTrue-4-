@@ -284,3 +284,5 @@ class Database:
         for i in range(1,4):
             if data[i] == 0:
                 User.cat_lock[i] = True
+
+    
