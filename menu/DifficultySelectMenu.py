@@ -5,7 +5,7 @@ import pygame_menu
 from game.InfiniteGame import *
 from pygame_menu.utils import make_surface
 
-from menu.CharacterSelectMenu import *
+
 
 # 난이도 선택 메뉴
 class DifficultySelectMenu:

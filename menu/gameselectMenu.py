@@ -13,7 +13,6 @@ from pygame.locals import *
 from data.Defs import *
 # from menu.LeaderBoardMenu import *
 from menu.MypageMenu import *
-from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
 from menu.HelpMenu import *
 
