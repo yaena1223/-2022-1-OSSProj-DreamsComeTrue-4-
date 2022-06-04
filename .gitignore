@@ -35,6 +35,7 @@ data/__pycache__/database_user.cpython-39.pyc
 game/__pycache__/InfiniteGame.cpython-38.pyc
 game/__pycache__/StageGame.cpython-38.pyc
 game/__pycache__/StageGameplay.cpython-39.pyc
+game/__pycache__/pvpGame.cpython-39.pyc
 menu/__pycache__/About.cpython-38.pyc
 menu/__pycache__/CharacterSelectMenu.cpython-38.pyc
 menu/__pycache__/DifficultySelectMenu.cpython-38.pyc
@@ -44,10 +45,12 @@ menu/__pycache__/LeaderBoardScrollMenu.cpython-38.pyc
 menu/__pycache__/StageSelectMenu.cpython-38.pyc
 menu/__pycache__/gameselectMenu.cpython-39.pyc
 menu/__pycache__/MypageMenu.cpython-39.pyc
+menu/__pycache__/CharacterStoreMenu.cpython-39.pyc
 object/__pycache__/Character.cpython-38.pyc
 object/__pycache__/Effect.cpython-38.pyc
 object/__pycache__/Item.cpython-38.pyc
 object/__pycache__/Missile.cpython-38.pyc
 object/__pycache__/Mob.cpython-38.pyc
 object/__pycache__/Object.cpython-38.pyc
+__pycache__/
 
