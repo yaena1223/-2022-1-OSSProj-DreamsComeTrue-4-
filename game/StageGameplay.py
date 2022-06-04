@@ -68,6 +68,8 @@ class StageGame:
         self.coin = 0
         self.infowindow_image = "Image/catthema/{}_dark.png".format(self.stage.chapter)
         self.soundvol=0.1
+        self.stage_data = StageDataManager.loadStageData() # 스테이지 데이터
+        self.temp = 0
 
         #일시정지 버튼 
         self.changed_screen_size = self.screen.get_size()
@@ -101,7 +103,7 @@ class StageGame:
         self.main()
         
     def main(self):
-        print("ch_vol " ,Default.sound.value['sfx']['volume'])
+        print(" ch_vol " ,Default.sound.value['sfx']['volume'])
         from menu.gameselectMenu import soundset
         # 메인 이벤트
         pygame.mixer.init()
@@ -337,6 +339,7 @@ class StageGame:
     def Home(self, menu):
         menu.disable()
         pygame.mixer.music.stop()
+        
 
     def gameselectmenu(self):
         import menu.gameselectMenu
@@ -348,15 +351,25 @@ class StageGame:
 
     #next stage 버튼 클릭 시
     def nextstage(self):
+
+        chapterlist = [['map1',"Dongguk university"], ['map2',"Night view"], ['map3',"Namsan"]]
+
+        if self.stage.chapter == 'map1':
+            self.temp = 0
+        elif self.stage.chapter == 'map2':
+            self.temp = 1
+        else :
+            self.temp = 2
+
         if(self.stage.stage == 1):
-            self.stage.stage = 2
-            StageGame(self, self.character, self.stage).main()
+            self.stage_map=Stage(self.stage_data["chapter"][chapterlist[self.temp][1]]["2"])
+            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
             self.menu.disable()
         if(self.stage.stage == 2):
-            self.stage.stage = 3
-            StageGame(self, self.character, self.stage).main()
+            self.stage_map=Stage(self.stage_data["chapter"][chapterlist[self.temp][1]]["2"])
+            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
             self.menu.disable()
-
+        
     # 클리어 화면
     def showStageClearScreen(self):
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
