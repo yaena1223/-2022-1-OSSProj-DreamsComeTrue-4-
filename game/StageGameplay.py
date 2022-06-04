@@ -338,12 +338,12 @@ class StageGame:
     #홈버튼 클릭 시
     def Home(self, menu):
         menu.disable()
-        pygame.mixer.music.pause()
+        pygame.mixer.music.stop()
         
     #Continue 클릭 시
     def Continue(self, menu):
         menu.disable()
-        pygame.mixer.music.play()
+        pygame.mixer.music.unpause()
 
     def gameselectmenu(self):
         import menu.gameselectMenu
@@ -392,6 +392,7 @@ class StageGame:
 
     # 실패 화면
     def showGameOverScreen(self):
+        pygame.mixer.music.stop()
         #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -413,7 +414,7 @@ class StageGame:
         
     # 일시정지 화면
     def StopGame(self):
-        pygame.mixer.music.stop()
+        pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
