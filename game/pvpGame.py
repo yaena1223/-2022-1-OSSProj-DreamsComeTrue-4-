@@ -64,7 +64,7 @@ class pvp :
 
         self.startTime = time.time()
         self.mob_gen_rate = 0.01
-        #self.mob_image = stage.mob_image
+        self.mob_image = "./Image/catthema/attack/cat_att.png"
         #self.background_image = stage.background_image
         self.background_image = "Image/catthema/map1.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
@@ -108,5 +108,66 @@ class pvp :
 
             self.screen.blit(background1,  [0,0]) 
             self.screen.blit(background1, [self.size[0]/2, 0])
+            
+
+
+            # 입력 처리
+            for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
+                if event.type ==pygame.QUIT:
+                    self.SB=1 # SB 가 1이되면 while 문을 벗어나오게 됨
+                if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
+                    if event.key == pygame.K_x:
+                        self.SB=1
+                    if event.key == pygame.K_z: #테스트용
+                        self.score += 30
+                if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
+                    #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
+                    width, height = max(event.w,300), max(event.h,390)
+
+                    #크기를 조절해도 화면의 비율이 유지되도록, 가로와 세로 중 작은 것을 기준으로 종횡비(10:13)으로 계산
+                    if(width<=height):
+                        height = int(width * (13/10))
+                    else:
+                        width = int(height * (10/13))
+                    
+                    self.size =[width,height] #게임의 size 속성 변경
+                    self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
+                    self.check_resize()
+                    self.animation.on_resize(self)
+
+            #몹을 확률적으로 발생시키기
+            if(random.random()<self.mob_gen_rate):
+                newMob = Mob(self.mob_image,{"x":50, "y":50},self.mob_velocity,0)
+                newMob.set_XY((random.randrange(0,self.size[0]),0)) #set mob location randomly
+                self.mobList.append(newMob)
+            
+            if random.random() < Default.item.value["powerup"]["spawn_rate"]:
+                new_item = PowerUp(self.animation.animations["powerup"])
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if random.random() < Default.item.value["bomb"]["spawn_rate"]:
+                new_item = Bomb(self.animation.animations["bomb"])
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if random.random() < Default.item.value["health"]["spawn_rate"]:
+                new_item = Health(self.animation.animations["health"])
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if random.random() < Default.item.value["coin"]["spawn_rate"]:
+                new_item = Coin(self.animation.animations["coin"])
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+
+            if random.random()< Default.item.value["speedup"]["spawn_rate"]:
+                new_item = SpeedUp(self.animation.animations["speedup"])
+                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
+                self.item_list.append(new_item)
+            
+            #self.character1.update(self)
+            #self.character2.update(self)
+
 
             pygame.display.flip()
