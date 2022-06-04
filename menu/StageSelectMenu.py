@@ -7,7 +7,6 @@ from data.StageDataManager import *
 from game.StageGameplay import StageGame
 from pygame_menu.utils import make_surface
 
-from menu.CharacterSelectMenu import *
 
 # 스테이지 선택 메뉴
 class StageSelectMenu:

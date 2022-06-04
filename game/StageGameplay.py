@@ -68,6 +68,8 @@ class StageGame:
         self.coin = 0
         self.infowindow_image = "Image/catthema/{}_dark.png".format(self.stage.chapter)
         self.soundvol=0.1
+        self.stage_data = StageDataManager.loadStageData() # 스테이지 데이터
+        self.temp = 0
 
         #일시정지 버튼 
         self.changed_screen_size = self.screen.get_size()
@@ -101,7 +103,7 @@ class StageGame:
         self.main()
         
     def main(self):
-        print("ch_vol " ,Default.sound.value['sfx']['volume'])
+        print(" ch_vol " ,Default.sound.value['sfx']['volume'])
         from menu.gameselectMenu import soundset
         # 메인 이벤트
         pygame.mixer.init()
@@ -139,7 +141,11 @@ class StageGame:
                 if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
                     if event.key == pygame.K_x:
                         self.SB=1
-
+                pos = pygame.mouse.get_pos() # mouse
+                if event.type == pygame.MOUSEBUTTONUP: 
+                    if self.stop.isOver(pos): #마우스로 일시정지 버튼 클릭하면
+                        self.StopGame()
+    
                 if event.type == pygame.VIDEORESIZE: #화면이 리사이즈 되면
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
@@ -322,7 +328,7 @@ class StageGame:
 
     def toMenu(self,menu):
         menu.disable()
-        pygame.mixer.music.stop()
+        pygame.mixer.music.play(-1)
 
     # 재시도 버튼 클릭 시 
     def retry(self):
@@ -333,18 +339,41 @@ class StageGame:
     def Home(self, menu):
         menu.disable()
         pygame.mixer.music.stop()
+        
+    #Continue 클릭 시
+    def Continue(self, menu):
+        menu.disable()
+        pygame.mixer.music.unpause()
+
+    def gameselectmenu(self):
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()
 
     #next stage 버튼 클릭 시
     def nextstage(self):
+
+        chapterlist = [['map1',"Dongguk university"], ['map2',"Night view"], ['map3',"Namsan"]]
+
+        if self.stage.chapter == 'map1':
+            self.temp = 0
+        elif self.stage.chapter == 'map2':
+            self.temp = 1
+        else :
+            self.temp = 2
+
         if(self.stage.stage == 1):
-            self.stage.stage = 2
-            StageGame(self, self.character, self.stage).main()
+            self.stage_map=Stage(self.stage_data["chapter"][chapterlist[self.temp][1]]["2"])
+            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
             self.menu.disable()
         if(self.stage.stage == 2):
-            self.stage.stage = 3
-            StageGame(self, self.character, self.stage).main()
+            self.stage_map=Stage(self.stage_data["chapter"][chapterlist[self.temp][1]]["2"])
+            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
             self.menu.disable()
-
+        
     # 클리어 화면
     def showStageClearScreen(self):
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
@@ -363,6 +392,7 @@ class StageGame:
 
     # 실패 화면
     def showGameOverScreen(self):
+        pygame.mixer.music.stop()
         #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -381,6 +411,27 @@ class StageGame:
         #print(User.coin)
         self.database = Database()
         self.database.set_coin()
+        
+    # 일시정지 화면
+    def StopGame(self):
+        pygame.mixer.music.pause()
+        stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
+        stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
+        stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        stageclear_theme.title_font_color = Color.WHITE.value
+        self.menu = pygame_menu.Menu('Paused', self.size[0], self.size[1],
+                            theme=stageclear_theme)        
+        self.menu.add.image(Images.win.value, scale=self.scale)
+        self.menu.add.label("")
+        #self.menu.add.button('to Menu', self.toMenu,self.menu)
+
+        self.menu.add.label('Paused')
+        self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
+        self.menu.add.button("Restart",self.retry)
+        
+        self.menu.add.button("Home",self.gameselectmenu)
+        
+        self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):

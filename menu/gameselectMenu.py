@@ -13,7 +13,6 @@ from pygame.locals import *
 from data.Defs import *
 # from menu.LeaderBoardMenu import *
 from menu.MypageMenu import *
-from menu.CharacterSelectMenu import *
 from menu.CharacterStoreMenu import *
 from menu.HelpMenu import *
 
@@ -29,17 +28,17 @@ class GameselectMenu:
         self.board_width=self.changed_screen_size[0] # x
         self.board_height=self.changed_screen_size[1] # y
 
-        self.map1 = button(self.board_width, self.board_height, 0.2, 0.4, 0.2, 0.3, "Image/catthema/map1.png")
-        self.map2 = button(self.board_width, self.board_height, 0.5, 0.4, 0.2, 0.3, "Image/catthema/map2.png")
-        self.map3 = button(self.board_width, self.board_height, 0.8, 0.4, 0.2, 0.3, "Image/catthema/map3.png")
+        self.map1 = button(self.board_width, self.board_height, 0.2, 0.4, 0.25, 0.35, "Image/catthema/map1.png")
+        self.map2 = button(self.board_width, self.board_height, 0.5, 0.4, 0.25, 0.35, "Image/catthema/map2.png")
+        self.map3 = button(self.board_width, self.board_height, 0.8, 0.4, 0.25, 0.35, "Image/catthema/map3.png")
 
-        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
-        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
-        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.6, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
         
-        self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
-        self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
-        self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.6, 0.2, 0.05, "Image/catthema/EASY.png")
+        self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
+        self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
+        self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
 
         self.rankpage = button(self.board_height,self.board_height,0.766,0.05,0.1,0.05,"Image/catthema/rank.png")
         self.mypage = button(self.board_height,self.board_height,0.5,0.05,0.1,0.05,"Image/catthema/mypage.png")
@@ -243,12 +242,14 @@ class GameselectMenu:
                             soundset = 0
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0
+                            self.character_data = CharacterDataManager.load() # volume 적용
                         else :
                             self.setting.image = "Image/catthema/on.png"
                             self.sound = "on"
                             soundset = 0.1
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0.1
+                            self.character_data = CharacterDataManager.load() # volume 적용
 
 
         else :
@@ -365,12 +366,14 @@ class GameselectMenu:
                             soundset = 0
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0
+                            self.character_data = CharacterDataManager.load()# volume 적용
                         else :
                             self.setting.image = "Image/catthema/on.png"
                             self.sound = "on"
                             soundset = 0.1
                             print(soundset)
                             Default.sound.value['sfx']['volume'] = 0.1
+                            self.character_data = CharacterDataManager.load()# volume 적용
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self,screen):
