@@ -8,14 +8,11 @@ class User:
     coin = 0
     character = 0
     buy_character = 0
-    cat1 = 1
-    cat2 = 0
-    cat3 = 0
-    cat4 = 0
-    cat = [cat1, cat2, cat3, cat4]
     price = [0, 100, 100, 200]
     easy_score = 0
     hard_score = 0
+    cat_lock = [False,False,False,False]
+    
 
 class Images(enum.Enum):
     lock = "./Image/catthema/lock.jpg"

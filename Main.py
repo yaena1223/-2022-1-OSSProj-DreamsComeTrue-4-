@@ -105,6 +105,7 @@ class Login:
                     User.user_id = self.id
                     User.character = self.database.show_mychar()
                     User.coin = self.database.show_mycoin()
+                    Database().char_lock()
                     self.login_success()
                     
 
