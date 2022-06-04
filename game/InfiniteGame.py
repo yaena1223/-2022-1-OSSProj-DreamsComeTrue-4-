@@ -125,6 +125,7 @@ class InfiniteGame:
                 if event.type == pygame.MOUSEBUTTONUP: 
                     if self.stop.isOver(pos): #마우스로 일시정지 버튼 클릭하면
                         self.StopGame()
+
                 if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
@@ -335,9 +336,10 @@ class InfiniteGame:
     def Continue(self, menu):
         menu.disable()
         pygame.mixer.music.unpause()
-
+    
     # 일시정지 화면
     def StopGame(self):
+        start_stop_time = time.time()
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
