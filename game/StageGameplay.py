@@ -328,7 +328,7 @@ class StageGame:
 
     def toMenu(self,menu):
         menu.disable()
-        pygame.mixer.music.stop()
+        pygame.mixer.music.play(-1)
 
     # 재시도 버튼 클릭 시 
     def retry(self):
@@ -338,8 +338,12 @@ class StageGame:
     #홈버튼 클릭 시
     def Home(self, menu):
         menu.disable()
-        pygame.mixer.music.stop()
+        pygame.mixer.music.pause()
         
+    #Continue 클릭 시
+    def Continue(self, menu):
+        menu.disable()
+        pygame.mixer.music.play()
 
     def gameselectmenu(self):
         import menu.gameselectMenu
@@ -409,6 +413,7 @@ class StageGame:
         
     # 일시정지 화면
     def StopGame(self):
+        pygame.mixer.music.stop()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
@@ -420,10 +425,11 @@ class StageGame:
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
 
         self.menu.add.label('Paused')
-        self.menu.add.button('Continue', self.Home, self.menu, font_size = self.font_size)
+        self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
         self.menu.add.button("Restart",self.retry)
         
         self.menu.add.button("Home",self.gameselectmenu)
+        
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
