@@ -75,7 +75,7 @@ class CharacterStoreMenu:
         for idx in range(1,5):
             char = data[idx] 
 
-            if(char == False):    
+            if(char == -1):    
                 default_image = pygame_menu.BaseImage(
                     image_path=front_image_path[idx-1]
                 ).scale(0.5, 0.5)

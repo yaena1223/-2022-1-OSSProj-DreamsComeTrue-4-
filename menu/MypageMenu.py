@@ -78,7 +78,7 @@ class Mypage:
         for i in range(1,5):
             char = data[i]
             
-            if(char == True):
+            if(char > -1):
                 default_image = pygame_menu.BaseImage(
                 image_path=front_image_path[i-1]
                 ).scale(0.5, 0.5)

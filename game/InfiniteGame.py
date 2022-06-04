@@ -339,7 +339,6 @@ class InfiniteGame:
     
     # 일시정지 화면
     def StopGame(self):
-        start_stop_time = time.time()
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE

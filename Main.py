@@ -106,6 +106,7 @@ class Login:
                     User.character = self.database.show_mychar()
                     User.coin = self.database.show_mycoin()
                     self.login_success()
+                    
 
                 else:
                     print("비밀번호 틀림")
