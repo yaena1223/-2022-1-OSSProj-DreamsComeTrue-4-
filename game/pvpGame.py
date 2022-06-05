@@ -22,10 +22,13 @@ from data.CharacterDataManager import *
 from data.Defs import *
 from data.StageDataManager import *
 from object.Item import *
-from object.Mob import Mob
+#from object.Mob import Mob
 from pygame_menu.utils import make_surface
 from data.Defs import User
 from data.database_user import *
+
+from pygame.math import Vector2 #mob.py에서 가져옴
+from object.Effect import Boom
 
 import time
 
@@ -51,6 +54,7 @@ class pvp :
         self.mobList = []
         self.item_list = []
         self.effect_list = []
+        self.enemyBullets =[]
         self.character_data = character_data
         #self.stage = stage
 
@@ -64,13 +68,13 @@ class pvp :
 
         self.startTime = time.time()
         self.mob_gen_rate = 0.01
+        self.mob_velocity = 2
         self.mob_image = "./Image/catthema/attack/cat_att.png"
         #self.background_image = stage.background_image
         self.background_image = "Image/catthema/map1.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.k = 0
         self.SB = 0
-        self.coin = 0 
         #self.infowindow_image = "Image/catthema/map1.png"
 
         # 방향키 
@@ -156,17 +160,209 @@ class pvp :
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if random.random() < Default.item.value["coin"]["spawn_rate"]:
-                new_item = Coin(self.animation.animations["coin"])
-                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.item_list.append(new_item)
-
             if random.random()< Default.item.value["speedup"]["spawn_rate"]:
                 new_item = SpeedUp(self.animation.animations["speedup"])
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
             
+            #몹 객체 이동
+            for mob in self.mobList:
+                mob.move(self.size,self)
+
+            for item in self.item_list:
+                item.move(self)
+
+            for effect in self.effect_list:
+                effect.move(self)
+
+            #적 투사체 이동
+            for bullet in self.enemyBullets:
+                bullet.move(self.size,self)
+                bullet.show(self.screen)
+
+
+
+            #몹 그리기
+            for mob in self.mobList:
+                mob.show(self.screen)
+
+            for item in list(self.item_list):
+                item.show(self.screen)
+
+           
+                        
             #self.character1.update(self)
             #self.character2.update(self)
 
             pygame.display.flip()
+
+class Mob(Object):
+    def __init__(self, img_path, size, velocity, missile):
+        super().__init__(img_path, size, velocity)
+        self.missile = missile
+        self.is_targeted = False
+        self.direction = Vector2(1,1)
+        self.rad = 1
+        self.kill_sfx = pygame.mixer.Sound(Default.effect.value["boom"]["sound"])
+        self.kill_sfx.set_volume(Default.sound.value["sfx"]["volume"])
+
+    def move(self, boundary, game):
+        if (game.size[0] != self.boundary[0]/2) or (game.size[1] != self.boundary[1]): #update when screen resized
+            self.on_resize(game)
+
+        self.x += self.direction.y
+        self.y += self.direction.x
+        self.rad+=0.04*self.velocity #속도에 적절한 값을 곱하여, 각도 변경
+        self.direction.from_polar((self.velocity*3,math.cos(self.rad)*70)) #속도에 비례한 길이를 갖고, 방향 sin함수를 따르는 벡터를 다음 방향으로 지정
+
+        if self.x >= self.boundary[0]/2 - self.sx:
+            self.x_inv = True
+
+        if self.y >= boundary[1] - self.sy:
+            game.mobList.remove(self)
+
+    def destroy(self, game):
+        self.kill_sfx.play()
+        boom = Boom(game.animation.animations["destroy_effect"])
+        mob_location = {"x":self.x+(self.sx/2), "y":self.y+(self.sy/2)}
+        boom.set_XY((mob_location["x"] - boom.sx/2, mob_location["y"]- boom.sy/2))
+        game.effect_list.append(boom)
+        if self in game.mobList:
+            game.mobList.remove(self)
+
+# 아이템 기본 클래스
+class Item(Object):
+    # 각 아이템은 해당 클래스를 상속 받음
+    
+    # Attributes :
+    # self.x_inv : x축 이동방향의 반전 여부 (bool)
+    # self.y_inv : y축 이동방향의 반전 여부 (bool)
+    # self.spawned : 아이템 생성된 시간 (float)
+    # self.blink_count : 깜빡임 애니메이션 중 다음 프레임까지 지난 시간 (float)
+    # self.inc : 다음 애니메이션까지 지난 시간 (float)
+    # self.inc_delay : 애니메이션 사이클이 끝나고 다시 반복할 때까지 걸리는 시간 (float)
+    # self.sfx : 아이템 획득 효과음 (sound)
+    def __init__(self, frames, frames_trans, anim_id):
+        super().__init__("", Default.item.value["size"], Default.item.value["velocity"], frames, frames_trans, anim_id)
+        self.x_inv = random.choice([True, False])
+        self.y_inv = False
+        self.spawned = time.time()
+        self.blink_count = 0.0
+        self.inc = 0.0
+        self.inc_delay = 0.0
+        self.sfx = pygame.mixer.Sound(Default.item.value["sound"])
+        self.sfx.set_volume(Default.sound.value["sfx"]["volume"])
+
+    # 아이템 이동 메소드
+    def move(self, game): 
+        if (game.size[0] != self.boundary[0]/2) or (game.size[1] != self.boundary[1]):
+            self.on_resize(game)
+        if self.x_inv == False:
+            self.x += self.velocity
+        else:
+            self.x -= self.velocity
+        if self.y_inv == False:
+            self.y += self.velocity
+        else:
+            self.y -= self.velocity
+        if self.x <= 0:
+            self.x_inv = False
+        elif self.y <= 0:
+            self.y_inv = False
+        elif self.x >= self.boundary[0]/2 - self.sx:
+            self.x_inv = True
+        elif self.y >= self.boundary[1] - self.sy:
+            self.y_inv = True
+        # rect 위치 업데이트
+        self.update_rect((self.x, self.y))
+        # 애니메이션 재생
+        self.inc += Default.animation.value["speed"]
+        self.inc = Utils.clamp(self.inc, 0.0, self.frame_count-1)
+        if self.inc >= self.frame_count-1:
+            self.inc_delay += Default.animation.value["speed"]
+            if self.inc_delay >= Default.animation.value["interval"]:
+                self.inc = 0.0
+                self.inc_delay = 0.0
+        self.current_frame = int(self.inc)
+        if self.is_transparent == False:
+            self.img = self.frames[int(self.inc)]
+        else:
+            self.img = self.frames_trans[int(self.inc)]
+        # 아이템 생성 후 일정 시간 경과 시 깜빡이면서 소멸
+        time_passed = time.time() - self.spawned
+        time_left = Default.item.value["duration"] - time_passed 
+        if time_left > 0:
+            if time_left <= Default.animation.value["blink"]["duration"]:
+                self.blink_count += Default.animation.value["blink"]["speed"]
+                if(self.blink_count >= Default.animation.value["blink"]["frame"]):
+                    if self.is_transparent == False:
+                        self.img = self.frames_trans[int(self.inc)]
+                        self.blink_count = 0.0
+                        self.is_transparent = True
+                    else:
+                        self.img = self.frames[int(self.inc)]
+                        self.blink_count = 0.0
+                        self.is_transparent = False
+        else:
+            game.item_list.remove(self)
+
+class Bomb(Item):
+    # 폭탄 아이템: 획득 시 폭탄 카운터 증가
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "bomb")
+
+    # 캐릭터와 충돌 시  바로 실행
+    '''def use(self, game):
+        if self.is_collidable == True:
+            self.sfx.play()
+            game.character.bomb_count+=1
+            self.is_collidable = False
+            game.item_list.remove(self)'''
+
+
+class Health(Item):
+    # 목숨 아이템: 획득 시 목숨 증가
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "health")
+
+    # 캐릭터와 충돌 시  바로 실행
+    def use(self, game):
+        if self.is_collidable == True:
+            self.sfx.play()
+            game.life += 1
+            self.is_collidable = False
+            game.item_list.remove(self)
+
+class PowerUp(Item):
+    # 파워업 아이템: 획득 시 캐릭터 발사체 개수 증가
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "powerup")
+
+    # 캐릭터와 충돌 시  바로 실행
+    '''def use(self, game):
+        if self.is_collidable == True:
+            self.sfx.play()
+            fire_count = game.character.fire_count + 1
+            n_min = Default.character.value["missile"]["min"]
+            n_max = Default.character.value["missile"]["max"]
+            if fire_count > n_max:
+                game.character.auto_target = True
+            game.character.fire_count  = Utils.clamp(fire_count, n_min, n_max)
+            self.is_collidable = False
+            game.item_list.remove(self)'''
+
+class SpeedUp(Item):
+    # 스피드업 아이템: 획득 시 캐릭터 이동/발사 속도 증가
+    def __init__(self, animation):
+        super().__init__(animation.frames, animation.frames_trans, "speedup")
+        
+    # 캐릭터와 충돌 시  바로 실행
+    '''def use(self, game):
+        if self.is_collidable == True:
+            self.sfx.play()
+            self.used = time.time()
+            self.org_velocity = game.character.velocity
+            self.org_fire_interval = game.character.fire_interval
+            game.character.speed_up()
+            self.is_collidable = False
+            game.item_list.remove(self)'''
