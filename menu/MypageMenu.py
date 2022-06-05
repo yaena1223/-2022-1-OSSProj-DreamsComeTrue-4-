@@ -43,6 +43,8 @@ class Mypage:
 
         self.show()
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        
+           
 
     def to_menu(self):
         import menu.gameselectMenu
@@ -61,8 +63,8 @@ class Mypage:
         self.menu.add.label("Hard Score : %s"%User.hard_score)
         self.menu.add.label("My coin : %d "%User.coin)
         #캐릭터 선택 메뉴 구성
-        characters = []
-        
+        characters = [] #보유하고 있는 캐릭터 이름만 저장하는 리스트
+
         curs = Database().dct_db.cursor()
         self.id = User.user_id
         sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
@@ -94,7 +96,7 @@ class Mypage:
                 ).scale(0.5, 0.5)
      
                 self.character_imgs2.append(default_image.copy())
-            
+        #print(self.price)    
         #print("이미지리스트",self.character_imgs)
         self.character_selector = self.menu.add.selector(
             title='Character :\t',
@@ -168,6 +170,8 @@ class Mypage:
     # 캐릭터 변경 시 실행
     def on_selector_change(self, selected, value: int) -> None:
         self.update_from_selection(value)
+
+
 
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
