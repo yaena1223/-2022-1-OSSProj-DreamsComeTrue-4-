@@ -169,5 +169,4 @@ class pvp :
             #self.character1.update(self)
             #self.character2.update(self)
 
-
             pygame.display.flip()
