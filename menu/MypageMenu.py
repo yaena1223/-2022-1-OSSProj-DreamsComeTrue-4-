@@ -45,7 +45,12 @@ class Mypage:
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def to_menu(self):
-        self.menu.disable()
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()
 
     #메뉴 구성하고 보이기
     def show(self):  
@@ -137,7 +142,8 @@ class Mypage:
             database.set_char()
         else:
             print("character locked")
-            self.showCharactereLockedScreen(self.character_data[selected_idx].name)
+            import menu.CharacterLock
+            menu.CharacterLock.Characterlock(self.screen,self.character_data[selected_idx].name).show()
             
 
 
@@ -163,25 +169,6 @@ class Mypage:
     def on_selector_change(self, selected, value: int) -> None:
         self.update_from_selection(value)
 
-
-
-    # 잠긴 캐릭터 선택 시 보여지는 화면
-    def showCharactereLockedScreen(self, character):       
-        self.menu.clear()
-        if(character == 'Merry'):
-            self.menu.add.image(Images.lock_cat2.value,scale=Scales.small.value)
-        elif(character == 'Haengal'):
-            self.menu.add.image(Images.lock_cat3.value,scale=Scales.small.value)
-        elif(character == 'Kongchi'):
-            self.menu.add.image(Images.lock_cat4.value,scale=Scales.small.value)
-        self.menu.add.label("")
-        self.menu.add.button('back', self.back_from_locked)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
-
-    def back_from_locked(self):
-        self.menu.clear()
-        self.show()
-        
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
