@@ -165,8 +165,16 @@ class Default(enum.Enum):
     item = {
         "duration":10.0,
         "size":{
-            "x":55, 
-            "y":30
+            "x":45, 
+            "y":45
+        },
+        "size2":{
+            "x":70,
+            "y":35
+        },
+        "size3":{
+            "x":80,
+            "y":33
         },
         "sound": "./Sound/Item/speedup.wav",
         "velocity":5,
