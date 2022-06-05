@@ -95,7 +95,6 @@ class Database:
 
     def show_mycoin(self):
         self.id = User.user_id
-        self.coin = User.coin
         curs = self.dct_db.cursor()
         sql = "SELECT user_id,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
         curs.execute(sql,self.id) 
@@ -138,6 +137,7 @@ class Database:
             curs.execute(sql, (self.coin-200, self.id))
             self.dct_db.commit()
         curs.close()
+
 
     # 유저 게임기록 업데이트
     def update_score(self,mode,new_score):

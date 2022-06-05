@@ -12,6 +12,7 @@ class Characterlock:
     def __init__(self,screen,character):
         self.size = screen.get_size()
         self.screen = screen
+        self.character = character
         self.charlock_theme =  pygame_menu.Theme(
             widget_font = pygame_menu.font.FONT_BEBAS,
             widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
@@ -35,6 +36,7 @@ class Characterlock:
     def show(self):     
         print(self.size[0])
         self.menu.add.vertical_margin(self.size[0]*0.5)
+        self.menu.add.button('unlock', self.unlock_character)
         self.menu.add.button('back', self.back_from_locked)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         
@@ -60,3 +62,52 @@ class Characterlock:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
+
+    def unlock_character(self):
+        import data.database_user
+        database =  data.database_user.Database()
+        price= [0,10,10,20]
+        curs =database.dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char2,char3,char4,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_coin열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        self.coin = data[4]
+        if self.character == "Merry":
+            selected_idx = 1
+        if self.character == "Haengal":
+            selected_idx = 2
+        if self.character == "Kongchi":
+            selected_idx = 3
+        #print(selected_idx)
+        if(data[4] >= price[selected_idx]):
+            print("잠금을 해제합니다.")
+            if self.character == "Merry":
+                User.coin = self.coin-10
+                sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
+                curs.execute(sql, (5, self.id))
+                sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+                curs.execute(sql, (self.coin-10, self.id))
+                database.dct_db.commit()
+                
+
+            if self.character == "Haengal":
+                User.coin = self.coin-10
+                sql = "UPDATE users2 SET char3=%s WHERE user_id = %s"
+                curs.execute(sql, (5, self.id))
+                sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+                curs.execute(sql, (self.coin-10, self.id))
+                database.dct_db.commit()
+
+            if self.character == "Kongchi":
+                User.coin = self.coin-20
+                sql = "UPDATE users2 SET char4=%s WHERE user_id = %s"
+                curs.execute(sql, (5, self.id))
+                sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
+                curs.execute(sql, (self.coin-20, self.id))
+                database.dct_db.commit()
+ 
+            
+        else:
+            print("코인이 부족하여 구매가 불가능합니다.")
+        curs.close()
