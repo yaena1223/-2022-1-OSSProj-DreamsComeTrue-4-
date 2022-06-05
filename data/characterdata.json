@@ -6,8 +6,8 @@
             "velocity": 11,
             "missile_img": "./Image/Weapon/worm.png",
             "missile_size": {
-                "x": 50,
-                "y": 50
+                "x": 35,
+                "y": 55
             },
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 180,
@@ -20,8 +20,8 @@
             "velocity": 13,
             "missile_img": "./Image/Weapon/carrot.png",
             "missile_size": {
-                "x": 40,
-                "y": 40
+                "x": 35,
+                "y": 55
             },
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 330,
@@ -32,10 +32,10 @@
             "name": "Haengal",
             "img_path": "./Image/catthema/cat3_back.png",
             "velocity": 13,
-            "missile_img": "./Image/MISSILE_2.png",
+            "missile_img": "./Image/Weapon/carrot.png",
             "missile_size": {
-                "x": 50,
-                "y": 70
+                "x": 35,
+                "y": 55
             },
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 200,
@@ -46,10 +46,10 @@
             "name": "Kongchi",
             "img_path": "./Image/catthema/cat4_back.png",
             "velocity": 17,
-            "missile_img": "./Image/MISSILE_2.png",
+            "missile_img": "./Image/Weapon/carrot.png",
             "missile_size": {
-                "x": 50,
-                "y": 70
+                "x": 35,
+                "y": 55
             },
             "missile_sfx": "./Sound/Weapon/heavy_missile.wav",
             "missile_power": 450,
