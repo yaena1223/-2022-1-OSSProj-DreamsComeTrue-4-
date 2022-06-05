@@ -77,12 +77,12 @@ class DestroyEffectAnim(Animation):
 class BombAnim(Animation):
     # 폭탄 아이템 애니메이션 객체 
     def __init__(self):
-        super().__init__(Default.item.value["bomb"]["frames"], Default.item.value["size"])
+        super().__init__(Default.item.value["bomb"]["frames"], Default.item.value["size3"])
 
 class PowerupAnim(Animation):
     # 파워업 아이템 애니메이션 객체 
     def __init__(self):
-        super().__init__(Default.item.value["powerup"]["frames"], Default.item.value["size"])
+        super().__init__(Default.item.value["powerup"]["frames"], Default.item.value["size2"])
 
 class SpeedupAnim(Animation):
     # 스피드업 아이템 애니메이션 객체 
