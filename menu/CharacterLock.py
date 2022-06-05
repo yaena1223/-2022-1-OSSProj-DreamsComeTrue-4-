@@ -90,6 +90,7 @@ class Characterlock:
                 curs.execute(sql, (self.coin-10, self.id))
                 database.dct_db.commit()
                 User.cat_lock[1] = False
+                database.char_lock()                
                 
 
             if self.character == "Haengal":
@@ -99,8 +100,8 @@ class Characterlock:
                 sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
                 curs.execute(sql, (self.coin-10, self.id))
                 database.dct_db.commit()
-                database.char_lock()
                 User.cat_lock[2] = False
+                database.char_lock()       
 
             if self.character == "Kongchi":
                 User.coin = self.coin-20
@@ -109,8 +110,8 @@ class Characterlock:
                 sql = "UPDATE users2 SET user_coin=%s WHERE user_id = %s"
                 curs.execute(sql, (self.coin-20, self.id))
                 database.dct_db.commit()
-                database.char_lock()
                 User.cat_lock[3] = False
+                database.char_lock()       
  
             
         else:
