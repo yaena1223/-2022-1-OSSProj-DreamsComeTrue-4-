@@ -393,6 +393,8 @@ class StageGame:
     # 실패 화면
     def showGameOverScreen(self):
         pygame.mixer.music.stop()
+        Database().reduce_char_life() #stage fail하면 캐릭터 생명 하나 줄임
+        Database().char_lock() #생명이 0이 된다면 잠굼
         #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE

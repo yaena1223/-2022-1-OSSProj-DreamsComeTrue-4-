@@ -14,7 +14,7 @@ from pygame_menu.utils import make_surface
 # 캐릭터 선택 메뉴
 class Mypage:
     image_widget: 'pygame_menu.widgets.Image'
-   # item_description_widget: 'pygame_menu.widgets.Label'
+    item_description_widget: 'pygame_menu.widgets.Label'
 
     def __init__(self,screen):
         # 화면 받고 화면 크기 값 받기
@@ -43,24 +43,28 @@ class Mypage:
 
         self.show()
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        
+           
 
     def to_menu(self):
-        self.menu.disable()
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()
 
     #메뉴 구성하고 보이기
     def show(self):  
         self.menu.add.label("My ID : %s "%User.user_id)
-        self.menu.add.vertical_margin(5)
         Database().my_easy_rank()
         Database().my_hard_rank()
         self.menu.add.label("Easy Score : %s"%User.easy_score)
         self.menu.add.label("Hard Score : %s"%User.hard_score)
-        self.menu.add.vertical_margin(5)
         self.menu.add.label("My coin : %d "%User.coin)
-        self.menu.add.vertical_margin(5)
         #캐릭터 선택 메뉴 구성
-        characters = []
-        
+        characters = [] #보유하고 있는 캐릭터 이름만 저장하는 리스트
+
         curs = Database().dct_db.cursor()
         self.id = User.user_id
         sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 user_character열만 선택
@@ -78,13 +82,13 @@ class Mypage:
         for i in range(1,5):
             char = data[i]
             
-            if(char == True):
+            if(char > -1): 
                 default_image = pygame_menu.BaseImage(
                 image_path=front_image_path[i-1]
                 ).scale(0.5, 0.5)
                 #print("이미지경로",front_image_path[i-1])
-                characters.append((self.character_data[i-1].name, i-1))
-                self.character_imgs.append(default_image.copy())
+                characters.append((self.character_data[i-1].name, i-1)) #보유하고 있는 캐릭터 이름만 저장
+                self.character_imgs.append(default_image.copy()) #보유하고 있는 캐릭터만 배열에 이미지 저장
 
         for i in range(4): 
                 default_image = pygame_menu.BaseImage(
@@ -92,7 +96,7 @@ class Mypage:
                 ).scale(0.5, 0.5)
      
                 self.character_imgs2.append(default_image.copy())
-            
+        #print(self.price)    
         #print("이미지리스트",self.character_imgs)
         self.character_selector = self.menu.add.selector(
             title='Character :\t',
@@ -103,8 +107,8 @@ class Mypage:
             image_path=self.character_imgs[0],
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
-        #self.item_description_widget = self.menu.add.label(title = "Unlocked" if self.character_data[0].is_unlocked == True else "Locked")
-        self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
+        self.item_description_widget = self.menu.add.label(title = "Unlocked" if User.cat_lock[0] == False else "Locked")
+        self.frame_v = self.menu.add.frame_v(350, 160, margin=(5, 0))
         # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.menu.add.progress_bar(
             title="Power",
@@ -126,7 +130,7 @@ class Mypage:
         ), ALIGN_RIGHT)
         self.mytheme.widget_background_color = (150, 213, 252)
         self.menu.add.button("SELECT",self.select_character)
-        self.menu.add.vertical_margin(10)
+        self.menu.add.vertical_margin(5)
         self.menu.add.button("    BACK    ",self.to_menu)
         self.update_from_selection(int(self.character_selector.get_value()[0][1]))
         self.mytheme.widget_background_color = (0,0,0,0)
@@ -134,9 +138,15 @@ class Mypage:
     def select_character(self): #게임 시작 함수
         # 캐릭터 셀릭터가 선택하고 있는 데이터를 get_value 로 가져와서, 그 중 Character 객체를 [0][1]로 접근하여 할당
         selected_idx = self.character_selector.get_value()[0][1]
-        User.character = selected_idx
-        database = Database()
-        database.set_char()
+        if User.cat_lock[selected_idx] == False:
+            User.character = selected_idx
+            database = Database()
+            database.set_char()
+        else:
+            print("character locked")
+            import menu.CharacterLock
+            menu.CharacterLock.Characterlock(self.screen,self.character_data[selected_idx].name).show()
+            
 
 
     # 화면 크기 조정 감지 및 비율 고정
@@ -161,6 +171,9 @@ class Mypage:
     def on_selector_change(self, selected, value: int) -> None:
         self.update_from_selection(value)
 
+
+
+
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
         self.current = selected_value
@@ -168,4 +181,4 @@ class Mypage:
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
-
+        self.item_description_widget.set_title(title = "Unlocked" if User.cat_lock[selected_value] == False else "Locked")
