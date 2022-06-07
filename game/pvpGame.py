@@ -184,6 +184,47 @@ class pvp :
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
+            #발사체와 몹 충돌 감지(player1)
+            for missile in list(self.character1.get_missiles_fired()):
+                for mob in list(self.mobList):
+                    if self.check_crash(missile,mob):
+                        self.score_player1 += 10
+                        if missile in self.character1.missiles_fired:
+                            self.character1.missiles_fired.remove(missile)
+                        mob.destroy(self)
+
+            #발사체와 몹 충돌 감지(player2)
+            for missile in list(self.character2.get_missiles_fired()):
+                for mob in list(self.mobList):
+                    if self.check_crash(missile,mob):
+                        self.score_player2 += 10
+                        if missile in self.character2.missiles_fired:
+                            self.character2.missiles_fired.remove(missile)
+                        mob.destroy(self)
+
+            #몹과 플레이어 충돌 감지
+            for mob in list(self.mobList):
+                if(self.check_crash(mob,self.character1)):
+                    if self.character1.is_collidable == True:
+                        self.character1.last_crashed = time.time()
+                        self.character1.is_collidable = False
+                        print("crash!")
+                        self.life_player1 -= 1
+                        mob.destroy(self)
+
+            for mob in list(self.mobList):
+                if(self.check_crash(mob,self.character2)):
+                    if self.character2.is_collidable == True:
+                        self.character2.last_crashed = time.time()
+                        self.character2.is_collidable = False
+                        print("crash!")
+                        self.life_player2 -= 1
+                        mob.destroy(self)
+
+            #화면 그리기
+            for effect in self.effect_list:
+                effect.show(self.screen)
+
             #캐릭터 그리기
             self.character1.show(self.screen)
             self.character2.show(self.screen)
@@ -195,12 +236,44 @@ class pvp :
             for item in list(self.item_list):
                 item.show(self.screen)
 
-           
+            for i in self.character1.get_missiles_fired():
+                i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
+            
+            for i in self.character2.get_missiles_fired():
+                i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
+
+            #점수와 목숨 표시
+            font = pygame.font.Font(Default.font.value, self.size[0]//40)
+            score_life_text1 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player1,self.life_player1,self.character1.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text2 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player2,self.life_player2,self.character2.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            self.screen.blit(score_life_text1,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+            self.screen.blit(score_life_text2,(10+self.size[0]/2,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
                         
             self.character1.pvp_update1(self)
             self.character2.pvp_update2(self)
 
             pygame.display.flip()
+
+#충돌 감지 함수
+    def check_crash(self,o1,o2):
+        o1_mask = pygame.mask.from_surface(o1.img)
+        o2_mask = pygame.mask.from_surface(o2.img)
+
+        offset = (int(o2.x - o1.x), int(o2.y - o1.y))
+        collision = o1_mask.overlap(o2_mask, offset)
+        
+        if collision:
+            return True
+        else:
+            return False
+
+
 
 class Mob(Object):
     def __init__(self, img_path, size, velocity, missile):
@@ -332,12 +405,12 @@ class Health(Item):
         super().__init__(animation.frames, animation.frames_trans, "health")
 
     # 캐릭터와 충돌 시  바로 실행
-    def use(self, game):
+    '''def use(self, game):
         if self.is_collidable == True:
             self.sfx.play()
             game.life += 1
             self.is_collidable = False
-            game.item_list.remove(self)
+            game.item_list.remove(self)'''
 
 class PowerUp(Item):
     # 파워업 아이템: 획득 시 캐릭터 발사체 개수 증가
