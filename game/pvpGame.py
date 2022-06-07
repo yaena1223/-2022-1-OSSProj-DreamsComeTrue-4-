@@ -252,9 +252,14 @@ class pvp :
             font = pygame.font.Font(Default.font.value, self.size[0]//40)
             score_life_text1 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player1,self.life_player1,self.character1.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             score_life_text2 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player2,self.life_player2,self.character2.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
-            self.screen.blit(score_life_text1,(10,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
-            self.screen.blit(score_life_text2,(10+self.size[0]/2,5)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+            self.screen.blit(score_life_text1,(10,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+            self.screen.blit(score_life_text2,(10+self.size[0]/2,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
                         
+            # 현재 흘러간 시간
+            play_time = (time.time() - self.startTime)
+            time_text = font.render("Time : {:.2f}".format(play_time), True, Color.YELLOW.value)
+            self.screen.blit(time_text,(10,5))
+            
             self.character1.pvp_update1(self)
             self.character2.pvp_update2(self)
 
