@@ -77,6 +77,10 @@ class pvp :
         self.SB = 0
         #self.infowindow_image = "Image/catthema/map1.png"
 
+        # 5. 캐릭터 초기화
+        self.character1.pvp_reinitialize1(self)
+        self.character2.pvp_reinitialize2(self)
+
         # 방향키 
         self.direction1 = {None: (0, 0), pygame.K_w: (0, -2), pygame.K_s: (0, 2),
                     pygame.K_a: (-2, 0), pygame.K_d: (2, 0)} #player1
@@ -180,7 +184,9 @@ class pvp :
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
-
+            #캐릭터 그리기
+            self.character1.show(self.screen)
+            self.character2.show(self.screen)
 
             #몹 그리기
             for mob in self.mobList:
@@ -191,8 +197,8 @@ class pvp :
 
            
                         
-            #self.character1.update(self)
-            #self.character2.update(self)
+            self.character1.pvp_update1(self)
+            self.character2.pvp_update2(self)
 
             pygame.display.flip()
 
