@@ -56,9 +56,11 @@ class Mypage:
 
     #메뉴 구성하고 보이기
     def show(self):  
+        Database().char_lock()  
         self.menu.add.label("My ID : %s "%User.user_id)
         Database().my_easy_rank()
         Database().my_hard_rank()
+        User.coin = Database().show_mycoin()
         self.menu.add.label("Easy Score : %s"%User.easy_score)
         self.menu.add.label("Hard Score : %s"%User.hard_score)
         self.menu.add.label("My coin : %d "%User.coin)
