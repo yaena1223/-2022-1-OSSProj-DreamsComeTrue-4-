@@ -146,7 +146,7 @@ class HelpMenu:
     # 조작법 설명 페이지
     def controls(self):
         self.menu.clear()
-        self.menu.add.image(Images.info_controls.value, scale=Scales.tiny.value)
+        self.menu.add.image(Images.info_controls.value, scale=(self.size[0]*0.001,self.size[1]*0.001))
         self.menu.add.button('         back         ', self.show, selection_color=Color.BLACK.value)
 
    # 화면 크기 조정 감지 및 비율 고정
