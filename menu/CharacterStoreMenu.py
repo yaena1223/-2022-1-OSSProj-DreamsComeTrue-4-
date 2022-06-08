@@ -81,59 +81,64 @@ class CharacterStoreMenu:
                 ).scale(0.5, 0.5)
                 characters.append((self.character_data[idx-1].name, idx-1))
                 self.character_imgs.append(default_image.copy())
-        
-        for i in range(4): 
-                default_image = pygame_menu.BaseImage(
-                image_path=front_image_path[i]
-                ).scale(0.5, 0.5)
-     
-                self.character_imgs2.append(default_image.copy())
+                
+        if len(characters)==0:
+                    self.menu.add.label("Nothing to buy.")
+                    self.menu.add.button("    BACK    ",self.to_menu)
 
-        for i in range(0,4):
-           self.price.append(User.price[i]) 
+        else:
+            for i in range(4): 
+                    default_image = pygame_menu.BaseImage(
+                    image_path=front_image_path[i]
+                    ).scale(0.5, 0.5)
+        
+                    self.character_imgs2.append(default_image.copy())
+
+            for i in range(0,4):
+                self.price.append(User.price[i]) 
+                
+            self.character_selector = self.menu.add.selector(
+                title='Character :\t',
+                items=characters,
+                onchange=self.on_selector_change
+            )
+            self.image_widget = self.menu.add.image(
+                image_path=self.character_imgs[0],
+                padding=(25, 0, 0, 0)  # top, right, bottom, left
+            )
             
-        self.character_selector = self.menu.add.selector(
-            title='Character :\t',
-            items=characters,
-            onchange=self.on_selector_change
-        )
-        self.image_widget = self.menu.add.image(
-            image_path=self.character_imgs[0],
-            padding=(25, 0, 0, 0)  # top, right, bottom, left
-        )
-        
 
-        self.item_description_widget = self.menu.add.label("")
-        self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
-        # 각 캐릭터의 능력치 표시
-        self.power = self.frame_v.pack(self.menu.add.progress_bar(
-            title="Power",
-            default=int((self.character_data[0].missile_power/Default.character.value["max_stats"]["power"])*100),
-            progress_text_enabled = False,
-            box_progress_color = Color.RED.value
-        ), ALIGN_RIGHT)
-        self.fire_rate = self.frame_v.pack(self.menu.add.progress_bar(
-            title="Fire Rate",
-            default=int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[0].org_fire_interval)*100),
-            progress_text_enabled = False,
-            box_progress_color =Color.BLUE.value
-        ), ALIGN_RIGHT)
-        self.velocity = self.frame_v.pack(self.menu.add.progress_bar(
-            title="Mobility",
-            default=int((self.character_data[0].org_velocity/Default.character.value["max_stats"]["mobility"])*100),
-            progress_text_enabled = False,
-            box_progress_color = Color.GREEN.value
-        ), ALIGN_RIGHT)
-        self.mytheme.widget_background_color = (150, 213, 252)
-        #self.item_description_widget = self.show_price
-        
-        self.menu.add.button("Buy", self.buy_character)
-        self.menu.add.vertical_margin(10)
-        self.menu.add.button("    BACK    ",self.to_menu)
-        self.lock()
+            self.item_description_widget = self.menu.add.label("")
+            self.frame_v = self.menu.add.frame_v(350, 160, margin=(10, 0))
+            # 각 캐릭터의 능력치 표시
+            self.power = self.frame_v.pack(self.menu.add.progress_bar(
+                title="Power",
+                default=int((self.character_data[0].missile_power/Default.character.value["max_stats"]["power"])*100),
+                progress_text_enabled = False,
+                box_progress_color = Color.RED.value
+            ), ALIGN_RIGHT)
+            self.fire_rate = self.frame_v.pack(self.menu.add.progress_bar(
+                title="Fire Rate",
+                default=int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[0].org_fire_interval)*100),
+                progress_text_enabled = False,
+                box_progress_color =Color.BLUE.value
+            ), ALIGN_RIGHT)
+            self.velocity = self.frame_v.pack(self.menu.add.progress_bar(
+                title="Mobility",
+                default=int((self.character_data[0].org_velocity/Default.character.value["max_stats"]["mobility"])*100),
+                progress_text_enabled = False,
+                box_progress_color = Color.GREEN.value
+            ), ALIGN_RIGHT)
+            self.mytheme.widget_background_color = (150, 213, 252)
+            #self.item_description_widget = self.show_price
+            
+            self.menu.add.button("Buy", self.buy_character)
+            self.menu.add.vertical_margin(10)
+            self.menu.add.button("    BACK    ",self.to_menu)
+            self.lock()
 
-        self.update_from_selection(int(self.character_selector.get_value()[0][1]))
-        self.mytheme.widget_background_color = (0,0,0,0)
+            self.update_from_selection(int(self.character_selector.get_value()[0][1]))
+            self.mytheme.widget_background_color = (0,0,0,0)
         
 
     def buy_character(self):
@@ -149,10 +154,11 @@ class CharacterStoreMenu:
             User.buy_character = selected_idx
             database = Database()
             database.buy_char()
+            User.coin = Database().show_mycoin()
+            #self.show()
             self.item_description_widget.set_title(title = "Unlocked" )
 
-        
-        
+
     #잠금 표시
     def lock(self):
         curs = Database().dct_db.cursor()
