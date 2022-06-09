@@ -50,12 +50,14 @@ class GameselectMenu:
         self.setting = button(self.board_height,self.board_height,0.1,0.05,0.05,0.05,"Image/catthema/on.png") # sound on/off
 
         self.barcol = button(self.board_height,self.board_height,0.5,0.0,1,0.2,"Image/catthema/bar.png")
+        
+        self.logo = button(self.board_height,self.board_height,0.5,0.92,0.5,0.08,"Image/catthema/logo.png")
 
         self.buttonlist1=[self.barcol,self.map1,self.map2,self.map3,self.level_map1,self.level_map2,self.level_map3,
-        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help] # stagemode
+        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help,self.logo] # stagemode
 
         self.buttonlist2=[self.barcol,self.map1,self.map2,self.map3,self.mode_map1,self.mode_map2,self.mode_map3,
-        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help] # inf mode
+        self.rankpage,self.mypage,self.gamemode,self.store,self.setting,self.logout,self.help,self.logo] # inf mode
 
         self.attchar=["./Image/catthema/attack/cat_att.png","./Image/catthema/attack/dog.png","./Image/catthema/attack/snake.png"]
 

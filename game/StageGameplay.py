@@ -390,6 +390,7 @@ class StageGame:
         self.menu.add.button('Home', self.Home, self.menu, font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
+
     # 실패 화면
     def showGameOverScreen(self):
         pygame.mixer.music.stop()
@@ -412,10 +413,11 @@ class StageGame:
         User.coin = User.coin + self.coin
         #print(User.coin)
         self.database = Database()
-        self.database.set_coin()
-        
+        self.database.set_coin()       
+
     # 일시정지 화면
     def StopGame(self):
+        self.check_resize()
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -426,14 +428,12 @@ class StageGame:
         self.menu.add.image(Images.win.value, scale=self.scale)
         self.menu.add.label("")
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
-
-        self.menu.add.label('Paused')
+        self.menu.add.label('Paused',font_size = self.font_size)
         self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
-        self.menu.add.button("Restart",self.retry)
-        
-        self.menu.add.button("Home",self.gameselectmenu)
-        
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        self.menu.add.button("Restart",self.retry,font_size = self.font_size)
+        self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size)
+        self.menu.mainloop(self.screen,disable_loop=True) # 스크린 이미지 실시간
+        self.StopGame()
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
@@ -455,3 +455,8 @@ class StageGame:
             font_size = new_w * 40 //720
             self.font_size = font_size
             self.scale = (new_w*0.00015,new_h*0.00015)
+            #print(self.font_size)
+            #print(self.scale)
+            return True
+        else :
+            return False
