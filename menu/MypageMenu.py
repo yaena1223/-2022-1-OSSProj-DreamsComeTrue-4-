@@ -152,6 +152,8 @@ class Mypage:
             User.character = selected_idx
             database = Database()
             database.set_char()
+            self.menu.clear()
+            self.show()
         else:
             print("character locked")
             import menu.CharacterLock
