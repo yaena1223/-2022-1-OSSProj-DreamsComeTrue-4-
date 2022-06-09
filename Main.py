@@ -94,6 +94,7 @@ class Login:
         self.menu.add.vertical_margin(10)
         b4 = self.menu.add.button('    Quit    ', pygame_menu.events.EXIT)
 
+
     def login_page(self): ##로그인 페이지
         self.menu.clear()
         #login.mytheme.widget_background_color = (0,0,0,0) #투명 배경

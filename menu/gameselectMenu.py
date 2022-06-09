@@ -161,17 +161,30 @@ class GameselectMenu:
 
                     if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
+                        self.check = Database().check_char_lock()
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Night view"][self.stage_level_map2])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Namsan"][self.stage_level_map3])
-                        StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            StageGame(self.character_data,self.character_data[User.character],self.stage_map).main_info()
                     pygame.display.update()
 
                     if self.level_map1.isOver(pos):
@@ -304,17 +317,31 @@ class GameselectMenu:
 
                     if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map1][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map1.png",self.attchar[0]).main()
+                        #print(self.character_data[User.character])
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map1.png",self.attchar[0]).main()
+                        
                     pygame.display.update()
 
                     if self.map2.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map2][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map2.png",self.attchar[1]).main()
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map2.png",self.attchar[1]).main()
                     pygame.display.update()
 
                     if self.map3.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=self.mode[self.inf_mode_map3][1]
-                        InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map3.png",self.attchar[2]).main()
+                        if self.check:
+                            import menu.FailPlay
+                            menu.FailPlay.FailPlay(self.screen).show()
+                        else:
+                            InfiniteGame(self.character_data[User.character],self.stage_map,"Image/catthema/map3.png",self.attchar[2]).main()
                     pygame.display.update()
 
                     if self.mode_map1.isOver(pos):
