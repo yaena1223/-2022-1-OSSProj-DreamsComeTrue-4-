@@ -14,7 +14,8 @@ class LeaderBoardMenu:
     def __init__(self,screen):
         self.size = screen.get_size()
         self.screen = screen
-        self.font_size = self.size[0] * 30//720
+        self.font_size = self.size[0] * 40//720
+        self.font_option = self.size[0] * 5//720
         self.mytheme = pygame_menu.themes.THEME_DEFAULT.copy()
         self.mytheme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         self.mytheme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
@@ -37,14 +38,26 @@ class LeaderBoardMenu:
     def to_menu(self):
         self.menu.disable()
 
+    def gameselectmenu(self):
+        import menu.gameselectMenu
+        game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+        while True:
+            game.show(self.screen)
+            pygame.display.flip()  
+
     # 리더보드 메인 메뉴
     def rank(self):
         self.menu.clear()
-        self.menu.add.button('     easy mode     ', self.show_current_easy_rank)
-        self.menu.add.button('     hard mode     ', self.show_current_hard_rank)
+        self.menu.add.button('     easy mode     ', self.show_current_easy_rank,font_size = self.font_size)
+        self.menu.add.button('     hard mode     ', self.show_current_hard_rank,font_size = self.font_size)
         #self.menu.add.button('     rank search     ', self.show_current_rank_search)
-        self.menu.add.button('         back         ', self.to_menu)
+        self.menu.add.button('         back         ', self.to_menu,font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
+
+    def check_resize_main(self):
+        if self.check_resize():
+            self.rank()
 
     # 이번 달 easy 모드 랭킹 보여주기
     def show_current_easy_rank(self):
@@ -74,14 +87,14 @@ class LeaderBoardMenu:
     # 페이지화 된 이번 달 easy 모드 랭킹 보여주기
     def get_current_easy_rank_page(self, tens):
         self.menu.clear()
-        self.menu.add.label("--Easy Rank--",selectable=False,font_size=Menus.fontsize_30.value)
+        self.menu.add.label("--Easy Rank--",selectable=False,font_size = self.font_size+self.font_option)
         if(len(easy_data) == 0): # 데이터가 없는 경우
             self.menu.add.vertical_margin(Menus.margin_100.value)
             self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(Menus.margin_100.value)
         else:   # 데이터가 있는 경우
             self.menu.add.vertical_margin(Menus.margin_40.value)
-            table = self.menu.add.table(table_id='my_table', font_size=Menus.fontsize_default.value)
+            table = self.menu.add.table(table_id='my_table', font_size = self.font_size-self.font_option)
             table.default_cell_padding = Menus.table_padding.value
             table.default_row_background_color = Color.GRAY.value
             table.add_row(['Rank', 'ID', 'Score', 'Date'],
@@ -108,8 +121,13 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_easy_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_easy_rank_page),align=ALIGN_CENTER)
-        self.menu.add.button('back', self.rank)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        self.menu.add.button('back', self.rank,font_size = self.font_size)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize_easy)
+    
+    def check_resize_easy(self):
+        if self.check_resize() :
+            #self.menu.disable()
+            self.get_current_easy_rank_page(self.tens)
 
     # 이번 달 easy 모드 랭킹에서 다음 페이지 보기
     def get_next_easy_rank_page(self):
@@ -124,14 +142,14 @@ class LeaderBoardMenu:
     # 페이지화 된 이번 달 hard 모드 랭킹 보여주기
     def get_current_hard_rank_page(self, tens):
         self.menu.clear()
-        self.menu.add.label("--Hard Rank--",selectable=False,font_size=Menus.fontsize_30.value)
+        self.menu.add.label("--Hard Rank--",selectable=False,font_size = self.font_size+self.font_option)
         if(len(hard_data) == 0): # 데이터가 없는 경우
             self.menu.add.vertical_margin(Menus.margin_100.value)
             self.menu.add.label('No Ranking Information.\nRegister ranking for the update.')
             self.menu.add.vertical_margin(Menus.margin_100.value)
         else:   # 데이터가 있는 경우
             self.menu.add.vertical_margin(Menus.margin_40.value)
-            table = self.menu.add.table(table_id='my_table', font_size=Menus.fontsize_default.value)
+            table = self.menu.add.table(table_id='my_table', font_size=self.font_size-self.font_option)
             table.default_cell_padding = Menus.table_padding.value
             table.default_row_background_color = Color.GRAY.value
             table.add_row(['Rank', 'ID', 'Score', 'Date'],
@@ -158,8 +176,12 @@ class LeaderBoardMenu:
                 prev_next_frame.pack(self.menu.add.button('<', self.get_prev_hard_rank_page),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.horizontal_margin(Menus.margin_200.value),align=ALIGN_CENTER)
                 prev_next_frame.pack(self.menu.add.button('>', self.get_next_hard_rank_page),align=ALIGN_CENTER)
-        self.menu.add.button('back', self.rank)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        self.menu.add.button('back', self.rank, font_size = self.font_size)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize_hard)
+
+    def check_resize_hard(self):
+        if self.check_resize():
+            self.get_current_hard_rank_page(self.tens)
 
     # 이번 달 hard 모드 랭킹에서 다음 페이지 보기
     def get_next_hard_rank_page(self):
@@ -189,5 +211,11 @@ class LeaderBoardMenu:
             self.menu._current._widgets_surface = make_surface(0,0)
             self.size = window_size
             print(f'New menu size: {self.menu.get_size()}')
-            font_size = new_w * 30//720
-            self.mytheme.widget_font_size = font_size   
+            #font_size = new_w * 30//720
+            #self.mytheme.widget_font_size = font_size  
+            font_size = new_w * 40 //720
+            font_option = new_w * 5//720
+            self.font_size = font_size
+            self.font_option = font_option
+            #self.scale = (new_w*0.00015,new_h*0.00015)
+            return True 
