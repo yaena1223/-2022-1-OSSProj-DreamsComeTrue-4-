@@ -293,8 +293,8 @@ class InfiniteGame:
         # self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
         self.menu.add.button('Ranking', self.show_register_result,font_size = self.font_size) # 랭킹화면으로 넘어가도록 설정했음.
         self.menu.add.button('Retry', self.retry, font_size = self.font_size)
-        self.menu.add.button('to Home', self.Home, self.menu,font_size = self.font_size)
-        self.menu.mainloop(self.screen,bgfun = self.check_resize)
+        self.menu.add.button('to Home', self.gameselectmenu,font_size = self.font_size)
+        self.menu.mainloop(self.screen,bgfun = self.check_resize_end)
         pygame.display.flip()
         User.coin = User.coin + self.coin
         #print(User.coin)
@@ -323,7 +323,6 @@ class InfiniteGame:
     # 랭킹 등록 결과 화면
     def show_register_result(self):
         #self.menu.remove_widget(self.result_frame)
-        
         LeaderBoardMenu(self.screen).rank()  
 
     def gameselectmenu(self):
@@ -341,26 +340,39 @@ class InfiniteGame:
     
     # 일시정지 화면
     def StopGame(self):
-        self.check_resize()
+        print("enterstopgame")
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Paused', self.size[0], self.size[1],
-                            theme=stageclear_theme)        
+                                    theme=stageclear_theme)   
         self.menu.add.image(Images.win.value, scale=self.scale)
         self.menu.add.label("")
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
-        self.menu.add.label('Paused',font_size = self.font_size)
+        self.menu.add.label('Paused',font_size = self.screen.get_size()[0]*40//720)
         self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
         self.menu.add.button("Restart",self.retry,font_size = self.font_size)
-        self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size)
-        self.menu.mainloop(self.screen,disable_loop=True) # 스크린 이미지 실시간
-        self.StopGame()
+        self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size,)
+        self.menu.mainloop(self.screen,bgfun=self.check_resize_stopgame)#wait_for_evnet=True,)
+
+    def check_resize_stopgame(self):
+        if self.check_resize():
+            #print("enter2")
+            #self.menu.clear
+            self.menu.disable()
+            self.StopGame()
+
+    def check_resize_end(self):
+        if self.check_resize():
+            self.menu.disable()
+            self.show_ranking_register_screen()
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
+        #print("enter!!")
+        #self.screen.get_size()[0]*40//720
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
             ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
@@ -376,16 +388,17 @@ class InfiniteGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
+            print(self.screen)
             font_size = new_w * 40 //720
             self.font_size = font_size
             self.scale = (new_w*0.00015,new_h*0.00015)
+            return True
 
     #재시도 버튼 클릭 시 실행
     def retry(self):
         InfiniteGame(self.character,self.mode, self.background_image,self.mob_image).main()
         self.menu.disable()
     
-
     #난이도를 나누는 모드 클래스 (상속하여 사용)
     class Mode:
         def update_difficulty():
