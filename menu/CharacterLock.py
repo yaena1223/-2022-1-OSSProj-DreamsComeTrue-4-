@@ -34,9 +34,27 @@ class Characterlock:
                             theme=self.charlock_theme)
 
     def show(self):     
-        print(self.size[0])
+        import data.database_user
+        database =  data.database_user.Database()
+        price= [0,10,10,20]
+        curs =database.dct_db.cursor()
+        self.id = User.user_id
+        sql = "SELECT user_id,char2,char3,char4,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_coin열만 선택
+        curs.execute(sql,self.id) 
+        data = curs.fetchone()  
+        self.coin = data[4]
+        if self.character == "Merry":
+            selected_idx = 1
+        if self.character == "Haengal":
+            selected_idx = 2
+        if self.character == "Kongchi":
+            selected_idx = 3
+        #print(selected_idx)
         self.menu.add.vertical_margin(self.size[0]*0.5)
-        self.menu.add.button('unlock', self.unlock_character)
+        if(data[4] >= price[selected_idx]):
+            self.menu.add.button('unlock', self.unlock_character)
+        else:
+            self.menu.add.label("Not enough money")
         self.menu.add.button('back', self.back_from_locked)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         
@@ -112,8 +130,8 @@ class Characterlock:
                 database.dct_db.commit()
                 User.cat_lock[3] = False
                 database.char_lock()       
- 
-            
+
+            self.back_from_locked()
         else:
             print("코인이 부족하여 구매가 불가능합니다.")
         curs.close()
