@@ -49,7 +49,12 @@ class CharacterStoreMenu:
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
 
     def to_menu(self):
-        self.menu.disable()
+            import menu.gameselectMenu
+            game=menu.gameselectMenu.GameselectMenu(self.screen)
+
+            while True:
+                game.show(self.screen)
+                pygame.display.flip()
 
     #메뉴 구성하고 보이기
     def show(self):  
