@@ -53,6 +53,7 @@ class CharacterStoreMenu:
 
     #메뉴 구성하고 보이기
     def show(self):  
+        User.coin = Database().show_mycoin()
         self.menu.add.label("My coin : %d "%User.coin)
         #캐릭터 선택 메뉴 구성
         characters = []
@@ -141,6 +142,7 @@ class CharacterStoreMenu:
             self.mytheme.widget_background_color = (0,0,0,0)
         
 
+
     def buy_character(self):
         curs = Database().dct_db.cursor()
         self.id = User.user_id
@@ -158,6 +160,10 @@ class CharacterStoreMenu:
             #self.show()
             self.item_description_widget.set_title(title = "Unlocked" )
 
+        else:
+            print("not enough money")
+            import menu.CharacterBuy
+            menu.CharacterBuy.CharacterBuy(self.screen,self.character_data[selected_idx].name).show()    
 
     #잠금 표시
     def lock(self):
