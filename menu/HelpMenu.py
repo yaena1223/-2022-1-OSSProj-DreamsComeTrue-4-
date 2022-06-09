@@ -140,7 +140,7 @@ class HelpMenu:
     # 아이템 설명 페이지
     def items(self):
         self.menu.clear()
-        self.menu.add.image(Images.info_items.value, scale=Scales.tiny.value)
+        self.menu.add.image(Images.info_items.value, scale=(self.size[0]*0.0008,self.size[1]*0.0008))
         self.menu.add.button('         back         ', self.show, selection_color=Color.BLACK.value)
 
     # 조작법 설명 페이지
