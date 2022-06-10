@@ -232,7 +232,7 @@ class Character(Object):
         if self.is_collidable == False:
             time_passed = time.time() - self.last_crashed
             self.blink_count += Default.animation.value["blink"]["speed"]
-            if game.life > 0:
+            if game.life_player1 > 0:
                 if(self.blink_count >= Default.animation.value["blink"]["frame"]):
                     if(self.is_transparent == False):
                         self.img = self.img_trans
@@ -301,7 +301,7 @@ class Character(Object):
         if self.is_collidable == False:
             time_passed = time.time() - self.last_crashed
             self.blink_count += Default.animation.value["blink"]["speed"]
-            if game.life > 0:
+            if game.life_player2 > 0:
                 if(self.blink_count >= Default.animation.value["blink"]["frame"]):
                     if(self.is_transparent == False):
                         self.img = self.img_trans

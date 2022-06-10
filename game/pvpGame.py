@@ -29,6 +29,7 @@ from data.database_user import *
 
 from pygame.math import Vector2 #mob.py에서 가져옴
 from object.Effect import Boom
+from object.Object import Object
 
 import time
 
@@ -56,7 +57,6 @@ class pvp :
         self.effect_list = []
         self.enemyBullets =[]
         self.character_data = character_data
-        #self.stage = stage
 
         self.goal_time = 120 # play 120초
         self.character1 = character1 # player1 character
@@ -88,6 +88,8 @@ class pvp :
         self.direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
                     pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)} #playter2
 
+        
+
     def main(self):
         # 메인 이벤트
         pygame.mixer.init()
@@ -98,7 +100,7 @@ class pvp :
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
             self.clock.tick(30)
-            
+
             #화면 흰색으로 채우기
             self.screen.fill(Color.WHITE.value)
             
@@ -116,18 +118,18 @@ class pvp :
 
             self.screen.blit(background1,  [0,0]) 
             self.screen.blit(background1, [self.size[0]/2, 0])
-            
 
+            start_ticks = pygame.time.get_ticks()
 
             # 입력 처리
             for event in pygame.event.get(): #동작을 했을때 행동을 받아오게됨
                 if event.type ==pygame.QUIT:
                     self.SB=1 # SB 가 1이되면 while 문을 벗어나오게 됨
-                if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
+                '''if event.type == pygame.KEYDOWN: # 어떤 키를 눌렀을때!(키보드가 눌렸을 때)
                     if event.key == pygame.K_x:
                         self.SB=1
                     if event.key == pygame.K_z: #테스트용
-                        self.score += 30
+                        self.score += 30'''
                 if event.type == pygame.VIDEORESIZE: #창크기가 변경되었을 때
                     #화면 크기가 최소 300x390은 될 수 있도록, 변경된 크기가 그것보다 작으면 300x390으로 바꿔준다
                     width, height = max(event.w,300), max(event.h,390)
@@ -154,10 +156,6 @@ class pvp :
                 new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
                 self.item_list.append(new_item)
 
-            if random.random() < Default.item.value["bomb"]["spawn_rate"]:
-                new_item = Bomb(self.animation.animations["bomb"])
-                new_item.set_XY((random.randrange(0,self.size[0]-new_item.sx),0))
-                self.item_list.append(new_item)
 
             if random.random() < Default.item.value["health"]["spawn_rate"]:
                 new_item = Health(self.animation.animations["health"])
@@ -184,6 +182,53 @@ class pvp :
                 bullet.move(self.size,self)
                 bullet.show(self.screen)
 
+            for item in list(self.item_list):
+                if item.rect_collide(self.character1.rect):
+                    item.use1(self, self.character1)
+                if item.rect_collide(self.character2.rect):
+                    item.use2(self, self.character2)
+
+            #발사체와 몹 충돌 감지(player1)
+            for missile in list(self.character1.get_missiles_fired()):
+                for mob in list(self.mobList):
+                    if self.check_crash(missile,mob):
+                        self.score_player1 += 10
+                        if missile in self.character1.missiles_fired:
+                            self.character1.missiles_fired.remove(missile)
+                        mob.destroy(self)
+
+            #발사체와 몹 충돌 감지(player2)
+            for missile in list(self.character2.get_missiles_fired()):
+                for mob in list(self.mobList):
+                    if self.check_crash(missile,mob):
+                        self.score_player2 += 10
+                        if missile in self.character2.missiles_fired:
+                            self.character2.missiles_fired.remove(missile)
+                        mob.destroy(self)
+
+            #몹과 플레이어 충돌 감지
+            for mob in list(self.mobList):
+                if(self.check_crash(mob,self.character1)):
+                    if self.character1.is_collidable == True:
+                        self.character1.last_crashed = time.time()
+                        self.character1.is_collidable = False
+                        print("crash!")
+                        self.life_player1 -= 1
+                        mob.destroy(self)
+
+            for mob in list(self.mobList):
+                if(self.check_crash(mob,self.character2)):
+                    if self.character2.is_collidable == True:
+                        self.character2.last_crashed = time.time()
+                        self.character2.is_collidable = False
+                        print("crash!")
+                        self.life_player2 -= 1
+                        mob.destroy(self)
+
+            #화면 그리기
+            for effect in self.effect_list:
+                effect.show(self.screen)
+
             #캐릭터 그리기
             self.character1.show(self.screen)
             self.character2.show(self.screen)
@@ -195,12 +240,74 @@ class pvp :
             for item in list(self.item_list):
                 item.show(self.screen)
 
-           
+            for i in self.character1.get_missiles_fired():
+                i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
+            
+            for i in self.character2.get_missiles_fired():
+                i.show(self.screen)
+                if hasattr(i, "crosshair"):
+                    if i.locked_on == True:
+                        i.crosshair.show(self.screen)
+
+            #점수와 목숨 표시
+            font = pygame.font.Font(Default.font.value, self.size[0]//40)
+            score_life_text1 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player1,self.life_player1,self.character1.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text2 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player2,self.life_player2,self.character2.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            self.screen.blit(score_life_text1,(10,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+            self.screen.blit(score_life_text2,(10+self.size[0]/2,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
                         
+            # 타이머
+            play_time = time.gmtime(time.time() - self.startTime)
+            timer = self.goal_time - play_time.tm_sec
+            time_text = font.render("Time : {:}".format(timer), True, Color.YELLOW.value)
+            self.screen.blit(time_text, (10,5))
+
+            # 만약 시간이 0 이하이면 게임 종료
+            if timer <= 0:
+                print("타임아웃")
+                running = False
+                self.screen.fill(Color.WHITE.value)
+                return
+
+
+            pygame.display.update()
+
             self.character1.pvp_update1(self)
             self.character2.pvp_update2(self)
 
             pygame.display.flip()
+
+            #목숨이 0 이하면 게임 종료 화면
+            if(self.life_player1<1):
+                #화면 흰색으로 채우기
+                self.screen.fill(Color.WHITE.value)
+                return
+
+            #목숨이 0 이하면 게임 종료 화면
+            if(self.life_player2<1):
+                #화면 흰색으로 채우기
+                self.screen.fill(Color.WHITE.value)
+                return
+
+        
+
+#충돌 감지 함수
+    def check_crash(self,o1,o2):
+        o1_mask = pygame.mask.from_surface(o1.img)
+        o2_mask = pygame.mask.from_surface(o2.img)
+
+        offset = (int(o2.x - o1.x), int(o2.y - o1.y))
+        collision = o1_mask.overlap(o2_mask, offset)
+        
+        if collision:
+            return True
+        else:
+            return False
+
+
 
 class Mob(Object):
     def __init__(self, img_path, size, velocity, missile):
@@ -312,18 +419,7 @@ class Item(Object):
         else:
             game.item_list.remove(self)
 
-class Bomb(Item):
-    # 폭탄 아이템: 획득 시 폭탄 카운터 증가
-    def __init__(self, animation):
-        super().__init__(animation.frames, animation.frames_trans, "bomb")
 
-    # 캐릭터와 충돌 시  바로 실행
-    '''def use(self, game):
-        if self.is_collidable == True:
-            self.sfx.play()
-            game.character.bomb_count+=1
-            self.is_collidable = False
-            game.item_list.remove(self)'''
 
 
 class Health(Item):
@@ -331,12 +427,22 @@ class Health(Item):
     def __init__(self, animation):
         super().__init__(animation.frames, animation.frames_trans, "health")
 
-    # 캐릭터와 충돌 시  바로 실행
-    def use(self, game):
-        if self.is_collidable == True:
+    # 캐릭터와 충돌 시  바로 실행(player1)
+    def use1(self, game, character1):
+        self.character1 = character1 # player1 character
+        if self.character1.is_collidable == True:
             self.sfx.play()
-            game.life += 1
-            self.is_collidable = False
+            game.life_player1 += 1
+            self.character1.is_collidable = False
+            game.item_list.remove(self)
+
+    # 캐릭터와 충돌 시  바로 실행(player2)
+    def use2(self, game, character2):
+        self.character2 = character2 # player2 character
+        if self.character2.is_collidable == True:
+            self.sfx.play()
+            game.life_player2 += 1
+            self.character2.is_collidable = False
             game.item_list.remove(self)
 
 class PowerUp(Item):
@@ -344,18 +450,33 @@ class PowerUp(Item):
     def __init__(self, animation):
         super().__init__(animation.frames, animation.frames_trans, "powerup")
 
-    # 캐릭터와 충돌 시  바로 실행
-    '''def use(self, game):
-        if self.is_collidable == True:
+    # 캐릭터와 충돌 시  바로 실행(player1)
+    def use1(self, game, character1):
+        self.character1 = character1 # player1 character
+        if self.character1.is_collidable == True:
             self.sfx.play()
-            fire_count = game.character.fire_count + 1
+            fire_count = game.character1.fire_count + 1
             n_min = Default.character.value["missile"]["min"]
             n_max = Default.character.value["missile"]["max"]
             if fire_count > n_max:
-                game.character.auto_target = True
-            game.character.fire_count  = Utils.clamp(fire_count, n_min, n_max)
-            self.is_collidable = False
-            game.item_list.remove(self)'''
+                game.character1.auto_target = True
+            game.character1.fire_count  = Utils.clamp(fire_count, n_min, n_max)
+            self.character1.is_collidable = False
+            game.item_list.remove(self)
+
+    # 캐릭터와 충돌 시  바로 실행(player2)
+    def use2(self, game, character2):
+        self.character2 = character2 # player2 character
+        if self.character2.is_collidable == True:
+            self.sfx.play()
+            fire_count = game.character2.fire_count + 1
+            n_min = Default.character.value["missile"]["min"]
+            n_max = Default.character.value["missile"]["max"]
+            if fire_count > n_max:
+                game.character2.auto_target = True
+            game.character2.fire_count  = Utils.clamp(fire_count, n_min, n_max)
+            self.character2.is_collidable = False
+            game.item_list.remove(self)
 
 class SpeedUp(Item):
     # 스피드업 아이템: 획득 시 캐릭터 이동/발사 속도 증가
@@ -363,12 +484,26 @@ class SpeedUp(Item):
         super().__init__(animation.frames, animation.frames_trans, "speedup")
         
     # 캐릭터와 충돌 시  바로 실행
-    '''def use(self, game):
-        if self.is_collidable == True:
+    def use1(self, game, character1):
+        self.character1 = character1 # player1 character
+        if self.character1.is_collidable == True:
             self.sfx.play()
             self.used = time.time()
-            self.org_velocity = game.character.velocity
-            self.org_fire_interval = game.character.fire_interval
-            game.character.speed_up()
-            self.is_collidable = False
-            game.item_list.remove(self)'''
+            self.org_velocity = game.character1.velocity
+            self.org_fire_interval = game.character1.fire_interval
+            game.character1.speed_up()
+            self.character1.is_collidable = False
+            game.item_list.remove(self)
+
+    # 캐릭터와 충돌 시  바로 실행
+    def use2(self, game, character2):
+        self.character2 = character2 # player2 character
+        if self.character2.is_collidable == True:
+            self.sfx.play()
+            self.used = time.time()
+            self.org_velocity = game.character2.velocity
+            self.org_fire_interval = game.character2.fire_interval
+            game.character2.speed_up()
+            self.character2.is_collidable = False
+            game.item_list.remove(self)
+
