@@ -72,6 +72,7 @@ class pvp :
         self.mob_image = "./Image/catthema/attack/cat_att.png"
         #self.background_image = stage.background_image
         self.background_image = "Image/catthema/map1.png"
+        self.gameover_image = "Image/catthema/map2.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.k = 0
         self.SB = 0
@@ -254,8 +255,8 @@ class pvp :
 
             #점수와 목숨 표시
             font = pygame.font.Font(Default.font.value, self.size[0]//40)
-            score_life_text1 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player1,self.life_player1,self.character1.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
-            score_life_text2 = font.render("Score : {} Life: {} Bomb: {}".format(self.score_player2,self.life_player2,self.character2.bomb_count), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text1 = font.render("Score : {} Life: {} ".format(self.score_player1,self.life_player1), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            score_life_text2 = font.render("Score : {} Life: {} ".format(self.score_player2,self.life_player2), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
             self.screen.blit(score_life_text1,(10,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
             self.screen.blit(score_life_text2,(10+self.size[0]/2,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
                         
@@ -269,9 +270,7 @@ class pvp :
             if timer <= 0:
                 print("타임아웃")
                 running = False
-                self.screen.fill(Color.WHITE.value)
                 return
-
 
             pygame.display.update()
 
@@ -291,8 +290,7 @@ class pvp :
                 #화면 흰색으로 채우기
                 self.screen.fill(Color.WHITE.value)
                 return
-
-        
+     
 
 #충돌 감지 함수
     def check_crash(self,o1,o2):
@@ -312,6 +310,8 @@ class pvp :
 class Mob(Object):
     def __init__(self, img_path, size, velocity, missile):
         super().__init__(img_path, size, velocity)
+        self.x_inv = random.choice([True, False]) #추가
+        self.y_inv = False #추가
         self.missile = missile
         self.is_targeted = False
         self.direction = Vector2(1,1)
@@ -320,19 +320,35 @@ class Mob(Object):
         self.kill_sfx.set_volume(Default.sound.value["sfx"]["volume"])
 
     def move(self, boundary, game):
-        if (game.size[0] != self.boundary[0]/2) or (game.size[1] != self.boundary[1]): #update when screen resized
+        if (game.size[0] != self.boundary[0]) or (game.size[1] != self.boundary[1]): #update when screen resized
             self.on_resize(game)
-
         self.x += self.direction.y
         self.y += self.direction.x
         self.rad+=0.04*self.velocity #속도에 적절한 값을 곱하여, 각도 변경
-        self.direction.from_polar((self.velocity*3,math.cos(self.rad)*70)) #속도에 비례한 길이를 갖고, 방향 sin함수를 따르는 벡터를 다음 방향으로 지정
-
-        if self.x >= self.boundary[0]/2 - self.sx:
+        #self.direction.from_polar((self.velocity*3,math.cos(self.rad)*70)) #속도에 비례한 길이를 갖고, 방향 sin함수를 따르는 벡터를 다음 방향으로 지정
+        if self.x_inv == False:
+            self.x += self.velocity*3
+        else:
+            self.x -= self.velocity*3
+        if self.y_inv == False:
+            self.y += self.velocity*3
+        else:
+            self.y -= self.velocity*3
+        if self.x <= 0:
+            self.x_inv = False
+        elif self.y <= 0:
+            self.y_inv = False
+        elif self.x >= self.boundary[0]/2 - self.sx and self.x<= self.boundary[0]/2:
             self.x_inv = True
-
-        if self.y >= boundary[1] - self.sy:
+        elif self.x > self.boundary[0]/2 and self.x <= self.boundary[0]/2 + self.sx/2:
+            self.x_inv = False
+        elif self.x >= self.boundary[0]-self.sx:
+            self.x_inv = True
+        elif self.y >= self.boundary[1] - self.sy:
             game.mobList.remove(self)
+        # rect 위치 업데이트
+        self.update_rect((self.x, self.y))
+        
 
     def destroy(self, game):
         self.kill_sfx.play()
@@ -382,7 +398,11 @@ class Item(Object):
             self.x_inv = False
         elif self.y <= 0:
             self.y_inv = False
-        elif self.x >= self.boundary[0]/2 - self.sx:
+        elif self.x >= self.boundary[0]/2 - self.sx and self.x<= self.boundary[0]/2:
+            self.x_inv = True
+        elif self.x > self.boundary[0]/2 and self.x <= self.boundary[0]/2 + self.sx/2:
+            self.x_inv = False
+        elif self.x >= self.boundary[0]-self.sx:
             self.x_inv = True
         elif self.y >= self.boundary[1] - self.sy:
             self.y_inv = True
