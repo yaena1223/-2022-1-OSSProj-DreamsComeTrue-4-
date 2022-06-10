@@ -8,58 +8,32 @@ from data.StageDataManager import *
 from menu.MypageMenu import *
 
 #Mypage에서 잠긴 캐릭터 SELECT할 시 보여주는 창
-class Characterlock:
-    def __init__(self,screen,character):
+class FailPlay:
+    def __init__(self,screen):
         self.size = screen.get_size()
         self.screen = screen
-        self.character = character
-        self.charlock_theme =  pygame_menu.Theme(
-            widget_font = pygame_menu.font.FONT_BEBAS,
-            widget_background_color = (150, 213, 252), #버튼 가독성 올리기 위해서 버튼 배경색 설정 : 하늘색
+        self.failplay_theme =  pygame_menu.Theme(
             title_font = pygame_menu.font.FONT_BEBAS,
-            selection_color = (0,0,0), #선택됐을때 글씨색 설정
+            widget_font = pygame_menu.font.FONT_FIRACODE,
+            selection_color = (255,255,255), #선택됐을때 글씨색 설정
             widget_font_color = (255,255,255), #글씨색 설정
             title_background_color = (0,100,162),
-            title_font_color = (255,255,255),
-            title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL,
-            widget_font_size = self.size[0] * 30 //720)
-        if(character == 'Merry'):
-            self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.lock_cat2.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        elif(character == 'Haengal'):
-             self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.lock_cat3.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        elif(character == 'Kongchi'):
-            self.menu_image = pygame_menu.baseimage.BaseImage(image_path=Images.lock_cat4.value,drawing_mode=pygame_menu.baseimage.IMAGE_MODE_FILL)
-        self.charlock_theme.background_color = self.menu_image
-        self.menu = pygame_menu.Menu('Character Locked!', self.size[0], self.size[1],
-                            theme=self.charlock_theme)
+            #title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_TITLE_ONLY_DIAGONAL
+            background_color = (0,0,0)
+        )
+        self.menu = pygame_menu.Menu('Cannot Play!', self.size[0], self.size[1],
+                            theme=self.failplay_theme)
 
-    def show(self):     
-        import data.database_user
-        database =  data.database_user.Database()
-        price= [0,10,10,20]
-        curs =database.dct_db.cursor()
-        self.id = User.user_id
-        sql = "SELECT user_id,char2,char3,char4,user_coin FROM users2 WHERE user_id=%s" #user_id와 user_coin열만 선택
-        curs.execute(sql,self.id) 
-        data = curs.fetchone()  
-        self.coin = data[4]
-        if self.character == "Merry":
-            selected_idx = 1
-        if self.character == "Haengal":
-            selected_idx = 2
-        if self.character == "Kongchi":
-            selected_idx = 3
-        #print(selected_idx)
-        self.menu.add.vertical_margin(self.size[0]*0.5)
-        if(data[4] >= price[selected_idx]):
-            self.menu.add.button('unlock', self.unlock_character)
-        else:
-            self.menu.add.label("Not enough money")
-        self.menu.add.button('back', self.back_from_locked)
+    def show(self):        
+        self.menu.add.label("Can't play Game!")
+        self.menu.add.label("Selected Character is locked!")
+        self.menu.add.label("Select your character again!")
+        self.failplay_theme.widget_background_color = (150, 213, 252)
+        self.menu.add.button('Go to Mypage', self.go_to_mypage)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         
     
-    def back_from_locked(self):
+    def go_to_mypage(self):
         self.menu.clear()
         Mypage(self.screen).show()
 
@@ -130,8 +104,8 @@ class Characterlock:
                 database.dct_db.commit()
                 User.cat_lock[3] = False
                 database.char_lock()       
-
-            self.back_from_locked()
+ 
+            
         else:
             print("코인이 부족하여 구매가 불가능합니다.")
         curs.close()

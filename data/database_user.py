@@ -273,6 +273,7 @@ class Database:
         if(data[self.char]==0):
             User.cat_lock[i] = True
 
+    #데이터베이스 확인을 통해, 캐릭터가 잠겨있는지 안잠겨있는지 확인
     def char_lock(self):
         self.id = User.user_id
         curs = self.dct_db.cursor()
@@ -286,3 +287,16 @@ class Database:
                 User.cat_lock[i] = True
 
     
+    def check_char_lock(self):
+        self.char = User.character
+        self.id = User.user_id
+        curs = self.dct_db.cursor()
+        sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" 
+        curs.execute(sql,self.id)
+        data = curs.fetchone()  
+        curs.close()
+        #User.character의 인덱스는 0부터임, 지금 가져온 데이터에서 char1부터 인덱스 1이므로, +1을 한 값.
+        check = data[User.character+1]
+        if check==0: #캐릭터가 잠겨 있으면 true
+            return True
+        return False #그렇지 않으면 false

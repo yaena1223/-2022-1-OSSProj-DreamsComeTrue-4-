@@ -1,5 +1,6 @@
 
 
+from select import select
 import pygame
 import pygame_menu
 from data.CharacterDataManager import *
@@ -56,9 +57,11 @@ class Mypage:
 
     #메뉴 구성하고 보이기
     def show(self):  
+        Database().char_lock()  
         self.menu.add.label("My ID : %s "%User.user_id)
         Database().my_easy_rank()
         Database().my_hard_rank()
+        User.coin = Database().show_mycoin()
         self.menu.add.label("Easy Score : %s"%User.easy_score)
         self.menu.add.label("Hard Score : %s"%User.hard_score)
         self.menu.add.label("My coin : %d "%User.coin)
@@ -107,7 +110,14 @@ class Mypage:
             image_path=self.character_imgs[0],
             padding=(25, 0, 0, 0)  # top, right, bottom, left
         )
-        self.item_description_widget = self.menu.add.label(title = "Unlocked" if User.cat_lock[0] == False else "Locked")
+        self.status = ""
+        if User.character == 0:
+            self.status = "Selected"
+        else:
+            self.status = "Unlocked"
+
+
+        self.item_description_widget = self.menu.add.label(title = self.status)
         self.frame_v = self.menu.add.frame_v(350, 160, margin=(5, 0))
         # 각 캐릭터의 능력치 표시
         self.power = self.frame_v.pack(self.menu.add.progress_bar(
@@ -142,6 +152,8 @@ class Mypage:
             User.character = selected_idx
             database = Database()
             database.set_char()
+            self.menu.clear()
+            self.show()
         else:
             print("character locked")
             import menu.CharacterLock
@@ -176,9 +188,17 @@ class Mypage:
 
     # 캐릭터 선택 시 캐릭터 이미지 및 능력치 위젯 업데이트
     def update_from_selection(self, selected_value, **kwargs) -> None:
+        self.status2 = ""
+        if User.character == selected_value:
+            self.status2 = "Selected"
+        elif User.cat_lock[selected_value] == False:
+            self.status2 = "Unlocked"
+        else:
+            self.status2 = "Locked"
+
         self.current = selected_value
         self.image_widget.set_image(self.character_imgs2[selected_value])
         self.power.set_value(int((self.character_data[selected_value].missile_power/Default.character.value["max_stats"]["power"])*100))
         self.fire_rate.set_value(int((Default.character.value["max_stats"]["fire_rate"]/self.character_data[selected_value].org_fire_interval)*100))
         self.velocity.set_value(int((self.character_data[selected_value].org_velocity/Default.character.value["max_stats"]["mobility"])*100))
-        self.item_description_widget.set_title(title = "Unlocked" if User.cat_lock[selected_value] == False else "Locked")
+        self.item_description_widget.set_title(title = self.status2)

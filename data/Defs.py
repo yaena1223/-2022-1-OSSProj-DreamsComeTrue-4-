@@ -68,6 +68,10 @@ class Images(enum.Enum):
     lock_cat3 = "./Image/catthema/lock_cat3.png"
     lock_cat4 = "./Image/catthema/lock_cat4.png"
 
+    failbuy_cat2 = "./Image/catthema/failbuy_cat2.png"
+    failbuy_cat3 = "./Image/catthema/failbuy_cat3.png"
+    failbuy_cat4 = "./Image/catthema/failbuy_cat4.png"
+
 class Scales(enum.Enum):
     large = (2, 2)
     default = (1, 1)
