@@ -158,10 +158,9 @@ class GameselectMenu:
                     pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
-
+                    self.check = Database().check_char_lock()
                     if self.map1.isOver(pos): # 맵 선택하면 게임이랑 연결시키기
                         self.stage_map=Stage(self.stage_data["chapter"]["Dongguk university"][self.stage_level_map1])
-                        self.check = Database().check_char_lock()
                         if self.check:
                             import menu.FailPlay
                             menu.FailPlay.FailPlay(self.screen).show()
