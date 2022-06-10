@@ -5,12 +5,10 @@ from sys import argv
 import pygame
 import pygame_menu
 from data.Defs import *
-from data.Rank import *
 from pygame_menu.locals import ALIGN_CENTER
 from pygame_menu.utils import make_surface
 from pygame_menu.widgets.core.widget import Widget
 
-from menu.LeaderBoardScrollMenu import *
 
 # 저자 및 라이선스 정보 확인 화면  
 class About:

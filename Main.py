@@ -2,7 +2,7 @@ from collections import OrderedDict
 from datetime import datetime
 from os import system
 from turtle import color
-from menu.DifficultySelectMenu import *
+#from menu.DifficultySelectMenu import *
 import pygame
 import pygame_menu
 from data.database_user import *
@@ -93,7 +93,6 @@ class Login:
         b3 = self.menu.add.button('2 Players', self.pvp_page)
         self.menu.add.vertical_margin(10)
         b4 = self.menu.add.button('    Quit    ', pygame_menu.events.EXIT)
-
 
     def login_page(self): ##로그인 페이지
         self.menu.clear()
@@ -220,7 +219,6 @@ class Login:
             login.menu.update(events)
             login.menu.draw(screen)
             #pygame.draw.rect(screen,color,input_rect,2)
-
 
             pygame.display.flip() #화면이 계속 업데이트 될 수 있도록 설정
 

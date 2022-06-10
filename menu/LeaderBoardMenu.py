@@ -2,11 +2,9 @@
 import pygame
 import pygame_menu
 from data.Defs import *
-from data.Rank import *
 from pygame_menu.locals import ALIGN_CENTER, ALIGN_LEFT, ALIGN_RIGHT
 from pygame_menu.utils import make_surface
 from pygame_menu.widgets.core.widget import Widget
-from menu.LeaderBoardScrollMenu import *
 from data.database_user import *
 
 # 리더보드 관련 메뉴

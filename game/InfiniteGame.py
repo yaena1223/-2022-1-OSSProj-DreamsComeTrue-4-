@@ -15,7 +15,6 @@ from boss.Boss import Boss
 from boss.Bullet import Bullet
 from data.Animation import AnimationManager
 from data.Defs import *
-from data.Rank import *
 from data.StageDataManager import *
 from object.Effect import *
 from object.Item import *
@@ -67,15 +66,12 @@ class InfiniteGame:
         self.coin = 0
         self.enemyBullets =[]
 
-        self.screensizechange = 0
-
         # 5. 캐릭터 초기화
         self.character.reinitialize(self)
 
         # user
         self.database = Database()
         self.user=User.user_id
-
 
         #일시정지 버튼 
         self.changed_screen_size = self.screen.get_size()
@@ -106,9 +102,6 @@ class InfiniteGame:
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            '''background1_y += self.dy
-            if background1_y > background_height:
-                background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
             self.stop.change(self.screen.get_size()[0],self.screen.get_size()[1]) # 화면 사이즈 변경되면 버튼사이즈 바꿔줌.
@@ -290,14 +283,12 @@ class InfiniteGame:
                             theme=ranking_register_screen)
         self.menu.add.image(Images.lose.value, scale=self.scale)
         self.menu.add.label("Score : {}".format(self.score),font_size = self.font_size)
-        # self.menu.add.button('Register Ranking', font_size = Menus.fontsize_default.value)
         self.menu.add.button('Ranking', self.show_register_result,font_size = self.font_size) # 랭킹화면으로 넘어가도록 설정했음.
         self.menu.add.button('Retry', self.retry, font_size = self.font_size)
         self.menu.add.button('to Home', self.gameselectmenu,font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize_end)
         pygame.display.flip()
         User.coin = User.coin + self.coin
-        #print(User.coin)
         self.database = Database()
         self.database.set_coin()
     
@@ -340,7 +331,6 @@ class InfiniteGame:
     
     # 일시정지 화면
     def StopGame(self):
-        print("enterstopgame")
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
@@ -350,19 +340,11 @@ class InfiniteGame:
                                     theme=stageclear_theme)   
         self.menu.add.image(Images.win.value, scale=self.scale)
         self.menu.add.label("")
-        #self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.add.label('Paused',font_size = self.screen.get_size()[0]*40//720)
         self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
         self.menu.add.button("Restart",self.retry,font_size = self.font_size)
         self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size,)
-        self.menu.mainloop(self.screen,bgfun=self.check_resize_stopgame)#wait_for_evnet=True,)
-
-    def check_resize_stopgame(self):
-        if self.check_resize():
-            #print("enter2")
-            #self.menu.clear
-            self.menu.disable()
-            self.StopGame()
+        self.menu.mainloop(self.screen,bgfun=self.check_resize)
 
     def check_resize_end(self):
         if self.check_resize():
@@ -371,8 +353,6 @@ class InfiniteGame:
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
-        #print("enter!!")
-        #self.screen.get_size()[0]*40//720
         if (self.size != self.screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
             changed_screen_size = self.screen.get_size() #변경된 사이즈
             ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
