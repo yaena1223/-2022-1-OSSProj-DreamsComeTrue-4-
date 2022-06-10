@@ -30,6 +30,7 @@ from data.database_user import *
 from pygame.math import Vector2 #mob.py에서 가져옴
 from object.Effect import Boom
 from object.Object import Object
+from button import *
 
 import time
 
@@ -47,6 +48,9 @@ class pvp :
         pygame.display.set_caption(title) # 창의 제목 표시줄 옵션
         self.size = [infoObject.current_w,infoObject.current_h]
         self.screen = pygame.display.set_mode(self.size,pygame.RESIZABLE)
+        self.scale = (self.size[0]*0.00015,self.size[1]*0.00015)
+        self.font_size = self.size[0] * 40 //720
+
         # 3. 게임 내 필요한 설정
         self.clock = pygame.time.Clock() # 이걸로 FPS설정함
 
@@ -58,7 +62,7 @@ class pvp :
         self.enemyBullets =[]
         self.character_data = character_data
 
-        self.goal_time = 120 # play 120초
+        self.goal_time = 10 # play 120초
         self.character1 = character1 # player1 character
         self.character2 = character2 # player2 character
         self.score_player1 = 0 # player1 score
@@ -72,7 +76,9 @@ class pvp :
         self.mob_image = "./Image/catthema/attack/cat_att.png"
         #self.background_image = stage.background_image
         self.background_image = "Image/catthema/map1.png"
-        self.gameover_image = "Image/catthema/map2.png"
+        self.gameover_image1 = "Image/catthema/win1_.png"
+        self.gameover_image2 = "Image/catthema/win2_.png"
+        self.gameover_image3 = "Image/catthema/same.png"
         self.background_music = "./Sound/bgm/bensound-evolution.wav"
         self.k = 0
         self.SB = 0
@@ -91,13 +97,13 @@ class pvp :
 
         
 
-    def main(self):
+    def main(self, screen):
         # 메인 이벤트
         pygame.mixer.init()
         pygame.mixer.music.load(self.background_music)
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.1)
-
+        
         while self.SB==0:
             #fps 제한을 위해 한 loop에 한번 반드시 호출해야합니다.
             self.clock.tick(30)
@@ -143,7 +149,7 @@ class pvp :
                     
                     self.size =[width,height] #게임의 size 속성 변경
                     self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE) #창 크기 세팅
-                    self.check_resize()
+                    self.check_resize(screen)
                     self.animation.on_resize(self)
 
             #몹을 확률적으로 발생시키기
@@ -268,9 +274,59 @@ class pvp :
 
             # 만약 시간이 0 이하이면 게임 종료
             if timer <= 0:
-                print("타임아웃")
-                running = False
-                return
+                pygame.mixer.music.stop()
+                font2 = pygame.font.Font(Default.font.value, self.size[0]//20)
+                if self.score_player1 > self.score_player2:
+                    self.win1 = pygame.image.load(self.gameover_image1)
+                    self.win1 = pygame.transform.scale(self.win1, (self.size[0],self.size[1]))
+                    self.screen.fill(Color.BLACK.value)
+                    self.screen.blit(self.win1,  [0,0])
+                    score_player1 = font2.render("Player1 Score : {} ".format(self.score_player1), True, Color.WHITE.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+                    score_player2 = font2.render("Player2 Score : {} ".format(self.score_player2), True, Color.WHITE.value)
+                    self.screen.blit(score_player1,(self.size[0]/3-15,self.size[1]/2+80))
+                    self.screen.blit(score_player2,(self.size[0]/3-15,self.size[1]/2+120))
+                    
+                if self.score_player2 > self.score_player1:
+                    self.win2 = pygame.image.load(self.gameover_image2)
+                    self.win2 = pygame.transform.scale(self.win2, (self.size[0],self.size[1]))
+                    self.screen.fill(Color.BLACK.value)
+                    self.screen.blit(self.win2,  [0,0])
+                    score_player1 = font2.render("Player1 Score : {} ".format(self.score_player1), True, Color.WHITE.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+                    score_player2 = font2.render("Player2 Score : {} ".format(self.score_player2), True, Color.WHITE.value)
+                    self.screen.blit(score_player1,(self.size[0]/3-15,self.size[1]/2+80))
+                    self.screen.blit(score_player2,(self.size[0]/3-15,self.size[1]/2+120))
+
+                if self.score_player1 == self.score_player2:
+                    self.same = pygame.image.load(self.gameover_image3)
+                    self.same = pygame.transform.scale(self.same, (self.size[0],self.size[1]))
+                    self.screen.fill(Color.BLACK.value)
+                    self.screen.blit(self.same,  [0,0])
+                    score_player1 = font2.render("Player1 Score : {} ".format(self.score_player1), True, Color.WHITE.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+                    score_player2 = font2.render("Player2 Score : {} ".format(self.score_player2), True, Color.WHITE.value)
+                    self.screen.blit(score_player1,(self.size[0]/3-15,self.size[1]/2+80))
+                    self.screen.blit(score_player2,(self.size[0]/3-15,self.size[1]/2+120))
+                
+
+            #목숨이 0 이하면 게임 종료 화면
+            if(self.life_player1<1):
+                pygame.mixer.music.stop()
+                #화면 흰색으로 채우기
+                self.win1 = pygame.image.load(self.gameover_image2)
+                self.win1 = pygame.transform.scale(self.win1, (self.size[0],self.size[1]))
+                self.screen.fill(Color.BLACK.value)
+                #gameover_img1 = font.render('gameover', True, Color.WHITE.value)
+                self.screen.blit(self.win1,  [0,0])
+                
+
+            #목숨이 0 이하면 게임 종료 화면
+            if(self.life_player2<1):
+                pygame.mixer.music.stop()
+                self.win2 = pygame.image.load(self.gameover_image1)
+                self.screen.fill(Color.BLACK.value)
+                #gameover_img1 = font.render('The end', True, Color.RED.value)
+                #gameover_img1 = pygame.image.load(self.mob_image)
+                self.screen.blit(self.win2,  [0,0])
+                
 
             pygame.display.update()
 
@@ -279,18 +335,9 @@ class pvp :
 
             pygame.display.flip()
 
-            #목숨이 0 이하면 게임 종료 화면
-            if(self.life_player1<1):
-                #화면 흰색으로 채우기
-                self.screen.fill(Color.WHITE.value)
-                return
+            
 
-            #목숨이 0 이하면 게임 종료 화면
-            if(self.life_player2<1):
-                #화면 흰색으로 채우기
-                self.screen.fill(Color.WHITE.value)
-                return
-     
+            #pygame.display.update()
 
 #충돌 감지 함수
     def check_crash(self,o1,o2):
@@ -305,6 +352,19 @@ class pvp :
         else:
             return False
 
+    
+
+    # 화면 크기 조정 감지 및 비율 고정
+    def check_resize(self,screen):
+        if (self.size != screen.get_size()): #현재 사이즈와 저장된 사이즈 비교 후 다르면 변경
+            changed_screen_size = self.screen.get_size() #변경된 사이즈
+            ratio_screen_size = (changed_screen_size[0],changed_screen_size[0]*783/720) #y를 x에 비례적으로 계산
+            if(ratio_screen_size[0]<320): #최소 x길이 제한
+                ratio_screen_size = (494,537)
+            if(ratio_screen_size[1]>783): #최대 y길이 제한
+                ratio_screen_size = (720,783)
+            screen = pygame.display.set_mode(ratio_screen_size,
+                                                    pygame.RESIZABLE)
 
 
 class Mob(Object):
@@ -527,3 +587,5 @@ class SpeedUp(Item):
             self.character2.is_collidable = False
             game.item_list.remove(self)
 
+
+     
