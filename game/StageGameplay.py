@@ -125,9 +125,6 @@ class StageGame:
             background_width = background1.get_width()
             background_height = background1.get_height()
             background2 = background1.copy()
-            '''background1_y += 2
-            if background1_y > background_height:
-                background1_y = 0'''
             self.screen.blit(background1, (0, background1_y))
             self.screen.blit(background2, (0, 0), pygame.Rect(0,background_height - background1_y,background_width,background1_y))
             
@@ -236,7 +233,6 @@ class StageGame:
                             self.life -=1
                             self.enemyBullets.remove(bullet)
 
-        
             #적 투사체 이동
             for bullet in self.enemyBullets:
                 bullet.move(self.size,self)
@@ -387,16 +383,14 @@ class StageGame:
         #self.menu.add.button('to Menu', self.toMenu,self.menu)
         if(self.stage.stage !=  "3"):
             self.menu.add.button('Next stage', self.nextstage, font_size = self.font_size)
-        self.menu.add.button('Home', self.Home, self.menu, font_size = self.font_size)
+        self.menu.add.button('Home', self.gameselectmenu, font_size = self.font_size)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
-
 
     # 실패 화면
     def showGameOverScreen(self):
         pygame.mixer.music.stop()
         Database().reduce_char_life() #stage fail하면 캐릭터 생명 하나 줄임
         Database().char_lock() #생명이 0이 된다면 잠굼
-        #print(self.font_size)
         gameover_theme = pygame_menu.themes.THEME_DARK.copy()
         gameover_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         gameover_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
@@ -408,32 +402,27 @@ class StageGame:
         self.menu.add.label("Score : {}".format(self.score) ,font_size = self.font_size)
         self.menu.add.button('Retry', self.retry, font_size = self.font_size)
         self.menu.add.button('Home', self.Home, self.menu,font_size = self.font_size)
-        #self.menu.add.button('to Menu', self.toMenu,self.menu)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
         User.coin = User.coin + self.coin
-        #print(User.coin)
         self.database = Database()
         self.database.set_coin()       
 
-    # 일시정지 화면
+# 일시정지 화면
     def StopGame(self):
-        self.check_resize()
         pygame.mixer.music.pause()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
         stageclear_theme.title_font_color = Color.WHITE.value
         self.menu = pygame_menu.Menu('Paused', self.size[0], self.size[1],
-                            theme=stageclear_theme)        
+                                    theme=stageclear_theme)   
         self.menu.add.image(Images.win.value, scale=self.scale)
         self.menu.add.label("")
-        #self.menu.add.button('to Menu', self.toMenu,self.menu)
-        self.menu.add.label('Paused',font_size = self.font_size)
+        self.menu.add.label('Paused',font_size = self.screen.get_size()[0]*40//720)
         self.menu.add.button('Continue', self.Continue, self.menu, font_size = self.font_size)
         self.menu.add.button("Restart",self.retry,font_size = self.font_size)
-        self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size)
-        self.menu.mainloop(self.screen,disable_loop=True) # 스크린 이미지 실시간
-        self.StopGame()
+        self.menu.add.button("Home",self.gameselectmenu,font_size = self.font_size,)
+        self.menu.mainloop(self.screen,bgfun=self.check_resize)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self):
@@ -452,11 +441,9 @@ class StageGame:
             self.size = window_size
             self.menu._current._widgets_surface = make_surface(0,0)
             print(f'New menu size: {self.menu.get_size()}')
+            print(self.screen)
             font_size = new_w * 40 //720
             self.font_size = font_size
             self.scale = (new_w*0.00015,new_h*0.00015)
-            #print(self.font_size)
-            #print(self.scale)
             return True
-        else :
-            return False
+            

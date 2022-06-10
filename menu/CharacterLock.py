@@ -52,12 +52,15 @@ class Characterlock:
         #print(selected_idx)
         self.menu.add.vertical_margin(self.size[0]*0.5)
         if(data[4] >= price[selected_idx]):
-            self.menu.add.button('unlock', self.unlock_character)
+            self.menu.add.button('unlock', self.unlock_character,font_size =self.size[0] * 30 //720)
         else:
-            self.menu.add.label("Not enough money")
-        self.menu.add.button('back', self.back_from_locked)
+            self.menu.add.label("Not enough money",font_size =self.size[0] * 40 //720)
+        self.menu.add.button('back', self.back_from_locked,font_size =self.size[0] * 30 //720)
         self.menu.mainloop(self.screen,bgfun = self.check_resize)
-        
+    
+    def check_resize_show(self):
+        if self.check_resize():
+            self.show()
     
     def back_from_locked(self):
         self.menu.clear()
