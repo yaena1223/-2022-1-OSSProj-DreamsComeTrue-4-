@@ -41,6 +41,7 @@ class TargetedMissile(Missile):
         self.vel = Vector2(0,0)
         self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)
         self.target = self.find_target(game)
+        self.target_pvp = self.find_target_pvp(game)
         self.locked_on = True
         self.crosshair = Crosshair(self.target)
         if self.target in game.mobList:
@@ -91,6 +92,40 @@ class TargetedMissile(Missile):
                     return target
                 else:
                     self.target_type = "NULL"
+            
+    # 화면에 있는 적들 중에서 가장 근접한 타깃 탐색
+    # 보스가 있으면 일반 몹 대신 보스만 조준
+    def find_target_pvp(self, game):
+        #pvp
+        if len(game.mobList) > 0:
+            targets1 = game.character1.check_for_targets(game)
+            if len(targets1) > 0:
+                target = targets1[0]
+                min = Utils.get_distance({"x":target.x,"y":target.y},{"x":game.character1.x,"y":game.character1.y}) 
+                for enemy in targets1:
+                    if min > Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character1.x,"y":game.character1.y}):
+                        min = Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character1.x,"y":game.character1.y})
+                        target = enemy
+                self.target_type = "MOB"
+                target.is_targeted = True
+                return target
+            else:
+                self.target_type = "NULL"
+
+        if len(game.mobList) > 0:
+            targets2 = game.character2.check_for_targets(game)
+            if len(targets2) > 0:
+                target = targets2[0]
+                min = Utils.get_distance({"x":target.x,"y":target.y},{"x":game.character2.x,"y":game.character2.y}) 
+                for enemy in targets2:
+                    if min > Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character2.x,"y":game.character2.y}):
+                        min = Utils.get_distance({"x":enemy.x,"y":enemy.y},{"x":game.character2.x,"y":game.character2.y})
+                        target = enemy
+                self.target_type = "MOB"
+                target.is_targeted = True
+                return target
+            else:
+                self.target_type = "NULL"
 
     # 적을 향해 미사일 이동
     def update(self, game):
