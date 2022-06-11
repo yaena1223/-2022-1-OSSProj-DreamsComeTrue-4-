@@ -255,7 +255,7 @@ class Database:
         curs.close()
 
         curs = self.dct_db.cursor()
-        if(data[self.char]>0): #목숨이 0이상일때만 1을 줄임. 
+        if(data[self.char+1]>0): #목숨이 0이상일때만 1을 줄임. 
             if(self.char == 1): #선택한 캐릭터가 cat2면, cat2의 목숨을 1개 줄임. 
                 sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
                 curs.execute(sql, (data[self.char]-1, self.id))
