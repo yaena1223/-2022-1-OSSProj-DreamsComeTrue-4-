@@ -1,4 +1,5 @@
 import pygame
+import os
 from pygame.locals import *
 from data.Defs import *
 
@@ -34,6 +35,6 @@ class button():   # 버튼 class
 def draw_image(window, img_path, x, y, width, height):
     x = x - (width / 2)    
     y = y - (height / 2)
-    image = pygame.image.load(img_path)
+    image = pygame.image.load(os.path.abspath(img_path))
     image = pygame.transform.smoothscale(image, (width, height))
     window.blit(image, (x, y))
