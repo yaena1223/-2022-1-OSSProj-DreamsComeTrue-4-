@@ -194,7 +194,7 @@ class Login:
 
     def pvp_page(self): #2인 플레이어
         pvpgame=pvp(self.pvpcharacter_data, self.pvpcharacter_data[0], self.pvpcharacter_data[1], self.mode)
-        pvpgame.main(screen)
+        pvpgame.main(self.screen)
         '''while True:
             pvpgame.main()'''
             
