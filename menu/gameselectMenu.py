@@ -32,18 +32,18 @@ class GameselectMenu:
         self.map2 = button(self.board_width, self.board_height, 0.5, 0.4, 0.25, 0.35, "Image/catthema/map2.png")
         self.map3 = button(self.board_width, self.board_height, 0.8, 0.4, 0.25, 0.35, "Image/catthema/map3.png")
 
-        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
-        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
-        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.65, 0.2, 0.05, "Image/catthema/LEVEL1.png")
+        self.level_map1 = button(self.board_width, self.board_height, 0.2, 0.65, 0.2, 0.05, "Image/catthema/level1.png")
+        self.level_map2 = button(self.board_width, self.board_height, 0.5, 0.65, 0.2, 0.05, "Image/catthema/level1.png")
+        self.level_map3 = button(self.board_width, self.board_height, 0.8, 0.65, 0.2, 0.05, "Image/catthema/level1.png")
         
         self.mode_map1 = button(self.board_width, self.board_height, 0.2, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
         self.mode_map2 = button(self.board_width, self.board_height, 0.5, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
         self.mode_map3 = button(self.board_width, self.board_height, 0.8, 0.65, 0.2, 0.05, "Image/catthema/EASY.png")
 
-        self.rankpage = button(self.board_height,self.board_height,0.766,0.05,0.1,0.05,"Image/catthema/rank.png")
-        self.mypage = button(self.board_height,self.board_height,0.5,0.05,0.1,0.05,"Image/catthema/mypage.png")
-        self.gamemode = button(self.board_height,self.board_height,0.366,0.05,0.1,0.05,"Image/catthema/stage.png")
-        self.store = button(self.board_height,self.board_height,0.233,0.05,0.1,0.05,"Image/catthema/store.png")
+        self.rankpage = button(self.board_height,self.board_height,0.766,0.05,0.1,0.05,"Image/catthema/RANK.png")
+        self.mypage = button(self.board_height,self.board_height,0.5,0.05,0.1,0.05,"Image/catthema/MYPAGE.png")
+        self.gamemode = button(self.board_height,self.board_height,0.366,0.05,0.1,0.05,"Image/catthema/STAGE.png")
+        self.store = button(self.board_height,self.board_height,0.233,0.05,0.1,0.05,"Image/catthema/STORE.png")
         self.logout= button(self.board_height,self.board_height,0.9,0.05,0.1,0.05,"Image/catthema/logout.png")
         self.help = button(self.board_height,self.board_height,0.633,0.05,0.1,0.05,"Image/catthema/help.png")
         
@@ -154,7 +154,7 @@ class GameselectMenu:
 
                     if self.gamemode.isOver(pos):
                         self.gamemode.image="Image/catthema/inf.png"
-                    else : self.gamemode.image="Image/catthema/stage.png"
+                    else : self.gamemode.image="Image/catthema/STAGE.png"
                     pygame.display.update()
 
                 if event.type == pygame.MOUSEBUTTONUP: # 마우스 클릭
@@ -308,7 +308,7 @@ class GameselectMenu:
                         pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/stage.png"
+                        self.gamemode.image="Image/catthema/STAGE.png"
                     else : self.gamemode.image="Image/catthema/inf.png"
                     pygame.display.update()
 
@@ -371,7 +371,7 @@ class GameselectMenu:
                     pygame.display.update()
 
                     if self.gamemode.isOver(pos):
-                        self.gamemode.image="Image/catthema/stage.png"
+                        self.gamemode.image="Image/catthema/STAGE.png"
                         self.modestate="stage"
                     pygame.display.update()
 
