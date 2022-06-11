@@ -249,7 +249,7 @@ class Database:
         self.id = User.user_id
         self.char = User.character #cat2는 1, cat3는 2, cat4는 3으로 되어 있음. 
         curs = self.dct_db.cursor()
-        sql = "SELECT user_id,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 char 2,3,4 선택(char1은 목숨 무제한)
+        sql = "SELECT user_id,char1,char2,char3,char4 FROM users2 WHERE user_id=%s" #user_id와 char 2,3,4 선택(char1은 목숨 무제한)
         curs.execute(sql,self.id)
         data = curs.fetchone()  
         curs.close()
