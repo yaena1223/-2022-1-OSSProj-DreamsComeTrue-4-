@@ -259,22 +259,21 @@ class pvp :
                     if i.locked_on == True:
                         i.crosshair.show(self.screen)
 
-            #점수와 목숨 표시
+            #점수와 목숨, 타이머 표시
             font = pygame.font.Font(Default.font.value, self.size[0]//40)
-            score_life_text1 = font.render("Score : {} Life: {} ".format(self.score_player1,self.life_player1), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
-            score_life_text2 = font.render("Score : {} Life: {} ".format(self.score_player2,self.life_player2), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
-            self.screen.blit(score_life_text1,(10,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
-            self.screen.blit(score_life_text2,(10+self.size[0]/2,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
-                        
-            # 타이머
             play_time = time.gmtime(time.time() - self.startTime)
             timer = self.goal_time - play_time.tm_sec
-            time_text = font.render("Time : {:}".format(timer), True, Color.YELLOW.value)
-            self.screen.blit(time_text, (10,5))
+            time_score_life_text1 = font.render("Time : {:} Score : {} Life: {} ".format(timer,self.score_player1,self.life_player1), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            time_score_life_text2 = font.render("Time : {:} Score : {} Life: {} ".format(timer,self.score_player2,self.life_player2), True, Color.YELLOW.value) # 폰트가지고 랜더링 하는데 표시할 내용, True는 글자가 잘 안깨지게 하는 거임 걍 켜두기, 글자의 색깔
+            self.screen.blit(time_score_life_text1,(10,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+            self.screen.blit(time_score_life_text2,(10+self.size[0]/2,15)) # 이미지화 한 텍스트라 이미지를 보여준다고 생각하면 됨
+                        
 
             # 만약 시간이 0 이하이면 게임 종료
             if timer <= 0:
                 pygame.mixer.music.stop()
+                pygame.mixer.Sound(Default.item.value["sound"]).stop()
+                pygame.mixer.Sound(Default.effect.value["boom"]["sound"]).stop()
                 font2 = pygame.font.Font(Default.font.value, self.size[0]//20)
                 if self.score_player1 > self.score_player2:
                     self.win1 = pygame.image.load(self.gameover_image1)
@@ -310,6 +309,8 @@ class pvp :
             #목숨이 0 이하면 게임 종료 화면
             if(self.life_player1<1):
                 pygame.mixer.music.stop()
+                pygame.mixer.Sound(Default.item.value["sound"]).stop()
+                pygame.mixer.Sound(Default.effect.value["boom"]["sound"]).stop()
                 self.win1 = pygame.image.load(self.gameover_image2)
                 self.win1 = pygame.transform.scale(self.win1, (self.size[0],self.size[1]))
                 self.screen.fill(Color.BLACK.value)
@@ -319,6 +320,8 @@ class pvp :
             #목숨이 0 이하면 게임 종료 화면
             if(self.life_player2<1):
                 pygame.mixer.music.stop()
+                pygame.mixer.Sound(Default.item.value["sound"]).stop()
+                pygame.mixer.Sound(Default.effect.value["boom"]["sound"]).stop()
                 self.win2 = pygame.image.load(self.gameover_image1)
                 self.win2 = pygame.transform.scale(self.win2, (self.size[0],self.size[1]))
                 self.screen.fill(Color.BLACK.value)
