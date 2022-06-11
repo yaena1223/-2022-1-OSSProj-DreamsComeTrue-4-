@@ -62,7 +62,7 @@ class pvp :
         self.enemyBullets =[]
         self.character_data = character_data
 
-        self.goal_time = 10 # play 120초
+        self.goal_time = 120 # play 120초
         self.character1 = character1 # player1 character
         self.character2 = character2 # player2 character
         self.score_player1 = 0 # player1 score
@@ -310,11 +310,9 @@ class pvp :
             #목숨이 0 이하면 게임 종료 화면
             if(self.life_player1<1):
                 pygame.mixer.music.stop()
-                #화면 흰색으로 채우기
                 self.win1 = pygame.image.load(self.gameover_image2)
                 self.win1 = pygame.transform.scale(self.win1, (self.size[0],self.size[1]))
                 self.screen.fill(Color.BLACK.value)
-                #gameover_img1 = font.render('gameover', True, Color.WHITE.value)
                 self.screen.blit(self.win1,  [0,0])
                 
 
@@ -322,9 +320,8 @@ class pvp :
             if(self.life_player2<1):
                 pygame.mixer.music.stop()
                 self.win2 = pygame.image.load(self.gameover_image1)
+                self.win2 = pygame.transform.scale(self.win2, (self.size[0],self.size[1]))
                 self.screen.fill(Color.BLACK.value)
-                #gameover_img1 = font.render('The end', True, Color.RED.value)
-                #gameover_img1 = pygame.image.load(self.mob_image)
                 self.screen.blit(self.win2,  [0,0])
                 
 
