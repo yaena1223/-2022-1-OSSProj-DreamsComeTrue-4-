@@ -30,7 +30,7 @@
 			"3": [
 				"map1",
 				3,
-				9999999999,
+				1000,
 				"./Image/catthema/map1.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
@@ -75,7 +75,7 @@
 			"3": [
 				"map2",
 				3,
-				9999999999,
+				1000,
 				"./Image/catthema/map2.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
@@ -120,7 +120,7 @@
 			"3": [
 				"map3",
 				3,
-				9999999999,
+				1000,
 				"./Image/catthema/map3.png",
 				"./Sound/bgm/bensound-theduel.wav",
 				1,
