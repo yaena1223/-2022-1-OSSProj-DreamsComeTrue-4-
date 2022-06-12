@@ -49,6 +49,7 @@ class Login:
         )
        
         self.mytheme.background_color = menu_image
+        
 
         #pvp 관련
         self.pvpcharacter_data = PvpCharacterDataManager.load() #pvp 캐릭터 데이터
@@ -226,6 +227,7 @@ class Login:
 
 if __name__ == '__main__':
     pygame.init()
+    pygame.mixer.music.stop()
     infoObject = pygame.display.Info()
     size = [int(infoObject.current_w*Display.w_init),int(infoObject.current_h*Display.h_init)] #사이즈 설정(w,h) 
     screen = pygame.display.set_mode(size,pygame.RESIZABLE) #창크기 조정 가능 
