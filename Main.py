@@ -49,6 +49,7 @@ class Login:
         )
        
         self.mytheme.background_color = menu_image
+        
 
         #pvp 관련
         self.pvpcharacter_data = PvpCharacterDataManager.load() #pvp 캐릭터 데이터
