@@ -94,8 +94,9 @@ class pvp :
 
         self.direction2 = {None: (0, 0), pygame.K_UP: (0, -2), pygame.K_DOWN: (0, 2),
                     pygame.K_LEFT: (-2, 0), pygame.K_RIGHT: (2, 0)} #playter2
-
-        
+        mytheme = pygame_menu.themes.THEME_ORANGE.copy()
+        self.menu = pygame_menu.Menu('PVP.', self.size[0], self.size[1],
+                            theme=mytheme)
 
     def main(self, screen):
         # 메인 이벤트
@@ -352,7 +353,16 @@ class pvp :
         else:
             return False
 
-    
+    def pvp_info(self):
+        self.check_resize(self.screen)
+        self.infopvp_img = "./Image/catthema/pvp_help.png"
+        self.menu.add.image(self.infopvp_img, scale=Scales.default.value)
+        infowindow = pygame.image.load(self.infopvp_img)
+        infowindow = pygame.transform.scale(infowindow, self.size)
+        self.screen.blit(infowindow, [0,0])
+        pygame.display.flip()
+        time.sleep(3) # 3초뒤에 게임 시작.
+        self.main(self.screen)
 
     # 화면 크기 조정 감지 및 비율 고정
     def check_resize(self,screen):
@@ -558,6 +568,7 @@ class PowerUp(Item):
             self.character2.is_collidable = False
             game.item_list.remove(self)
 
+
 class SpeedUp(Item):
     # 스피드업 아이템: 획득 시 캐릭터 이동/발사 속도 증가
     def __init__(self, animation):
@@ -588,4 +599,3 @@ class SpeedUp(Item):
             game.item_list.remove(self)
 
 
-     
