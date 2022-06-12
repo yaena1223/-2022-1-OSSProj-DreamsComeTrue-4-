@@ -6,9 +6,7 @@
 ![badges](https://img.shields.io/badge/python-3-blue)
 ![badges](https://img.shields.io/badge/pygame-2.0.2-yellow)
 ![Generic badge](https://img.shields.io/badge/pygame_menu-4.2.0-yellow.svg)
-![Generic badge](https://img.shields.io/badge/pymysql-1.0.2-orange.svg)
-
-안녕하세요 팀 드림즈컴츄르 입니다 : ) 
+![Generic badge](https://img.shields.io/badge/pymysql-1.0.2-orange.svg)  
 
 ---
 🤪 [이예나](https://github.com/yaena1223) (팀장) : 경영정보학과 18학번
@@ -20,9 +18,10 @@
 ---
 
 ![로그인2](https://user-images.githubusercontent.com/77571090/173226976-b3931216-9b16-4b4a-8633-20877e6a0f3b.png)
+<br/></br>안녕하세요 팀 드림즈컴츄르 입니다 : ) <br/>
+pygame를 기반으로 한 ‘동냥이’테마 shooting game입니다.
 
-- pygame를 기반으로 한 ‘동냥이’테마 shooting game
-
+<br/></br>
 ### How to run
 
 ---
@@ -59,6 +58,7 @@ sudo apt-get install python3-tk
 python3 Main.py
 ```
 
+<br/></br>
 ### How to play
 
 ---
@@ -71,6 +71,7 @@ python3 Main.py
 
 ![Untitled 2](https://user-images.githubusercontent.com/77571090/173226507-7f20b997-f228-4524-a342-0950155b7a54.png)
 
+<br/></br>
 ### Game preview
 
 ---
@@ -83,6 +84,8 @@ python3 Main.py
 - RDS 데이터베이스를 통해 user 정보 저장
 - 로그인 버튼 클릭 시 아이디 & 비밀번호 입력 후 login 가능
 
+<br/>
+
 > 기본 메뉴 화면
 > 
 
@@ -92,6 +95,8 @@ python3 Main.py
 - 게임은 Stage모드와 Infinite모드로 구성
 - 게임 외의 기능에는 캐릭터상점, 마이페이지, 랭킹, 도움말, 소리on/off 가 있음
 
+<br/>
+
 > Stage 모드 game
 > 
 
@@ -99,6 +104,8 @@ python3 Main.py
 
 - 3가지 map이 있으며 각각 stage1,2,3으로 구성
 - 게임 시작 시 목표점수 안내창 확인 가능
+
+<br/>
 
 > Infinite 모드 game
 > 
@@ -110,6 +117,8 @@ python3 Main.py
 - 게임 종료 후 자동으로 랭킹이 등록됨
 - 등록된 랭킹은 랭킹페이지에서 확인 가능
 
+<br/>
+
 > PVP game
 > 
 
@@ -117,6 +126,8 @@ python3 Main.py
 
 - 2인 플레이 게임으로 로그인 없이 이용 가능
 - 120초의 제한 시간 내에 목숨이 0이 되거나 제한시간이 끝나면 게임 종료
+
+<br/>
 
 > Mypage
 > 
@@ -128,6 +139,8 @@ python3 Main.py
 - 아이디, 점수, 보유 코인, 보유 캐릭터에 대한 정보 제공
 - 캐릭터 선택 가능
 
+<br/>
+
 > Character Store
 > 
 
@@ -135,6 +148,7 @@ python3 Main.py
 
 - 캐릭터 상점에서는 보유한 코인으로 캐릭터 구매 가능
 
+<br/></br>
 ### Credits
 
 ---
@@ -145,6 +159,7 @@ python3 Main.py
 - Background image: Copyright 2022. Choi Dahee
 - Attacker image: Copyright 2022. Choi Dahee
 
+<br/></br>
 ### References
 
 ---
