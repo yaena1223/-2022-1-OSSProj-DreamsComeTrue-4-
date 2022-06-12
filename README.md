@@ -18,9 +18,9 @@
 😊 [정민경](https://github.com/kkong1007) (팀원) : 화공생물공학과 19학번
 ```
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled.png)
+![로그인2](https://user-images.githubusercontent.com/77571090/173226976-b3931216-9b16-4b4a-8633-20877e6a0f3b.png)
 
-- pygame를 기반으로 한 ‘동냥이’테마 shooting game/
+- pygame를 기반으로 한 ‘동냥이’테마 shooting game
 
 ### How to run
 
@@ -64,11 +64,11 @@ python3 Main.py
 
 [Default]
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%201.png)
+![Untitled 1](https://user-images.githubusercontent.com/77571090/173226458-42aebf24-adb0-4114-a6f4-3965f8265fa1.png)
 
 [PVP Game]
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%202.png)
+![Untitled 2](https://user-images.githubusercontent.com/77571090/173226507-7f20b997-f228-4524-a342-0950155b7a54.png)
 
 ### Game preview
 
@@ -77,7 +77,7 @@ python3 Main.py
 > 로그인/회원가입
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%203.png)
+![Untitled 3](https://user-images.githubusercontent.com/77571090/173226588-f944264c-47ef-4dc5-b43e-0299c668f1b8.png)
 
 - RDS 데이터베이스를 통해 user 정보 저장
 - 로그인 버튼 클릭 시 아이디 & 비밀번호 입력 후 login 가능
@@ -85,7 +85,7 @@ python3 Main.py
 > 기본 메뉴 화면
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%204.png)
+![Untitled 4](https://user-images.githubusercontent.com/77571090/173226613-11cc2f44-ff0e-484c-ad65-04d95198ba85.png)
 
 - 네브바를 통해 원하는 페이지 접근 가능
 - 게임은 Stage모드와 Infinite모드로 구성
@@ -94,7 +94,7 @@ python3 Main.py
 > Stage 모드 game
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%205.png)
+![Untitled 5](https://user-images.githubusercontent.com/77571090/173226634-d00874f5-2f96-4844-b89e-87f1c7d9d42a.png)
 
 - 3가지 map이 있으며 각각 stage1,2,3으로 구성
 - 게임 시작 시 목표점수 안내창 확인 가능
@@ -102,7 +102,7 @@ python3 Main.py
 > Infinite 모드 game
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%206.png)
+![Untitled 6](https://user-images.githubusercontent.com/77571090/173226657-804ed977-00b7-4093-901f-c2cf7cecb3fa.png)
 
 - 3가지 map으로 구성
 - 목숨이 0이 될 경우 게임 종료
@@ -112,7 +112,7 @@ python3 Main.py
 > PVP game
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%207.png)
+![Untitled 7](https://user-images.githubusercontent.com/77571090/173226689-3ccc27fd-5318-4674-8582-475ce0d12dec.png)
 
 - 2인 플레이 게임으로 로그인 없이 이용 가능
 - 120초의 제한 시간 내에 목숨이 0이 되거나 제한시간이 끝나면 게임 종료
@@ -120,9 +120,9 @@ python3 Main.py
 > Mypage
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%208.png)
+![Untitled 8](https://user-images.githubusercontent.com/77571090/173226699-8d68ec9c-68ec-447b-bc7f-93dc54df0759.png)
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%209.png)
+![Untitled 9](https://user-images.githubusercontent.com/77571090/173226704-4fddb9d8-63c5-4fcc-b9c9-64062c2048c7.png)
 
 - 아이디, 점수, 보유 코인, 보유 캐릭터에 대한 정보 제공
 - 캐릭터 선택 가능
@@ -130,7 +130,7 @@ python3 Main.py
 > Character Store
 > 
 
-![Untitled](Readme%20md%20d956af960cc740b2937bd0fb546ca2af/Untitled%2010.png)
+![Untitled 10](https://user-images.githubusercontent.com/77571090/173226710-060422c1-2444-49e6-91d6-8d7eb053f189.png)
 
 - 캐릭터 상점에서는 보유한 코인으로 캐릭터 구매 가능
 
