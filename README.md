@@ -33,26 +33,26 @@ sudo apt-get update
 sudo apt install python3
 ```
 
-1. pygame, pygame_menu 설치
+2. pygame, pygame_menu 설치
 
 ```powershell
 sudo pip3 install pygame==2.0.2
 sudo pip3 install pygame_menu==4.2.0
 ```
 
-1. pymysql 설치
+3. pymysql 설치
 
 ```powershell
 sudo pip3 install pymysql==1.0.2
 ```
 
-1. 
+4. 
 
 ```powershell
 sudo apt-get install python3-tk
 ```
 
-1. 게임 실행
+5. 게임 실행
 
 ```powershell
 python3 Main.py
