@@ -46,7 +46,7 @@ sudo pip3 install pygame_menu==4.2.0
 sudo pip3 install pymysql==1.0.2
 ```
 
-4. 
+4. tkinter 설치
 
 ```powershell
 sudo apt-get install python3-tk
