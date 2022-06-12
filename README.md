@@ -134,7 +134,6 @@ python3 Main.py
 
 ![Untitled 8](https://user-images.githubusercontent.com/77571090/173226699-8d68ec9c-68ec-447b-bc7f-93dc54df0759.png)
 
-![Untitled 9](https://user-images.githubusercontent.com/77571090/173226704-4fddb9d8-63c5-4fcc-b9c9-64062c2048c7.png)
 
 - 아이디, 점수, 보유 코인, 보유 캐릭터에 대한 정보 제공
 - 캐릭터 선택 가능
