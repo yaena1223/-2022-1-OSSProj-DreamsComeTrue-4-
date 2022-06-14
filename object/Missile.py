@@ -41,7 +41,6 @@ class TargetedMissile(Missile):
         self.vel = Vector2(0,0)
         self.position = Vector2(position[0]-self.sx/2, position[1]-self.sy)
         self.target = self.find_target(game)
-        self.target_pvp = self.find_target_pvp(game)
         self.locked_on = True
         self.crosshair = Crosshair(self.target)
         if self.target in game.mobList:
@@ -97,6 +96,7 @@ class TargetedMissile(Missile):
     # 보스가 있으면 일반 몹 대신 보스만 조준
     def find_target_pvp(self, game):
         #pvp
+        self.target_pvp = self.find_target_pvp(game)
         if len(game.mobList) > 0:
             targets1 = game.character1.check_for_targets(game)
             if len(targets1) > 0:

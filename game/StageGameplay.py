@@ -333,8 +333,9 @@ class StageGame:
 
     #홈버튼 클릭 시
     def Home(self, menu):
-        menu.disable()
         pygame.mixer.music.stop()
+        menu.disable()
+        
         
     #Continue 클릭 시
     def Continue(self, menu):
@@ -372,6 +373,7 @@ class StageGame:
         
     # 클리어 화면
     def showStageClearScreen(self):
+        pygame.mixer.music.stop()
         stageclear_theme = pygame_menu.themes.THEME_SOLARIZED.copy()
         stageclear_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_SIMPLE
         stageclear_theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND

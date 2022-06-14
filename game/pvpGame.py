@@ -277,6 +277,7 @@ class pvp :
                 pygame.mixer.Sound(Default.effect.value["boom"]["sound"]).stop()
                 font2 = pygame.font.Font(Default.font.value, self.size[0]//20)
                 if self.score_player1 > self.score_player2:
+                    pygame.mixer.music.stop()
                     self.win1 = pygame.image.load(self.gameover_image1)
                     self.win1 = pygame.transform.scale(self.win1, (self.size[0],self.size[1]))
                     self.screen.fill(Color.BLACK.value)
@@ -287,6 +288,7 @@ class pvp :
                     self.screen.blit(score_player2,(self.size[0]/3-15,self.size[1]/2+120))
                     
                 if self.score_player2 > self.score_player1:
+                    pygame.mixer.music.stop()
                     self.win2 = pygame.image.load(self.gameover_image2)
                     self.win2 = pygame.transform.scale(self.win2, (self.size[0],self.size[1]))
                     self.screen.fill(Color.BLACK.value)
@@ -297,6 +299,7 @@ class pvp :
                     self.screen.blit(score_player2,(self.size[0]/3-15,self.size[1]/2+120))
 
                 if self.score_player1 == self.score_player2:
+                    pygame.mixer.music.stop()
                     self.same = pygame.image.load(self.gameover_image3)
                     self.same = pygame.transform.scale(self.same, (self.size[0],self.size[1]))
                     self.screen.fill(Color.BLACK.value)
@@ -336,7 +339,7 @@ class pvp :
 
             pygame.display.flip()
 
-            
+        pygame.mixer.music.stop()  
 
             #pygame.display.update()
 
