@@ -148,6 +148,9 @@ python3 Main.py
 - 캐릭터 상점에서는 보유한 코인으로 캐릭터 구매 가능
 
 <br/></br>
+### 시연영상
+https://www.youtube.com/watch?v=pP2DY6C4dr8
+<br/></br>
 ### Credits
 
 ---
@@ -165,3 +168,4 @@ python3 Main.py
 
 - Origin Source: [https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9](https://github.com/CSID-DGU/2021-2-OSSProj-PlusAlpha-9)
 - Login/Signup Source:  https://github.com/CSID-DGU/2021-1-OSSPC-Tongsan1-2
+
