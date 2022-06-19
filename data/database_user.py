@@ -258,20 +258,20 @@ class Database:
         if(data[self.char+1]>0): #목숨이 0이상일때만 1을 줄임. 
             if(self.char == 1): #선택한 캐릭터가 cat2면, cat2의 목숨을 1개 줄임. 
                 sql = "UPDATE users2 SET char2=%s WHERE user_id = %s"
-                curs.execute(sql, (data[self.char]-1, self.id))
+                curs.execute(sql, (data[self.char+1]-1, self.id))
                 self.dct_db.commit()
             if(self.char == 2): #선택한 캐릭터가 cat3면, cat3의 목숨을 1개 줄임. 
                 sql = "UPDATE users2 SET char3=%s WHERE user_id = %s"
-                curs.execute(sql, (data[self.char]-1, self.id))
+                curs.execute(sql, (data[self.char+1]-1, self.id))
                 self.dct_db.commit()
             if(self.char == 3): #선택한 캐릭터가 cat4면, cat4의 목숨을 1개 줄임. 
                 sql = "UPDATE users2 SET char4=%s WHERE user_id = %s"
-                curs.execute(sql, (data[self.char]-1, self.id))
+                curs.execute(sql, (data[self.char+1]-1, self.id))
                 self.dct_db.commit()
             curs.close()
 
-        if(data[self.char]==0):
-            User.cat_lock[i] = True
+        if(data[self.char+1]==0):
+            User.cat_lock[self.char] = True
 
     #데이터베이스 확인을 통해, 캐릭터가 잠겨있는지 안잠겨있는지 확인
     def char_lock(self):
